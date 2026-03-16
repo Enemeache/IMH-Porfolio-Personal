@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ignacio Montero Horianski</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Fraunces:ital,wght@0,300;1,300&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    :root{--bg:#F2EFE9;--white:#FAFAF7;--ink:#111110;--red:#D94F3D;--muted:#7a776f;--border:#D8D4CC;--card:#E8E4DC;}
+    body{background:var(--bg);color:var(--ink);font-family:'Plus Jakarta Sans',sans-serif;font-weight:300;line-height:1.7;overflow-x:hidden;}
+    ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--red);}
+    nav{position:fixed;top:0;left:0;width:100%;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:22px 60px;transition:background .3s,box-shadow .3s;}
+    nav.scrolled{background:rgba(242,239,233,.95);backdrop-filter:blur(10px);box-shadow:0 1px 0 var(--border);}
+    .nav-logo{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:800;color:var(--ink);text-decoration:none;}
+    .nav-logo span{color:var(--red);}
+    .nav-links{display:flex;gap:36px;list-style:none;}
+    .nav-links a{font-size:.75rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;}
+    .nav-links a:hover{color:var(--red);}
+    .nav-cta{display:inline-flex;align-items:center;gap:8px;padding:9px 22px;background:var(--ink);color:var(--white);font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;transition:background .2s;}
+    .nav-cta:hover{background:var(--red);}
+    .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px;}
+    .hamburger span{display:block;width:22px;height:2px;background:var(--ink);transition:transform .3s,opacity .3s;transform-origin:center;}
+    .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+    .hamburger.open span:nth-child(2){opacity:0;}
+    .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+    .mobile-menu{display:none;position:fixed;inset:0;background:var(--ink);z-index:150;flex-direction:column;align-items:center;justify-content:center;gap:36px;}
+    .mobile-menu.open{display:flex;}
+    .mobile-menu a{font-family:'Syne',sans-serif;font-size:2rem;font-weight:700;color:var(--white);text-decoration:none;transition:color .2s;}
+    .mobile-menu a:hover{color:var(--red);}
+    #hero{min-height:100vh;padding:0 60px;display:grid;grid-template-columns:1fr auto;grid-template-rows:1fr auto;position:relative;overflow:hidden;}
+    .hero-bg-text{position:absolute;bottom:-80px;right:-20px;font-family:'Syne',sans-serif;font-size:clamp(180px,25vw,340px);font-weight:800;color:transparent;-webkit-text-stroke:1.5px var(--border);line-height:1;pointer-events:none;user-select:none;z-index:0;}
+    .hero-main{grid-column:1;grid-row:1;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:80px;padding-top:140px;position:relative;z-index:1;}
+    .hero-tag{display:inline-flex;align-items:center;gap:10px;font-size:.7rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin-bottom:32px;animation:fadeUp .7s .2s both;}
+    .hero-tag::before{content:'';width:28px;height:2px;background:var(--red);}
+    .hero-name{font-family:'Syne',sans-serif;font-size:clamp(3.5rem,8vw,8rem);font-weight:800;line-height:.95;letter-spacing:-.03em;color:var(--ink);margin-bottom:32px;animation:fadeUp .8s .35s both;}
+    .hero-name em{font-family:'Fraunces',Georgia,serif;font-style:italic;font-weight:300;color:var(--red);}
+    .hero-desc{max-width:520px;font-size:1rem;color:var(--muted);line-height:1.8;margin-bottom:48px;animation:fadeUp .8s .5s both;}
+    .hero-actions{display:flex;gap:14px;flex-wrap:wrap;animation:fadeUp .8s .65s both;}
+    .btn-fill{display:inline-flex;align-items:center;gap:10px;padding:14px 36px;background:var(--ink);color:var(--white);font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;transition:background .2s;}
+    .btn-fill:hover{background:var(--red);}
+    .btn-outline{display:inline-flex;align-items:center;gap:10px;padding:14px 36px;border:2px solid var(--ink);color:var(--ink);font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;transition:background .2s,color .2s;}
+    .btn-outline:hover{background:var(--ink);color:var(--white);}
+    .hero-side{grid-column:2;grid-row:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-end;padding-bottom:80px;padding-left:60px;gap:24px;position:relative;z-index:1;animation:fadeUp .8s .8s both;}
+    .hero-stat{text-align:right;}
+    .hero-stat-num{font-family:'Syne',sans-serif;font-size:2.8rem;font-weight:800;color:var(--ink);line-height:1;}
+    .hero-stat-label{font-size:.68rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:4px;}
+    .hero-divider{width:1px;height:40px;background:var(--border);align-self:center;}
+    .hero-bottom{grid-column:1/-1;grid-row:2;display:flex;justify-content:space-between;align-items:center;padding:24px 0 32px;border-top:1px solid var(--border);position:relative;z-index:1;}
+    .hero-skills{display:flex;gap:28px;flex-wrap:wrap;}
+    .hero-skill{font-size:.68rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+    .hero-scroll{font-size:.65rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:10px;}
+    .hero-scroll::after{content:'';width:40px;height:1px;background:var(--muted);}
+    section{padding:120px 60px;}
+    .section-num{font-family:'Syne',sans-serif;font-size:.72rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin-bottom:12px;display:flex;align-items:center;gap:12px;}
+    .section-num::after{content:'';flex:1;max-width:40px;height:2px;background:var(--red);}
+    .section-title{font-family:'Syne',sans-serif;font-size:clamp(2rem,4vw,3.6rem);font-weight:800;line-height:1.05;letter-spacing:-.02em;color:var(--ink);margin-bottom:16px;}
+    .section-title em{font-family:'Fraunces',Georgia,serif;font-style:italic;font-weight:300;}
+    #about{background:var(--ink);color:var(--white);}
+    #about .section-num{color:var(--red);}
+    #about .section-title{color:var(--white);}
+    .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;margin-top:64px;align-items:start;}
+    .about-text p{font-size:.95rem;color:rgba(255,255,255,.6);line-height:1.9;margin-bottom:20px;}
+    .about-text strong{color:var(--white);font-weight:500;}
+    .about-stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,.08);margin-bottom:40px;}
+    .about-stat{background:rgba(255,255,255,.03);padding:28px 24px;}
+    .about-stat-num{font-family:'Syne',sans-serif;font-size:2.8rem;font-weight:800;color:var(--red);line-height:1;margin-bottom:6px;}
+    .about-stat-label{font-size:.68rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);}
+    .skills-list{display:flex;flex-wrap:wrap;gap:8px;}
+    .skill-tag{display:inline-block;padding:6px 14px;border:1px solid rgba(255,255,255,.15);font-size:.68rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.6);}
+    #services{background:var(--white);}
+    .services-list{margin-top:64px;}
+    .service-item{display:grid;grid-template-columns:80px 1fr auto;align-items:center;gap:48px;padding:40px 0;border-bottom:1px solid var(--border);transition:padding-left .3s;}
+    .service-item:first-child{border-top:1px solid var(--border);}
+    .service-item:hover{padding-left:20px;}
+    .service-num{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:var(--border);transition:color .25s;}
+    .service-item:hover .service-num{color:var(--red);}
+    .service-name{font-family:'Syne',sans-serif;font-size:clamp(1.4rem,2.5vw,2rem);font-weight:700;color:var(--ink);margin-bottom:8px;transition:color .25s;}
+    .service-item:hover .service-name{color:var(--red);}
+    .service-desc{font-size:.88rem;color:var(--muted);max-width:500px;line-height:1.7;}
+    .service-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+    .stag{padding:4px 12px;background:var(--card);font-size:.62rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+    .service-arrow{font-size:1.4rem;color:var(--border);transition:color .25s,transform .3s;}
+    .service-item:hover .service-arrow{color:var(--red);transform:translateX(8px);}
+    #projects{background:var(--bg);}
+    .projects-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:56px;flex-wrap:wrap;gap:24px;}
+    .filter-bar{display:flex;gap:6px;flex-wrap:wrap;}
+    .filter-btn{padding:8px 18px;border:2px solid var(--border);background:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);cursor:pointer;transition:border-color .2s,color .2s,background .2s;}
+    .filter-btn.active,.filter-btn:hover{border-color:var(--ink);background:var(--ink);color:var(--white);}
+    .projects-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--border);}
+    .project-card{background:var(--white);overflow:hidden;cursor:pointer;}
+    .project-card.hidden{display:none;}
+    .project-visual{height:280px;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:28px;}
+    .project-img-cover{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.25,.46,.45,.94);}
+    .project-card:hover .project-img-cover{transform:scale(1.07);}
+    .project-visual-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.65) 0%,rgba(0,0,0,.15) 60%,transparent 100%);}
+    .project-visual-bg{position:absolute;inset:0;transition:transform .6s cubic-bezier(.25,.46,.45,.94);}
+    .project-card:hover .project-visual-bg{transform:scale(1.05);}
+    .pv-1{background:linear-gradient(135deg,#1C2B4A 0%,#0F1D35 100%);}
+    .pv-2{background:linear-gradient(135deg,#2A1F14 0%,#3D2B18 100%);}
+    .pv-3{background:linear-gradient(135deg,#0D2318 0%,#1A3828 100%);}
+    .pv-4{background:linear-gradient(135deg,#1E0F2E 0%,#2D1A42 100%);}
+    .project-visual-icon{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:5rem;color:rgba(255,255,255,.06);font-family:'Syne',sans-serif;font-weight:800;}
+    .project-cat{position:relative;z-index:1;display:inline-flex;align-items:center;gap:8px;padding:6px 14px;background:rgba(255,255,255,.15);backdrop-filter:blur(8px);font-size:.62rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.9);}
+    .project-body{padding:32px;}
+    .project-title{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:700;color:var(--ink);margin-bottom:10px;line-height:1.2;}
+    .project-desc{font-size:.86rem;color:var(--muted);line-height:1.8;margin-bottom:20px;}
+    .project-tools{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:24px;}
+    .ptool{padding:4px 10px;border:1px solid var(--border);font-size:.62rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
+    .project-link-btn{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);transition:gap .2s,color .2s;cursor:pointer;}
+    .project-card:hover .project-link-btn{gap:16px;color:var(--red);}
+    .project-link-btn::after{content:'&#x2192;';}
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;align-items:center;justify-content:center;padding:24px;}
+    .modal-overlay.open{display:flex;}
+    .modal-box{background:var(--white);max-width:820px;width:100%;max-height:90vh;overflow-y:auto;animation:scaleIn .3s both;}
+    .modal-hero-img{height:320px;overflow:hidden;position:relative;}
+    .modal-hero-img img{width:100%;height:100%;object-fit:cover;}
+    .modal-topbar{position:sticky;top:0;background:var(--white);padding:14px 24px;display:flex;justify-content:flex-end;z-index:2;border-bottom:1px solid var(--border);}
+    .modal-topbar button{background:none;border:2px solid var(--border);color:var(--muted);width:36px;height:36px;font-size:1rem;cursor:pointer;font-weight:700;transition:border-color .2s,color .2s;}
+    .modal-topbar button:hover{border-color:var(--red);color:var(--red);}
+    .modal-content{padding:36px 40px 48px;}
+    .modal-cat-label{font-size:.65rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin-bottom:10px;}
+    .modal-title{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--ink);margin-bottom:24px;line-height:1.1;}
+    .modal-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-bottom:36px;}
+    .modal-meta-item{background:var(--bg);padding:18px 20px;}
+    .modal-meta-label{font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+    .modal-meta-value{font-size:.9rem;font-weight:600;color:var(--ink);}
+    .modal-section{margin-bottom:28px;}
+    .modal-section-label{font-size:.65rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin-bottom:10px;}
+    .modal-text{font-size:.95rem;color:var(--muted);line-height:1.9;}
+    .modal-imgs-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:28px;}
+    .modal-imgs-grid img{width:100%;height:180px;object-fit:cover;}
+    .modal-imgs-grid img:first-child{grid-column:1/-1;height:240px;}
+    .modal-tags{display:flex;flex-wrap:wrap;gap:8px;}
+    .modal-tag{padding:6px 14px;background:var(--card);font-size:.65rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
+    #process{background:var(--white);}
+    .process-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--border);margin-top:64px;}
+    .process-item{background:var(--white);padding:48px 40px;transition:background .3s;}
+    .process-item:hover{background:var(--bg);}
+    .process-step-num{font-family:'Syne',sans-serif;font-size:4rem;font-weight:800;color:var(--border);line-height:1;margin-bottom:20px;transition:color .3s;}
+    .process-item:hover .process-step-num{color:var(--red);}
+    .process-step-name{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:700;color:var(--ink);margin-bottom:14px;}
+    .process-step-desc{font-size:.88rem;color:var(--muted);line-height:1.8;}
+    #contact{background:var(--red);color:var(--white);display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+    .contact-eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:20px;}
+    .contact-big{font-family:'Syne',sans-serif;font-size:clamp(2.4rem,5vw,5rem);font-weight:800;line-height:1.0;letter-spacing:-.02em;color:var(--white);margin-bottom:28px;}
+    .contact-sub{font-size:.95rem;color:rgba(255,255,255,.75);line-height:1.8;}
+    .contact-right{display:flex;flex-direction:column;gap:16px;}
+    .contact-btn{display:flex;align-items:center;justify-content:space-between;padding:20px 28px;background:rgba(255,255,255,.12);color:var(--white);text-decoration:none;font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;transition:background .2s;}
+    .contact-btn:hover{background:rgba(255,255,255,.22);}
+    footer{background:var(--ink);padding:24px 60px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+    .footer-copy,.footer-right{font-size:.7rem;color:rgba(255,255,255,.3);}
+    .reveal{opacity:1;transform:none;transition:opacity .65s ease,transform .65s ease;}
+    .js-ready .reveal{opacity:0;transform:translateY(24px);}
+    .js-ready .reveal.visible{opacity:1;transform:none;}
+    .d1{transition-delay:.1s;}.d2{transition-delay:.2s;}.d3{transition-delay:.3s;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:none;}}
+    @keyframes scaleIn{from{opacity:0;transform:scale(.96);}to{opacity:1;transform:none;}}
+    /* ── TABLET 1024px ── */
+    @media(max-width:1024px){
+      nav{padding:20px 32px;}
+      #hero{padding:0 32px 64px;}
+      section{padding:96px 32px;}
+      .hero-name{font-size:clamp(3rem,7vw,5.5rem);}
+      .hero-side{padding-left:40px;gap:16px;}
+      .hero-stat-num{font-size:2.2rem;}
+      .about-grid{grid-template-columns:1fr;gap:48px;}
+      .service-item{gap:28px;}
+      #contact{grid-template-columns:1fr;gap:48px;padding:80px 32px;}
+      footer{padding:20px 32px;}
+      .process-grid{grid-template-columns:1fr 1fr;}
+      .modal-meta{grid-template-columns:1fr 1fr 1fr;}
+    }
+
+    /* ── MOBILE 768px ── */
+    @media(max-width:768px){
+      /* Nav */
+      .nav-links,.nav-cta{display:none;}
+      .hamburger{display:flex;}
+      nav{padding:18px 24px;}
+
+      /* Hero */
+      #hero{grid-template-columns:1fr;grid-template-rows:auto auto auto;padding:0 24px 48px;min-height:100svh;}
+      .hero-main{padding-top:110px;padding-bottom:28px;}
+      .hero-name{font-size:clamp(2.4rem,9vw,3.8rem);margin-bottom:20px;}
+      .hero-desc{font-size:.86rem;margin-bottom:32px;}
+      .hero-actions{flex-direction:column;align-items:flex-start;gap:12px;}
+      .btn-fill,.btn-outline{width:100%;justify-content:center;padding:13px 28px;}
+      .hero-side{grid-column:1;grid-row:2;flex-direction:row;justify-content:flex-start;align-items:center;padding-left:0;padding-bottom:0;padding-top:0;gap:16px;}
+      .hero-stat{text-align:left;}
+      .hero-stat-num{font-size:1.8rem;}
+      .hero-stat-label{font-size:.58rem;}
+      .hero-divider{height:28px;}
+      .hero-bottom{grid-column:1;grid-row:3;flex-direction:column;align-items:flex-start;gap:10px;padding:20px 0 28px;border-top:1px solid var(--border);}
+      .hero-skills{gap:12px;flex-wrap:wrap;}
+      .hero-skill{font-size:.62rem;}
+      .hero-scroll{display:none;}
+      .hero-bg-text{display:none;}
+
+      /* Sections */
+      section{padding:64px 24px;}
+      .section-num{font-size:.68rem;}
+      .section-title{font-size:clamp(1.8rem,7vw,2.6rem);}
+
+      /* About */
+      .about-grid{grid-template-columns:1fr;gap:40px;}
+      .about-stats{grid-template-columns:1fr 1fr;}
+      .about-stat{padding:20px 16px;}
+      .about-stat-num{font-size:2rem;}
+      .skills-list{gap:6px;}
+      .skill-tag{font-size:.62rem;padding:5px 10px;}
+
+      /* Services */
+      .service-item{grid-template-columns:40px 1fr;gap:16px;padding:28px 0;}
+      .service-arrow{display:none;}
+      .service-name{font-size:1.2rem;margin-bottom:6px;}
+      .service-desc{font-size:.82rem;}
+      .services-list{margin-top:40px;}
+      .stag{font-size:.58rem;padding:3px 8px;}
+
+      /* Projects */
+      .projects-grid{grid-template-columns:1fr;}
+      .projects-header{flex-direction:column;align-items:flex-start;margin-bottom:32px;gap:20px;}
+      .filter-bar{gap:6px;}
+      .filter-btn{font-size:.62rem;padding:7px 12px;}
+      .project-visual{height:210px;}
+      .project-body{padding:24px;}
+      .project-title{font-size:1.2rem;}
+      .project-desc{font-size:.82rem;}
+      .ptool{font-size:.58rem;}
+
+      /* Process */
+      .process-grid{grid-template-columns:1fr;}
+      .process-item{padding:32px 24px;}
+      .process-step-num{font-size:3rem;margin-bottom:14px;}
+      .process-step-name{font-size:1.1rem;}
+      .process-step-desc{font-size:.84rem;}
+
+      /* Contact */
+      #contact{grid-template-columns:1fr;gap:40px;padding:64px 24px;}
+      .contact-big{font-size:clamp(2rem,8vw,3.2rem);}
+      .contact-sub{font-size:.88rem;}
+      .contact-btn{padding:16px 20px;font-size:.72rem;}
+
+      /* Modal */
+      .modal-overlay{padding:0;align-items:flex-end;}
+      .modal-box{max-height:92svh;width:100%;border-radius:0;}
+      .modal-hero-img{height:200px;}
+      .modal-topbar{padding:12px 16px 0;}
+      .modal-content{padding:20px 20px 40px;}
+      .modal-title{font-size:1.4rem;margin-bottom:16px;}
+      .modal-meta{grid-template-columns:1fr 1fr;gap:1px;}
+      .modal-meta-item{padding:14px 16px;}
+      .modal-section{margin-bottom:20px;}
+      .modal-text{font-size:.88rem;}
+      .modal-imgs-grid{grid-template-columns:1fr;gap:3px;}
+      .modal-imgs-grid img{height:160px !important;}
+      .modal-tag{font-size:.6rem;padding:5px 10px;}
+
+      /* Footer */
+      footer{padding:20px 24px;flex-direction:column;text-align:center;gap:8px;}
+    }
+
+    /* ── MOBILE PEQUEÑO 480px ── */
+    @media(max-width:480px){
+      nav{padding:16px 20px;}
+      #hero{padding:0 20px 40px;}
+      .hero-name{font-size:clamp(2rem,10vw,3rem);}
+      .hero-tag{font-size:.62rem;margin-bottom:20px;}
+      .hero-side{gap:10px;}
+      .hero-divider{display:none;}
+      .hero-stat-num{font-size:1.6rem;}
+      section{padding:52px 20px;}
+      .about-stats{grid-template-columns:1fr 1fr;}
+      .about-stat-num{font-size:1.8rem;}
+      .modal-meta{grid-template-columns:1fr;}
+      .service-item{padding:22px 0;}
+      .service-name{font-size:1.1rem;}
+      .contact-right{gap:10px;}
+      .contact-big{font-size:clamp(1.8rem,9vw,2.8rem);}
+      footer{padding:16px 20px;}
+      .process-item{padding:24px 16px;}
+      .process-step-num{font-size:2.5rem;}
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#about"    onclick="closeMM()">Sobre mi</a>
+    <a href="#services" onclick="closeMM()">Servicios</a>
+    <a href="#projects" onclick="closeMM()">Proyectos</a>
+    <a href="#process"  onclick="closeMM()">Proceso</a>
+    <a href="#contact"  onclick="closeMM()">Contacto</a>
+  </div>
+  <nav id="navbar">
+    <a href="#hero" class="nav-logo">IMH<span>.</span></a>
+    <ul class="nav-links">
+      <li><a href="#about">Sobre mi</a></li>
+      <li><a href="#services">Servicios</a></li>
+      <li><a href="#projects">Proyectos</a></li>
+      <li><a href="#process">Proceso</a></li>
+    </ul>
+    <a href="#contact" class="nav-cta">Contacto</a>
+    <button class="hamburger" id="hamburger" onclick="toggleMM()"><span></span><span></span><span></span></button>
+  </nav>
+  <section id="hero">
+    <div class="hero-bg-text">IMH</div>
+    <div class="hero-main">
+      <p class="hero-tag">Disponible para proyectos</p>
+      <h1 class="hero-name">Datos.<br>Diseño.<br><em>Resultados.</em></h1>
+      <p class="hero-desc">Analista de datos y desarrollador web. Combino análisis de datos, diseño UX/UI y desarrollo para crear soluciones digitales que mejoran procesos y toman decisiones más inteligentes.</p>
+      <div class="hero-actions">
+        <a href="#projects" class="btn-fill">Ver proyectos</a>
+        <a href="#contact" class="btn-outline">Hablemos</a>
+      </div>
+    </div>
+    <div class="hero-side">
+      <div class="hero-stat"><div class="hero-stat-num">4+</div><div class="hero-stat-label">Años de experiencia</div></div>
+      <div class="hero-divider"></div>
+      <div class="hero-stat"><div class="hero-stat-num">10+</div><div class="hero-stat-label">Herramientas</div></div>
+      <div class="hero-divider"></div>
+      <div class="hero-stat"><div class="hero-stat-num">2026</div><div class="hero-stat-label">Egresado UCES</div></div>
+    </div>
+    <div class="hero-bottom">
+      <div class="hero-skills">
+        <span class="hero-skill">Power BI</span>
+        <span class="hero-skill">SQL</span>
+        <span class="hero-skill">Python</span>
+        <span class="hero-skill">Figma</span>
+        <span class="hero-skill">HTML/CSS/JS</span>
+        <span class="hero-skill">Next.js</span>
+      </div>
+      <div class="hero-scroll">Scroll</div>
+    </div>
+  </section>
+  <section id="about">
+    <p class="section-num">01 &mdash; Sobre mi</p>
+    <h2 class="section-title">Analista, diseñador<br><em>y builder</em></h2>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>Soy <strong>Ignacio Montero Horianski</strong>, técnico en Programación de Sistemas (UCES, 2026) con foco en análisis de datos, visualización y desarrollo web. Me especializo en transformar datos complejos en soluciones digitales claras y funcionales.</p>
+        <p>Me definen tres cosas: soy <strong>detallista</strong> — cada dato y cada línea de código importa. Soy <strong>proactivo y desafiante</strong> — siempre busco ir un paso más allá de lo que se pide. Y sobre todo, me apasiona la <strong>comunicación constante con el cliente</strong> para entender exactamente qué necesita y cumplir los objetivos.</p>
+      </div>
+      <div class="reveal d1">
+        <div class="about-stats">
+          <div class="about-stat"><div class="about-stat-num">4+</div><div class="about-stat-label">Años en datos</div></div>
+          <div class="about-stat"><div class="about-stat-num">2026</div><div class="about-stat-label">Egreso UCES</div></div>
+          <div class="about-stat"><div class="about-stat-num">Adv</div><div class="about-stat-label">Figma y Excel</div></div>
+          <div class="about-stat"><div class="about-stat-num">BI</div><div class="about-stat-label">Power BI & Looker</div></div>
+        </div>
+        <div class="skills-list">
+          <span class="skill-tag">Power BI</span><span class="skill-tag">Looker Studio</span><span class="skill-tag">SQL</span><span class="skill-tag">Python</span><span class="skill-tag">Excel Avanzado</span><span class="skill-tag">Figma</span><span class="skill-tag">HTML/CSS/JS</span><span class="skill-tag">Next.js</span><span class="skill-tag">UX/UI</span><span class="skill-tag">Softland ERP</span>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="services">
+    <p class="section-num">02 &mdash; Servicios</p>
+    <h2 class="section-title">Lo que puedo<br><em>hacer por vos</em></h2>
+    <div class="services-list">
+      <div class="service-item reveal">
+        <div class="service-num">01</div>
+        <div><div class="service-name">Análisis de Datos &amp; BI</div><div class="service-desc">Transformo datos crudos en dashboards claros y decisiones concretas. Power BI, Looker Studio, SQL y Excel para visualizar lo que importa.</div><div class="service-tags"><span class="stag">Power BI</span><span class="stag">SQL</span><span class="stag">Looker Studio</span><span class="stag">Excel</span></div></div>
+        <div class="service-arrow">&#x2192;</div>
+      </div>
+      <div class="service-item reveal d1">
+        <div class="service-num">02</div>
+        <div><div class="service-name">Diseño UX/UI</div><div class="service-desc">Diseño interfaces que los usuarios entienden de inmediato. Wireframes, prototipos interactivos en Figma y pruebas de usuario.</div><div class="service-tags"><span class="stag">Figma</span><span class="stag">Prototipado</span><span class="stag">User Testing</span><span class="stag">Responsive</span></div></div>
+        <div class="service-arrow">&#x2192;</div>
+      </div>
+      <div class="service-item reveal d2">
+        <div class="service-num">03</div>
+        <div><div class="service-name">Desarrollo Web</div><div class="service-desc">Sitios y apps web funcionales con HTML, CSS, JavaScript y Next.js. Foco en performance, usabilidad y codigo limpio.</div><div class="service-tags"><span class="stag">HTML/CSS/JS</span><span class="stag">Next.js</span><span class="stag">Node.js</span></div></div>
+        <div class="service-arrow">&#x2192;</div>
+      </div>
+      <div class="service-item reveal d3">
+        <div class="service-num">04</div>
+        <div><div class="service-name">Automatización de Procesos</div><div class="service-desc">Scripts en Python y SQL para automatizar reportes, limpiar datos masivos y eliminar trabajo manual repetitivo.</div><div class="service-tags"><span class="stag">Python</span><span class="stag">SQL</span><span class="stag">Automatización</span></div></div>
+        <div class="service-arrow">&#x2192;</div>
+      </div>
+    </div>
+  </section>
+  <section id="projects">
+    <div class="projects-header">
+      <div><p class="section-num">03 &mdash; Proyectos</p><h2 class="section-title">Trabajo <em>real</em></h2></div>
+      <div class="filter-bar">
+        <button class="filter-btn active" data-filter="all">Todos</button>
+        <button class="filter-btn" data-filter="datos">Datos &amp; BI</button>
+        <button class="filter-btn" data-filter="ux">UX/UI &amp; Dev</button>
+        <button class="filter-btn" data-filter="auto">Automatización</button>
+      </div>
+    </div>
+    <div class="projects-grid">
+      <div class="project-card reveal" data-cat="datos" onclick="openProject('dashboard')">
+        <div class="project-visual pv-1">
+          <img src="./img/dashboard-hero.png" alt="Dashboard Power BI" class="project-img-cover" onerror="this.style.display='none'"/>
+          <div class="project-visual-icon">BI</div>
+          <span class="project-cat">Datos &amp; BI</span>
+        </div>
+        <div class="project-body">
+          <h3 class="project-title">Dashboard KPIs de Producción</h3>
+          <p class="project-desc">Dashboard interactivo en Power BI con visualización UX/UI optimizada para el seguimiento de KPIs de producción en tiempo real.</p>
+          <div class="project-tools"><span class="ptool">Power BI</span><span class="ptool">SQL Server</span><span class="ptool">Excel</span></div>
+          <span class="project-link-btn">Ver proyecto</span>
+        </div>
+      </div>
+      <div class="project-card reveal d1" data-cat="ux" onclick="openProject('inventario')">
+        <div class="project-visual pv-2">
+          <img src="./img/ux-hero.jpg" alt="UX Figma" class="project-img-cover" onerror="this.style.display='none'"/>
+          <div class="project-visual-icon">UX</div>
+          <span class="project-cat">UX/UI &amp; Dev</span>
+        </div>
+        <div class="project-body">
+          <h3 class="project-title">Prototipo Web &mdash; Gestión de Inventarios</h3>
+          <p class="project-desc">Diseño y desarrollo de prototipo web validado con usuarios reales para mejorar la usabilidad del sistema de inventarios.</p>
+          <div class="project-tools"><span class="ptool">Figma</span><span class="ptool">HTML/CSS/JS</span><span class="ptool">User Testing</span></div>
+          <span class="project-link-btn">Ver proyecto</span>
+        </div>
+      </div>
+      <div class="project-card reveal" data-cat="auto" onclick="openProject('reportes')">
+        <div class="project-visual pv-3">
+          <img src="./img/excel-hero.png" alt="Automatización Python" class="project-img-cover" onerror="this.style.display='none'"/>
+          <div class="project-visual-icon">PY</div>
+          <span class="project-cat">Automatización</span>
+        </div>
+        <div class="project-body">
+          <h3 class="project-title">Automatización de Reportes Contables</h3>
+          <p class="project-desc">Scripts en Python para limpieza, procesamiento y carga masiva de datos contables, eliminando trabajo manual repetitivo.</p>
+          <div class="project-tools"><span class="ptool">Python</span><span class="ptool">SQL</span><span class="ptool">Excel</span></div>
+          <span class="project-link-btn">Ver proyecto</span>
+        </div>
+      </div>
+      <div class="project-card reveal d1" data-cat="ux" onclick="openProject('depofis')">
+        <div class="project-visual pv-4">
+          <img src="./img/web-hero.webp" alt="Desarrollo web Next.js" class="project-img-cover" onerror="this.style.display='none'"/>
+          <div class="project-visual-icon">JS</div>
+          <span class="project-cat">UX/UI &amp; Dev</span>
+        </div>
+        <div class="project-body">
+          <h3 class="project-title">Módulo de Software &mdash; Depofis</h3>
+          <p class="project-desc">Desarrollo de módulo de software para automatización de carga de datos. Front-end en Figma y JavaScript, backend con Next.js y Node.js.</p>
+          <div class="project-tools"><span class="ptool">Next.js</span><span class="ptool">Node.js</span><span class="ptool">Figma</span></div>
+          <span class="project-link-btn">Ver proyecto</span>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="modal-overlay" id="projectModal" onclick="handleOverlayClick(event)">
+    <div class="modal-box" id="modalBox">
+      <div class="modal-topbar"><button onclick="closeProject()">&#x2715;</button></div>
+      <div class="modal-hero-img" id="modalHeroImg"></div>
+      <div class="modal-content">
+        <p class="modal-cat-label" id="mCat"></p>
+        <h2 class="modal-title" id="mTitle"></h2>
+        <div class="modal-meta" id="mMeta"></div>
+        <div class="modal-section">
+          <p class="modal-section-label">El desafío</p>
+          <p class="modal-text" id="mChallenge"></p>
+        </div>
+        <div class="modal-section">
+          <p class="modal-section-label">La solución</p>
+          <p class="modal-text" id="mSolution"></p>
+        </div>
+        <div class="modal-imgs-grid" id="mImgsGrid"></div>
+        <div class="modal-section">
+          <p class="modal-section-label">Resultado</p>
+          <p class="modal-text" id="mResult"></p>
+        </div>
+        <div class="modal-tags" id="mTags"></div>
+      </div>
+    </div>
+  </div>
+  <section id="process">
+    <p class="section-num">04 &mdash; Como trabajo</p>
+    <h2 class="section-title">Proceso claro,<br><em>sin sorpresas</em></h2>
+    <div class="process-grid">
+      <div class="process-item reveal"><div class="process-step-num">01</div><h3 class="process-step-name">Relevamiento</h3><p class="process-step-desc">Entiendo el problema a fondo: que datos existen, que decisiones se toman con ellos y que necesita realmente el usuario o el negocio.</p></div>
+      <div class="process-item reveal d1"><div class="process-step-num">02</div><h3 class="process-step-name">Estrategia y Diseño</h3><p class="process-step-desc">Defino la arquitectura de la solución, wireframes o modelo de datos. Todo iterado hasta que sea claro y funcional antes de construir.</p></div>
+      <div class="process-item reveal d1"><div class="process-step-num">03</div><h3 class="process-step-name">Desarrollo y Validación</h3><p class="process-step-desc">Construyo la solución con el stack adecuado. Pruebo con usuarios reales o datos reales para asegurar que funciona en contexto.</p></div>
+      <div class="process-item reveal d2"><div class="process-step-num">04</div><h3 class="process-step-name">Entrega y Soporte</h3><p class="process-step-desc">Entrego documentado y con capacitacion si es necesario. Disponible para ajustes y mejoras post-entrega.</p></div>
+    </div>
+  </section>
+  <section id="contact">
+    <div class="contact-left reveal">
+      <p class="contact-eyebrow">05 &mdash; Contacto</p>
+      <h2 class="contact-big">Arrancamos<br>algo juntos?</h2>
+      <p class="contact-sub">Disponible para proyectos freelance, consultas de datos o desarrollo web. Respondo en menos de 24 horas.</p>
+    </div>
+    <div class="contact-right reveal d1">
+      <a href="https://mail.google.com/mail/?view=cm&to=ignaciomonterohorianski@gmail.com" class="contact-btn" target="_blank">Email <span>&#x2197;</span></a>
+      <a href="https://wa.me/5491157517796" class="contact-btn" target="_blank">WhatsApp <span>&#x2197;</span></a>
+      <a href="https://www.linkedin.com/in/ignaciomonterohorianski/" class="contact-btn" target="_blank">LinkedIn <span>&#x2197;</span></a>
+    </div>
+  </section>
+  <footer>
+    <span class="footer-copy">&copy; 2026 Ignacio Montero Horianski</span>
+    <span class="footer-right">Buenos Aires, Argentina</span>
+  </footer>
+  <script>
+    document.body.classList.add('js-ready');
+    var nav=document.getElementById('navbar');
+    window.addEventListener('scroll',function(){nav.classList.toggle('scrolled',window.scrollY>50);});
+    function toggleMM(){var m=document.getElementById('mobileMenu'),h=document.getElementById('hamburger');m.classList.toggle('open');h.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
+    function closeMM(){document.getElementById('mobileMenu').classList.remove('open');document.getElementById('hamburger').classList.remove('open');document.body.style.overflow='';}
+    var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting){x.target.classList.add('visible');obs.unobserve(x.target);}});},{threshold:0.12});
+    document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el);});
+    document.querySelectorAll('.filter-btn').forEach(function(btn){
+      btn.addEventListener('click',function(){
+        document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
+        btn.classList.add('active');
+        var f=btn.dataset.filter;
+        document.querySelectorAll('.project-card').forEach(function(c){c.classList.toggle('hidden',f!=='all'&&c.dataset.cat!==f);});
+      });
+    });
+    var projects={
+      dashboard:{
+        cat:'Análisis de Datos & BI',
+        title:'Dashboard KPIs de Producción',
+        heroImg:'./img/dashboard-hero.png',
+        meta:[{l:'Stack',v:'Power BI + SQL Server'},{l:'Duración',v:'3 semanas'},{l:'Rol',v:'Analista de Datos'}],
+        challenge:'El equipo de operaciones no tenía visibilidad en tiempo real sobre los KPIs de producción. Los reportes se hacían de forma manual en Excel, tardaban horas en prepararse y llegaban desactualizados a la gerencia, dificultando la toma de decisiones estratégicas.',
+        solution:'Conecté SQL Server directamente a Power BI mediante consultas optimizadas y modelos de datos relacionales. Diseñé un dashboard con criterios UX/UI claros: métricas principales visibles de un vistazo, filtros por período y por área, y alertas visuales automáticas cuando un KPI cae por debajo del umbral definido.',
+        imgs:['./img/dashboard-1.avif','./img/dashboard-2.png','./img/dashboard-3.jpg'],
+        result:'El tiempo de generación de reportes se redujo de 3 horas a segundos. La gerencia pasó a tomar decisiones con datos del mismo día, y el dashboard se adoptó como herramienta central de seguimiento operativo.',
+        tags:['Power BI','SQL Server','Excel','KPIs','UX/UI','Data Viz','DAX']
+      },
+      inventario:{
+        cat:'UX/UI & Desarrollo Web',
+        title:'Prototipo Web — Gestión de Inventarios',
+        heroImg:'./img/ux-hero.jpg',
+        meta:[{l:'Stack',v:'Figma + HTML/CSS/JS'},{l:'Duración',v:'4 semanas'},{l:'Rol',v:'UX/UI Designer + Dev'}],
+        challenge:'El sistema existente de gestión de inventarios era confuso e ineficiente. Los operarios cometían errores frecuentes en la carga de stock, y el flujo de navegación requería demasiados pasos para completar tareas simples como registrar una entrada de mercadería.',
+        solution:'Arranqué con entrevistas a los usuarios reales del sistema para entender sus frustraciones. Armé wireframes de baja fidelidad, los iteré con feedback del equipo, y luego diseñé el prototipo interactivo completo en Figma. El front-end fue desarrollado en HTML, CSS y JavaScript vanilla con foco en accesibilidad y diseño responsive.',
+        imgs:['./img/ux-1.png','./img/ux-2.jpg','./img/ux-3.jpg'],
+        result:'Las pruebas de usuario post-implementación mostraron una reducción del 60% en errores de carga. El tiempo promedio para completar una tarea bajó de 4 minutos a menos de 90 segundos.',
+        tags:['Figma','HTML5','CSS3','JavaScript','Prototipado','User Testing','Responsive','UX Research']
+      },
+      reportes:{
+        cat:'Automatización de Procesos',
+        title:'Automatización de Reportes Contables',
+        heroImg:'./img/excel-hero.png',
+        meta:[{l:'Lenguaje',v:'Python + SQL'},{l:'Duración',v:'2 semanas'},{l:'Rol',v:'Data Engineer'}],
+        challenge:'El área contable generaba reportes mensuales de forma 100% manual: copiaban datos desde múltiples fuentes a Excel, los limpiaban a mano y los formateaban para enviar a dirección. El proceso tomaba entre 6 y 8 horas mensuales y era propenso a errores humanos.',
+        solution:'Desarrollé scripts en Python que conectan directamente a la base de datos MySQL, extraen los datos necesarios, aplican reglas de limpieza y normalización automáticas, y generan los reportes finales en Excel con el formato exacto requerido. Todo el flujo corre con un solo comando.',
+        imgs:['./img/excel-1.webp','./img/excel-2.png','./img/excel-3.png'],
+        result:'El proceso que tomaba 6-8 horas quedó en menos de 3 minutos. Cero errores de carga manual. El equipo contable liberó tiempo para tareas de mayor valor y el script sigue corriendo en producción.',
+        tags:['Python','SQL','MySQL','Excel','Automatización','ETL','Pandas','Openpyxl']
+      },
+      depofis:{
+        cat:'UX/UI & Desarrollo Web',
+        title:'Módulo de Software — Depofis',
+        heroImg:'./img/web-hero.webp',
+        meta:[{l:'Stack',v:'Next.js + Node.js'},{l:'Duración',v:'6 semanas'},{l:'Rol',v:'Frontend Dev + UX'}],
+        challenge:'El sistema Depofis necesitaba un módulo nuevo para la carga automatizada de datos de deportistas. El proceso existente era completamente manual, repetitivo y no escalable. Se necesitaba una interfaz clara y un backend que procesara los datos de forma confiable.',
+        solution:'Participé en la planificación bajo metodología Scrum. Diseñé el front-end en Figma y lo implementé en JavaScript. El backend fue desarrollado con Next.js y Node.js para automatizar la carga de datos. Colaboré en el modelo de base de datos y las validaciones de entrada para garantizar la integridad de la información.',
+        imgs:['./img/web-1.png','./img/web-2.jpg','./img/web-3.avif'],
+        result:'El módulo quedó funcional y en producción. La carga de datos que antes requería intervención manual constante pasó a ser automática, mejorando la eficiencia del sistema Depofis significativamente.',
+        tags:['Next.js','Node.js','Figma','JavaScript','Scrum','Kanban','Frontend','API REST']
+      }
+    };
+    function openProject(id){
+      var p=projects[id];
+      document.getElementById('mCat').textContent=p.cat;
+      document.getElementById('mTitle').textContent=p.title;
+      document.getElementById('modalHeroImg').innerHTML='<img src="'+p.heroImg+'" alt="'+p.title+'" onerror="this.parentElement.style.display=\'none\'"/>';
+      document.getElementById('mChallenge').textContent=p.challenge;
+      document.getElementById('mSolution').textContent=p.solution;
+      document.getElementById('mResult').textContent=p.result;
+      document.getElementById('mMeta').innerHTML=p.meta.map(function(m){return '<div class="modal-meta-item"><div class="modal-meta-label">'+m.l+'</div><div class="modal-meta-value">'+m.v+'</div></div>';}).join('');
+      document.getElementById('mImgsGrid').innerHTML=p.imgs.map(function(url,i){return '<img src="'+url+'" alt="imagen '+(i+1)+'" loading="lazy" onerror="this.style.display=\'none\'"/>';}).join('');
+      document.getElementById('mTags').innerHTML=p.tags.map(function(t){return '<span class="modal-tag">'+t+'</span>';}).join('');
+      document.getElementById('projectModal').classList.add('open');
+      document.body.style.overflow='hidden';
+    }
+    function closeProject(){document.getElementById('projectModal').classList.remove('open');document.body.style.overflow='';}
+    function handleOverlayClick(e){if(e.target===document.getElementById(    'projectModal'))closeProject();}
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeProject();closeMM();}});
+  </script>
+</body>
+</html>
