@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Mensual — Marzo 2026 | Cuartos Congelados</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600&display=swap');
+  :root{
+    --bg:#0c0e14;--surface:#141720;--surface2:#1b1f2d;--border:#252a3a;
+    --accent:#f5c842;--text:#e8eaf0;--muted:#6b7494;
+    --green:#56d364;--red:#f85149;--orange:#f0883e;--teal:#4ecdc4;--purple:#a78bfa;
+    --pq:#f5c842;--pe:#4ecdc4;--pi:#a78bfa;--sc:#56d364;--bz:#f0883e;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;min-height:100vh;}
+
+  .hdr{background:var(--surface);border-bottom:3px solid var(--accent);padding:24px 40px 20px;display:flex;align-items:flex-end;gap:20px;flex-wrap:wrap;}
+  .hdr-l{flex:1;min-width:240px;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+  .big-title{font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--accent);letter-spacing:4px;line-height:1;}
+  .sub{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);margin-top:5px;letter-spacing:1px;}
+  .hdr-r{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;}
+  .pill{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:7px 14px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);}
+  .pill b{color:var(--text);}
+  .pill.hl{border-color:var(--accent);color:var(--accent);}
+  .pill.warn{border-color:var(--orange);color:var(--orange);}
+
+  .main{padding:28px 40px;display:grid;gap:24px;}
+
+  /* TOGGLE BUTTONS */
+  .toggle-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .toggle-group{display:flex;background:var(--surface2);border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+  .toggle-btn{padding:9px 20px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:all .2s;}
+  .toggle-btn.active{background:var(--accent);color:#0c0e14;font-weight:600;}
+  .toggle-btn:hover:not(.active){background:var(--surface);color:var(--text);}
+  .prod-group{display:flex;background:var(--surface2);border:1px solid var(--border);border-radius:6px;overflow:hidden;gap:0;}
+  .prod-btn{padding:7px 14px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:all .2s;border-right:1px solid var(--border);}
+  .prod-btn:last-child{border-right:none;}
+  .prod-btn.active{color:#0c0e14;font-weight:600;}
+  .prod-btn.pq.active{background:var(--pq);}
+  .prod-btn.pe.active{background:var(--pe);}
+  .prod-btn.pi.active{background:var(--pi);}
+  .prod-btn.sc.active{background:var(--sc);}
+  .prod-btn.bz.active{background:var(--bz);}
+  .prod-btn.all.active{background:var(--text);color:var(--bg);}
+
+  .slabel{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+  .slabel::after{content:'';flex:1;height:1px;background:var(--border);}
+
+  /* KPI TOTALES */
+  .kpi-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;}
+  @media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(3,1fr);}}
+  @media(max-width:700px){.kpi-grid{grid-template-columns:repeat(2,1fr);}}
+  .kpi{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:16px 18px;position:relative;overflow:hidden;transition:border-color .3s;}
+  .kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;transition:background .3s;}
+  .kpi.pq::before{background:var(--pq);} .kpi.pe::before{background:var(--pe);}
+  .kpi.pi::before{background:var(--pi);} .kpi.sc::before{background:var(--sc);}
+  .kpi.bz::before{background:var(--bz);} .kpi.total::before{background:var(--text);}
+  .kpi-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+  .kpi-val{font-family:'Bebas Neue',sans-serif;font-size:38px;line-height:1;}
+  .kpi-unit{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);margin-top:3px;}
+  .kpi-sub{font-family:'IBM Plex Mono',monospace;font-size:10px;margin-top:8px;}
+
+  /* CHARTS */
+  .cgrid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .cgrid .wide{grid-column:1/-1;}
+  @media(max-width:800px){.cgrid{grid-template-columns:1fr;}}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:22px;}
+  .ctitle{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;}
+  .cbadge{background:var(--surface2);border:1px solid var(--border);border-radius:3px;padding:2px 8px;font-size:9px;color:var(--accent);letter-spacing:1px;}
+  .cwrap{position:relative;}
+
+  /* LEYENDA */
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:12px;}
+  .legend-item{display:flex;align-items:center;gap:6px;}
+  .legend-dot{width:10px;height:10px;border-radius:2px;}
+
+  /* TABLE */
+  .tscroll{overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:11px;}
+  th{padding:9px 12px;background:var(--surface2);color:var(--muted);font-size:9px;letter-spacing:2px;text-transform:uppercase;border-bottom:1px solid var(--border);text-align:left;white-space:nowrap;}
+  td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle;white-space:nowrap;}
+  tr:last-child td{border-bottom:none;}
+  tr.sem-total td{background:rgba(255,255,255,0.03);font-weight:600;color:var(--accent);}
+  .chip{border-radius:3px;padding:2px 7px;display:inline-block;font-size:10px;}
+  .chip.g{background:rgba(86,211,100,.15);color:var(--green);}
+  .chip.r{background:rgba(248,81,73,.15);color:var(--red);}
+  .chip.o{background:rgba(240,136,62,.15);color:var(--orange);}
+  .chip.n{background:rgba(107,116,148,.15);color:var(--muted);}
+
+  /* NOTA */
+  .nota{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);background:rgba(107,116,148,0.08);border:1px solid var(--border);border-radius:4px;padding:10px 14px;}
+
+  footer{text-align:center;padding:20px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;border-top:1px solid var(--border);text-transform:uppercase;}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-l">
+    <div class="eyebrow">Sector Cuartos Congelados — Resumen Mensual</div>
+    <div class="big-title">MARZO 2026</div>
+    <div class="sub">Todos los productos · Datos desde 13/03 (inicio del sistema de relevamiento) · Dashboard interactivo</div>
+  </div>
+  <div class="hdr-r">
+    <div class="pill">Período <b>13/03 → 31/03</b></div>
+    <div class="pill">5 productos</div>
+    <div class="pill warn">Baja operario desde 26/03</div>
+    <div class="pill hl">CIERRE MARZO 2026</div>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- CONTROLES -->
+  <div class="toggle-bar">
+    <div class="toggle-group">
+      <button class="toggle-btn active" onclick="setVista('mensual',this)">Vista mensual</button>
+      <button class="toggle-btn" onclick="setVista('semanal',this)">Vista semanal</button>
+    </div>
+    <div class="prod-group">
+      <button class="prod-btn all active" onclick="setProd('all',this)">Todos</button>
+      <button class="prod-btn pq" onclick="setProd('pq',this)">Pan de Queso</button>
+      <button class="prod-btn pe" onclick="setProd('pe',this)">Pepas</button>
+      <button class="prod-btn pi" onclick="setProd('pi',this)">Pepitos</button>
+      <button class="prod-btn sc" onclick="setProd('sc',this)">Scones</button>
+      <button class="prod-btn bz" onclick="setProd('bz',this)">Bizcochitos</button>
+    </div>
+  </div>
+
+  <!-- KPIs DINÁMICOS -->
+  <div>
+    <div class="slabel" id="kpi-titulo">Producción total del mes — todos los productos</div>
+    <div class="kpi-grid" id="kpi-grid"></div>
+  </div>
+
+  <!-- CHARTS PRINCIPALES -->
+  <div>
+    <div class="slabel" id="chart-titulo">Evolución de producción</div>
+    <div class="cgrid">
+      <div class="card wide">
+        <div class="ctitle" id="main-chart-title">Producción (kg) por jornada — todos los productos <span class="cbadge" id="main-chart-badge">ACUMULADO MENSUAL</span></div>
+        <div class="legend" id="main-legend"></div>
+        <div class="cwrap" style="height:320px"><canvas id="cMain"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="ctitle">Distribución kg por producto <span class="cbadge">TORTA MENSUAL</span></div>
+        <div class="cwrap" style="height:260px"><canvas id="cPie"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="ctitle">Eficiencia kg/min por jornada <span class="cbadge">RENDIMIENTO</span></div>
+        <div class="cwrap" style="height:260px"><canvas id="cEff"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLA DINÁMICA -->
+  <div>
+    <div class="slabel" id="tabla-titulo">Detalle por jornada</div>
+    <div class="card">
+      <div class="tscroll">
+        <table id="tabla-detalle">
+          <thead id="tabla-head"></thead>
+          <tbody id="tabla-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="nota">
+    NOTA: Los datos corresponden al período 13/03–31/03/2026, fecha de inicio del sistema de relevamiento del Sector Cuartos Congelados. La producción del 1 al 12/03 no está incluida por no contar con datos relevados en planilla BATCH.
+  </div>
+
+</div>
+
+<footer>Confidencial — Uso interno · Sector Producción — Cuartos Congelados · Cierre Marzo 2026</footer>
+
+<script>
+// ── DATOS COMPLETOS ────────────────────────────────────────────────────────
+const DATA = [
+  // sem=1(13-15), sem=2(16-22), sem=3(23-29), sem=4(30-31)
+  {fecha:"13/03",prod:"pq",nombre:"Pan de Queso",am:11.8,kg:541.2,eff:2.71,op:5,desc:0,sem:1},
+  {fecha:"16/03",prod:"pq",nombre:"Pan de Queso",am:19,  kg:874,  eff:3.57,op:5,desc:0,sem:2},
+  {fecha:"17/03",prod:"pe",nombre:"Pepas",        am:4,   kg:232,  eff:4.38,op:5,desc:0,sem:2},
+  {fecha:"17/03",prod:"bz",nombre:"Bizcochitos",  am:3,   kg:300,  eff:1.38,op:5,desc:0,sem:2},
+  {fecha:"18/03",prod:"pq",nombre:"Pan de Queso",am:20,  kg:1100, eff:5.31,op:5,desc:40,sem:2},
+  {fecha:"19/03",prod:"sc",nombre:"Scones",       am:4,   kg:196,  eff:3.02,op:5,desc:0,sem:2},
+  {fecha:"19/03",prod:"pe",nombre:"Pepas",        am:6,   kg:348,  eff:4.64,op:5,desc:0,sem:2},
+  {fecha:"19/03",prod:"pi",nombre:"Pepitos",      am:6,   kg:372,  eff:4.13,op:5,desc:0,sem:2},
+  {fecha:"20/03",prod:"pq",nombre:"Pan de Queso",am:20,  kg:1100, eff:4.40,op:5,desc:15,sem:2},
+  {fecha:"21/03",prod:"bz",nombre:"Bizcochitos",  am:2,   kg:200,  eff:0.89,op:5,desc:0,sem:2},
+  {fecha:"23/03",prod:"sc",nombre:"Scones",       am:4,   kg:196,  eff:2.97,op:4,desc:0,sem:3},
+  {fecha:"23/03",prod:"pe",nombre:"Pepas",        am:8,   kg:464,  eff:3.74,op:4,desc:0,sem:3},
+  {fecha:"23/03",prod:"pi",nombre:"Pepitos",      am:6,   kg:372,  eff:4.77,op:4,desc:0,sem:3},
+  {fecha:"25/03",prod:"pq",nombre:"Pan de Queso",am:20,  kg:1100, eff:3.93,op:5,desc:20,sem:3},
+  {fecha:"26/03",prod:"bz",nombre:"Bizcochitos",  am:3,   kg:300,  eff:1.28,op:4,desc:90,sem:3},
+  {fecha:"27/03",prod:"pq",nombre:"Pan de Queso",am:20,  kg:1100, eff:4.23,op:4,desc:35,sem:3},
+  {fecha:"28/03",prod:"sc",nombre:"Scones",       am:4,   kg:196,  eff:2.51,op:4,desc:20,sem:3},
+  {fecha:"28/03",prod:"pe",nombre:"Pepas",        am:6,   kg:348,  eff:5.44,op:4,desc:20,sem:3},
+  {fecha:"28/03",prod:"pi",nombre:"Pepitos",      am:6,   kg:372,  eff:5.10,op:4,desc:20,sem:3},
+  {fecha:"30/03",prod:"bz",nombre:"Bizcochitos",  am:3,   kg:300,  eff:1.11,op:3,desc:0,sem:4},
+  {fecha:"31/03",prod:"pq",nombre:"Pan de Queso",am:14,  kg:644,  eff:4.95,op:5,desc:105,sem:4},
+];
+
+const PROD_CFG = {
+  pq:{label:"Pan de Queso", color:"#f5c842", bg:"rgba(245,200,66,0.7)"},
+  pe:{label:"Pepas",         color:"#4ecdc4", bg:"rgba(78,205,196,0.7)"},
+  pi:{label:"Pepitos",       color:"#a78bfa", bg:"rgba(167,139,250,0.7)"},
+  sc:{label:"Scones",        color:"#56d364", bg:"rgba(86,211,100,0.7)"},
+  bz:{label:"Bizcochitos",   color:"#f0883e", bg:"rgba(240,136,62,0.7)"},
+};
+
+const SEMS = {
+  1:{label:"Semana 1 (13-15/03)",short:"Sem 1"},
+  2:{label:"Semana 2 (16-22/03)",short:"Sem 2"},
+  3:{label:"Semana 3 (23-29/03)",short:"Sem 3"},
+  4:{label:"Semana 4 (30-31/03)",short:"Sem 4"},
+};
+
+const mono="IBM Plex Mono", grid="rgba(37,42,58,0.5)", muted="#6b7494";
+
+let vistaActual="mensual", prodActual="all";
+let chartMain, chartPie, chartEff;
+
+// ── HELPERS ────────────────────────────────────────────────────────────────
+function filtrar(prod,sem) {
+  let d=DATA;
+  if(prod && prod!=="all") d=d.filter(r=>r.prod===prod);
+  if(sem) d=d.filter(r=>r.sem===sem);
+  return d;
+}
+function sumaKg(rows){ return rows.reduce((a,r)=>a+r.kg,0); }
+function sumAm(rows){ return rows.reduce((a,r)=>a+r.am,0); }
+function avgEff(rows){ if(!rows.length)return 0; return parseFloat((rows.reduce((a,r)=>a+r.eff,0)/rows.length).toFixed(2)); }
+
+// ── KPIs ───────────────────────────────────────────────────────────────────
+function renderKpis() {
+  const grid=document.getElementById("kpi-grid");
+  const titulo=document.getElementById("kpi-titulo");
+  grid.innerHTML="";
+
+  if(prodActual==="all") {
+    // 5 productos + total
+    titulo.textContent = vistaActual==="mensual"
+      ? "Producción total del mes — todos los productos"
+      : "Producción por semana — todos los productos";
+
+    const prods=["pq","pe","pi","sc","bz"];
+    prods.forEach(p=>{
+      const rows=filtrar(p,null);
+      const kg=sumaKg(rows).toLocaleString("es-AR");
+      const am=sumAm(rows);
+      const cfg=PROD_CFG[p];
+      const div=document.createElement("div");
+      div.className=`kpi ${p}`;
+      div.innerHTML=`<div class="kpi-lbl">${cfg.label}</div>
+        <div class="kpi-val" style="color:${cfg.color}">${kg}</div>
+        <div class="kpi-unit">kg producidos</div>
+        <div class="kpi-sub" style="color:${cfg.color}">~${Math.round(am)} amasijos</div>`;
+      grid.appendChild(div);
+    });
+    // total
+    const totalKg=sumaKg(filtrar("all",null)).toLocaleString("es-AR");
+    const div=document.createElement("div");
+    div.className="kpi total";
+    div.innerHTML=`<div class="kpi-lbl">TOTAL MES</div>
+      <div class="kpi-val" style="color:var(--text)">${totalKg}</div>
+      <div class="kpi-unit">kg — todos los productos</div>
+      <div class="kpi-sub" style="color:var(--muted)">${DATA.length} jornadas relevadas</div>`;
+    grid.appendChild(div);
+  } else {
+    // un solo producto, mostrar por semana
+    titulo.textContent=`${PROD_CFG[prodActual].label} — detalle por período`;
+    const color=PROD_CFG[prodActual].color;
+    const total=filtrar(prodActual,null);
+    // total
+    const div0=document.createElement("div");
+    div0.className=`kpi ${prodActual}`;
+    div0.innerHTML=`<div class="kpi-lbl">Total mes</div>
+      <div class="kpi-val" style="color:${color}">${sumaKg(total).toLocaleString("es-AR")}</div>
+      <div class="kpi-unit">kg producidos</div>
+      <div class="kpi-sub" style="color:${color}">${total.length} jornadas</div>`;
+    grid.appendChild(div0);
+    [1,2,3,4].forEach(s=>{
+      const rows=filtrar(prodActual,s);
+      const div=document.createElement("div");
+      div.className=`kpi ${prodActual}`;
+      div.innerHTML=`<div class="kpi-lbl">${SEMS[s].short}</div>
+        <div class="kpi-val" style="color:${color}">${rows.length?sumaKg(rows).toLocaleString("es-AR"):"—"}</div>
+        <div class="kpi-unit">kg</div>
+        <div class="kpi-sub" style="color:var(--muted)">${rows.length?rows.length+" jornadas":"sin datos"}</div>`;
+      grid.appendChild(div);
+    });
+    // eff
+    const divE=document.createElement("div");
+    divE.className=`kpi ${prodActual}`;
+    divE.innerHTML=`<div class="kpi-lbl">Efic. promedio</div>
+      <div class="kpi-val" style="color:${color}">${avgEff(total)}</div>
+      <div class="kpi-unit">kg/min promedio</div>`;
+    grid.appendChild(divE);
+  }
+}
+
+// ── CHART MAIN ─────────────────────────────────────────────────────────────
+function renderMain() {
+  if(chartMain) chartMain.destroy();
+  const ctx=document.getElementById("cMain").getContext("2d");
+  const badge=document.getElementById("main-chart-badge");
+  const leg=document.getElementById("main-legend");
+  leg.innerHTML="";
+
+  if(vistaActual==="mensual") {
+    // stacked bar por fecha
+    badge.textContent="ACUMULADO MENSUAL";
+    const fechas=[...new Set(DATA.map(r=>r.fecha))].sort((a,b)=>a.localeCompare(b));
+    const prods=prodActual==="all"?["pq","pe","pi","sc","bz"]:[prodActual];
+    const datasets=prods.map(p=>{
+      const cfg=PROD_CFG[p];
+      leg.innerHTML+=`<div class="legend-item"><div class="legend-dot" style="background:${cfg.color}"></div>${cfg.label}</div>`;
+      return {
+        label:cfg.label,
+        data:fechas.map(f=>{const r=DATA.find(d=>d.fecha===f&&d.prod===p);return r?r.kg:0;}),
+        backgroundColor:cfg.bg, borderColor:cfg.color, borderWidth:2, borderRadius:3,
+        stack:"stack"
+      };
+    });
+    chartMain=new Chart(ctx,{type:"bar",data:{labels:fechas,datasets},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{backgroundColor:"#1b1f2d",borderColor:"#252a3a",borderWidth:1,
+          titleColor:muted,bodyColor:"#e8eaf0",titleFont:{family:mono,size:10},bodyFont:{family:mono,size:12},
+          callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.raw.toLocaleString("es-AR")} kg`}}},
+        scales:{x:{stacked:true,grid:{color:grid},ticks:{color:muted,font:{family:mono,size:9},maxRotation:45}},
+                y:{stacked:true,grid:{color:grid},ticks:{color:muted,font:{family:mono,size:10},callback:v=>v+" kg"}}}
+      }});
+  } else {
+    // por semana
+    badge.textContent="VISTA SEMANAL";
+    const prods=prodActual==="all"?["pq","pe","pi","sc","bz"]:[prodActual];
+    const labels=Object.values(SEMS).map(s=>s.short);
+    const datasets=prods.map(p=>{
+      const cfg=PROD_CFG[p];
+      leg.innerHTML+=`<div class="legend-item"><div class="legend-dot" style="background:${cfg.color}"></div>${cfg.label}</div>`;
+      return {
+        label:cfg.label,
+        data:[1,2,3,4].map(s=>sumaKg(filtrar(p,s))),
+        backgroundColor:cfg.bg, borderColor:cfg.color, borderWidth:2, borderRadius:3,
+        stack:"stack"
+      };
+    });
+    chartMain=new Chart(ctx,{type:"bar",data:{labels,datasets},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{backgroundColor:"#1b1f2d",borderColor:"#252a3a",borderWidth:1,
+          titleColor:muted,bodyColor:"#e8eaf0",titleFont:{family:mono,size:10},bodyFont:{family:mono,size:12},
+          callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.raw.toLocaleString("es-AR")} kg`}}},
+        scales:{x:{stacked:true,grid:{color:grid},ticks:{color:muted,font:{family:mono,size:10}}},
+                y:{stacked:true,grid:{color:grid},ticks:{color:muted,font:{family:mono,size:10},callback:v=>v+" kg"}}}
+      }});
+  }
+}
+
+// ── CHART PIE ──────────────────────────────────────────────────────────────
+function renderPie() {
+  if(chartPie) chartPie.destroy();
+  const ctx=document.getElementById("cPie").getContext("2d");
+  const prods=["pq","pe","pi","sc","bz"];
+  const data=prods.map(p=>sumaKg(filtrar(p,null)));
+  const labels=prods.map(p=>PROD_CFG[p].label);
+  const colors=prods.map(p=>PROD_CFG[p].color);
+  chartPie=new Chart(ctx,{type:"doughnut",data:{labels,datasets:[{data,backgroundColor:colors,borderColor:"#0c0e14",borderWidth:3}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:"65%",
+      plugins:{legend:{display:true,position:"bottom",labels:{color:muted,font:{family:mono,size:10},usePointStyle:true,padding:12}},
+        tooltip:{backgroundColor:"#1b1f2d",borderColor:"#252a3a",borderWidth:1,titleColor:muted,bodyColor:"#e8eaf0",
+          titleFont:{family:mono,size:10},bodyFont:{family:mono,size:12},
+          callbacks:{label:ctx=>`${ctx.label}: ${ctx.raw.toLocaleString("es-AR")} kg (${((ctx.raw/sumaKg(DATA))*100).toFixed(1)}%)`}}}}
+  });
+}
+
+// ── CHART EFF ──────────────────────────────────────────────────────────────
+function renderEff() {
+  if(chartEff) chartEff.destroy();
+  const ctx=document.getElementById("cEff").getContext("2d");
+  const rows=prodActual==="all"?DATA:DATA.filter(r=>r.prod===prodActual);
+  const labels=rows.map(r=>r.fecha+" "+PROD_CFG[r.prod].label.substring(0,3));
+  const effs=rows.map(r=>r.eff);
+  const colors=rows.map(r=>PROD_CFG[r.prod].color);
+  chartEff=new Chart(ctx,{type:"bar",data:{labels,datasets:[{
+    data:effs,backgroundColor:colors.map(c=>c+"bb"),borderColor:colors,borderWidth:2,borderRadius:3}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{backgroundColor:"#1b1f2d",borderColor:"#252a3a",borderWidth:1,
+        titleColor:muted,bodyColor:"#e8eaf0",titleFont:{family:mono,size:10},bodyFont:{family:mono,size:12},
+        callbacks:{label:ctx=>` ${ctx.raw} kg/min`}}},
+      scales:{x:{grid:{color:grid},ticks:{color:muted,font:{family:mono,size:8},maxRotation:90}},
+              y:{grid:{color:grid},min:0,ticks:{color:muted,font:{family:mono,size:10},callback:v=>v+" kg/m"}}}}
+  });
+}
+
+// ── TABLA ──────────────────────────────────────────────────────────────────
+function renderTabla() {
+  const head=document.getElementById("tabla-head");
+  const body=document.getElementById("tabla-body");
+  document.getElementById("tabla-titulo").textContent=
+    vistaActual==="semanal"?"Resumen por semana":"Detalle por jornada — "+
+    (prodActual==="all"?"todos los productos":PROD_CFG[prodActual].label);
+
+  if(vistaActual==="mensual") {
+    head.innerHTML=`<tr><th>Fecha</th><th>Producto</th><th>Amasijos</th><th>Produccion</th><th>Efic. kg/min</th><th>Operarios</th><th>Descuentos</th></tr>`;
+    const rows=prodActual==="all"?DATA:DATA.filter(r=>r.prod===prodActual);
+    body.innerHTML=rows.map(r=>{
+      const cfg=PROD_CFG[r.prod];
+      const descChip=r.desc>0?`<span class="chip o">${r.desc} min</span>`:`<span class="chip n">—</span>`;
+      return `<tr>
+        <td><b>${r.fecha}</b></td>
+        <td style="color:${cfg.color};font-weight:600">${cfg.label}</td>
+        <td>${r.am}</td>
+        <td><b>${r.kg.toLocaleString("es-AR")} kg</b></td>
+        <td>${r.eff} kg/min</td>
+        <td>${r.op}</td>
+        <td>${descChip}</td>
+      </tr>`;
+    }).join("")+`<tr class="sem-total">
+      <td colspan="3">TOTAL MES</td>
+      <td>${sumaKg(prodActual==="all"?DATA:DATA.filter(r=>r.prod===prodActual)).toLocaleString("es-AR")} kg</td>
+      <td>${avgEff(prodActual==="all"?DATA:DATA.filter(r=>r.prod===prodActual))} kg/min prom.</td>
+      <td>—</td><td>—</td>
+    </tr>`;
+  } else {
+    head.innerHTML=`<tr><th>Semana</th><th>Pan de Queso</th><th>Pepas</th><th>Pepitos</th><th>Scones</th><th>Bizcochitos</th><th>Total</th></tr>`;
+    body.innerHTML=[1,2,3,4].map(s=>{
+      const prods=["pq","pe","pi","sc","bz"];
+      const vals=prods.map(p=>sumaKg(filtrar(p,s)));
+      const total=vals.reduce((a,b)=>a+b,0);
+      const cols=vals.map((v,i)=>v>0?`<span style="color:${PROD_CFG[prods[i]].color};font-weight:600">${v.toLocaleString("es-AR")} kg</span>`:`<span style="color:var(--muted)">—</span>`);
+      return `<tr><td><b>${SEMS[s].label}</b></td>${cols.map(c=>`<td>${c}</td>`).join("")}<td><b>${total.toLocaleString("es-AR")} kg</b></td></tr>`;
+    }).join("")+`<tr class="sem-total">
+      <td>TOTAL</td>
+      ${["pq","pe","pi","sc","bz"].map(p=>`<td>${sumaKg(filtrar(p,null)).toLocaleString("es-AR")} kg</td>`).join("")}
+      <td>${sumaKg(DATA).toLocaleString("es-AR")} kg</td>
+    </tr>`;
+  }
+}
+
+// ── CONTROLES ──────────────────────────────────────────────────────────────
+function setVista(v,btn) {
+  vistaActual=v;
+  document.querySelectorAll(".toggle-btn").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  renderAll();
+}
+
+function setProd(p,btn) {
+  prodActual=p;
+  document.querySelectorAll(".prod-btn").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  renderAll();
+}
+
+function renderAll() {
+  renderKpis();
+  renderMain();
+  renderPie();
+  renderEff();
+  renderTabla();
+}
+
+renderAll();
+</script>
+</body>
+</html>
