@@ -76,9 +76,11 @@
     .bubble-line1{font-family:'IBM Plex Mono',monospace;font-size:.72rem;font-weight:600;color:var(--accent);letter-spacing:.06em;display:block;margin-bottom:2px;}
     .bubble-line2{font-family:'Plus Jakarta Sans',sans-serif;font-size:.82rem;color:var(--ink);}
 
-    /* Avatar circle (crops to circle, removes yellow bg on dark) */
-    .avatar-circle{width:250px;height:250px;border-radius:50%;overflow:hidden;position:relative;border:2px solid rgba(6,182,212,0.25);box-shadow:0 0 40px rgba(6,182,212,0.12),0 0 80px rgba(6,182,212,0.05);}
-    .avatar-img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;}
+    /* Avatar circle — background removed via JS canvas */
+    .avatar-circle{width:260px;height:260px;border-radius:50%;overflow:hidden;position:relative;background:transparent;}
+    .avatar-img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;background:transparent;}
+    /* Subtle cyan glow ring around avatar */
+    .avatar-circle::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:2px solid rgba(6,182,212,0.25);box-shadow:0 0 30px rgba(6,182,212,0.1);pointer-events:none;}
 
     /* Water drop animation (from thermos to mate area) */
     .pour-drops{position:absolute;top:0;left:0;width:250px;height:250px;pointer-events:none;}
@@ -165,6 +167,7 @@
     .pv-4{background:linear-gradient(135deg,#1A1006 0%,#261A06 100%);}
     .pv-5{background:linear-gradient(135deg,#0A1A0D 0%,#0E2312 100%);}
     .pv-6{background:linear-gradient(135deg,#0A0F1A 0%,#0E1528 100%);}
+    .pv-7{background:linear-gradient(135deg,#021A1A 0%,#062828 100%);}
     .project-visual-icon{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:3.5rem;font-weight:600;color:rgba(255,255,255,.035);letter-spacing:.1em;}
     .project-visual-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.7) 0%,rgba(0,0,0,.15) 60%,transparent 100%);}
     .project-cat{position:relative;z-index:1;display:inline-flex;align-items:center;gap:8px;padding:5px 12px;background:rgba(6,182,212,0.14);border:1px solid rgba(6,182,212,0.3);font-family:'IBM Plex Mono',monospace;font-size:.56rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(6,182,212,.9);}
@@ -364,37 +367,65 @@
           </div>
         </div>
 
-        <!-- SVG Legs -->
-        <svg class="avatar-legs" width="200" height="110" viewBox="0 0 200 110" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- Belt area -->
-          <rect x="52" y="0" width="96" height="14" fill="#2D3748" rx="2"/>
-          <rect x="52" y="0" width="96" height="4" fill="#374151"/>
+        <!-- SVG Legs — musculosas, estilo atlético -->
+        <svg class="avatar-legs" width="230" height="138" viewBox="0 0 230 138" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Waistband -->
+          <path d="M46 0 L184 0 L180 16 L50 16 Z" fill="#2D3748"/>
+          <rect x="46" y="0" width="138" height="5" fill="#374151"/>
           <!-- Belt buckle -->
-          <rect x="92" y="2" width="16" height="10" rx="1" fill="#4A5568"/>
-          <rect x="95" y="4" width="10" height="6" rx="1" fill="#1A2332"/>
-          <!-- Left leg -->
-          <path d="M58 14 C56 50 52 80 50 105 L82 105 C80 80 78 50 78 14 Z" fill="#1E3A5F"/>
-          <!-- Right leg -->
-          <path d="M122 14 C122 50 120 80 118 105 L150 105 C148 80 144 50 142 14 Z" fill="#1E3A5F"/>
-          <!-- Left leg seam detail -->
-          <line x1="70" y1="18" x2="67" y2="75" stroke="#1A3358" stroke-width="1.2"/>
-          <!-- Right leg seam detail -->
-          <line x1="130" y1="18" x2="133" y2="75" stroke="#1A3358" stroke-width="1.2"/>
-          <!-- Left knee -->
-          <ellipse cx="66" cy="60" rx="12" ry="6" fill="rgba(255,255,255,0.04)"/>
-          <!-- Right knee -->
-          <ellipse cx="134" cy="60" rx="12" ry="6" fill="rgba(255,255,255,0.04)"/>
-          <!-- Left shoe -->
-          <ellipse cx="63" cy="108" rx="20" ry="6" fill="#0D1117"/>
-          <ellipse cx="66" cy="107" rx="17" ry="5" fill="#161B22"/>
-          <ellipse cx="70" cy="106" rx="8" ry="3" fill="#1C2128"/>
-          <!-- Right shoe -->
-          <ellipse cx="137" cy="108" rx="20" ry="6" fill="#0D1117"/>
-          <ellipse cx="134" cy="107" rx="17" ry="5" fill="#161B22"/>
-          <ellipse cx="130" cy="106" rx="8" ry="3" fill="#1C2128"/>
-          <!-- Cyan accent line on shoes -->
-          <line x1="46" y1="107" x2="80" y2="107" stroke="rgba(6,182,212,0.3)" stroke-width="0.8"/>
-          <line x1="120" y1="107" x2="154" y2="107" stroke="rgba(6,182,212,0.3)" stroke-width="0.8"/>
+          <rect x="101" y="2" width="28" height="12" rx="2" fill="#4A5568"/>
+          <rect x="106" y="4" width="18" height="8" rx="1" fill="#1C2531"/>
+          <rect x="109" y="6" width="12" height="4" rx="0.5" fill="#06B6D4" opacity="0.4"/>
+
+          <!-- LEFT THIGH — ancho y musculoso -->
+          <path d="M50 16 C42 22 36 38 36 58 C36 72 40 82 48 88 C56 94 68 94 74 88 C82 80 84 64 82 46 C80 30 78 18 76 16 Z" fill="#1B2F50"/>
+          <!-- Left quad definition -->
+          <path d="M54 22 C50 38 48 56 50 70" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="5" stroke-linecap="round"/>
+          <path d="M68 20 C66 36 68 56 70 68" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="3" stroke-linecap="round"/>
+
+          <!-- RIGHT THIGH — ancho y musculoso -->
+          <path d="M180 16 L154 16 C152 18 150 30 148 46 C146 64 148 80 156 88 C162 94 174 94 182 88 C190 82 194 72 194 58 C194 38 188 22 180 16 Z" fill="#1B2F50"/>
+          <!-- Right quad definition -->
+          <path d="M176 22 C180 38 182 56 180 70" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="5" stroke-linecap="round"/>
+          <path d="M162 20 C160 36 162 56 160 68" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="3" stroke-linecap="round"/>
+
+          <!-- LEFT KNEE cap -->
+          <ellipse cx="60" cy="90" rx="18" ry="10" fill="#16273F"/>
+          <ellipse cx="60" cy="89" rx="12" ry="6" fill="rgba(255,255,255,0.04)"/>
+
+          <!-- RIGHT KNEE cap -->
+          <ellipse cx="170" cy="90" rx="18" ry="10" fill="#16273F"/>
+          <ellipse cx="170" cy="89" rx="12" ry="6" fill="rgba(255,255,255,0.04)"/>
+
+          <!-- LEFT CALF — definido, gemelos prominentes -->
+          <path d="M42 92 C40 100 42 114 50 122 C56 128 66 130 72 126 C78 122 82 112 82 100 C82 94 76 90 68 90 C60 90 48 92 42 92 Z" fill="#1B2F50"/>
+          <!-- Calf muscle highlight -->
+          <path d="M52 96 C50 106 52 118 56 124" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="4" stroke-linecap="round"/>
+          <path d="M66 92 C68 102 68 116 66 124" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="3" stroke-linecap="round"/>
+
+          <!-- RIGHT CALF -->
+          <path d="M148 100 C148 90 154 90 162 90 C170 90 190 94 188 100 C188 112 182 122 176 126 C170 130 160 128 154 122 C146 114 148 100 148 100 Z" fill="#1B2F50"/>
+          <!-- Calf muscle highlight -->
+          <path d="M178 96 C180 106 178 118 174 124" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="4" stroke-linecap="round"/>
+          <path d="M164 92 C162 102 162 116 164 124" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="3" stroke-linecap="round"/>
+
+          <!-- LEFT SHOE — zapatilla deportiva -->
+          <path d="M34 130 C34 125 40 122 52 121 L72 121 C80 121 86 124 86 128 C86 133 80 136 70 136 C56 136 34 136 34 130 Z" fill="#0D1117"/>
+          <path d="M36 126 L82 126" stroke="#1C2A40" stroke-width="1"/>
+          <rect x="38" y="121" width="42" height="6" rx="1" fill="#161B22"/>
+          <!-- Swoosh detail -->
+          <path d="M44 124 C50 121 62 122 70 124" fill="none" stroke="rgba(6,182,212,0.5)" stroke-width="1.5" stroke-linecap="round"/>
+          <!-- Sole accent -->
+          <line x1="34" y1="131" x2="86" y2="131" stroke="rgba(6,182,212,0.3)" stroke-width="1"/>
+
+          <!-- RIGHT SHOE -->
+          <path d="M196 130 C196 125 190 122 178 121 L158 121 C150 121 144 124 144 128 C144 133 150 136 160 136 C174 136 196 136 196 130 Z" fill="#0D1117"/>
+          <path d="M146 126 L194 126" stroke="#1C2A40" stroke-width="1"/>
+          <rect x="150" y="121" width="42" height="6" rx="1" fill="#161B22"/>
+          <!-- Swoosh detail -->
+          <path d="M186 124 C180 121 168 122 160 124" fill="none" stroke="rgba(6,182,212,0.5)" stroke-width="1.5" stroke-linecap="round"/>
+          <!-- Sole accent -->
+          <line x1="144" y1="131" x2="196" y2="131" stroke="rgba(6,182,212,0.3)" stroke-width="1"/>
         </svg>
       </div>
     </div>
@@ -577,6 +608,39 @@
           <h3 class="project-title">Küme — Estrategia de Marca Completa</h3>
           <p class="project-desc">Brand Bible de 40+ páginas, identidad visual completa, calendario de 30 días, landing page funcional y estrategia de posicionamiento para agencia de marketing.</p>
           <div class="project-tools"><span class="ptool">Claude AI</span><span class="ptool">HTML/CSS</span><span class="ptool">Canva</span><span class="ptool">Vercel</span></div>
+          <span class="project-link-btn">Ver proyecto &nbsp;→</span>
+        </div>
+      </div>
+
+      <!-- 7. Personal Trainer (responsive web) -->
+      <div class="project-card reveal" data-cat="ux" onclick="openProject('trainer')">
+        <div class="project-visual pv-3">
+          <div class="project-visual-bg pv-3"></div>
+          <div class="project-visual-overlay"></div>
+          <div class="project-visual-icon">WEB</div>
+          <span class="project-cat">UX/UI &amp; Dev</span>
+        </div>
+        <div class="project-body">
+          <h3 class="project-title">Personal Trainer — Sitio Web Responsive</h3>
+          <p class="project-desc">Sitio web responsive para personal trainer: secciones de servicios, metodología, testimonios y contacto. Diseño mobile-first con animaciones CSS y formulario funcional.</p>
+          <div class="project-tools"><span class="ptool">HTML5</span><span class="ptool">CSS3</span><span class="ptool">JavaScript</span><span class="ptool">Responsive</span></div>
+          <span class="project-link-btn">Ver proyecto &nbsp;→</span>
+        </div>
+      </div>
+
+      <!-- 8. CICLO — Web de Joaco -->
+      <div class="project-card reveal" data-cat="ux" onclick="openProject('ciclo')">
+        <div class="project-visual pv-7">
+          <img src="./img/ciclo-hero.png" alt="CICLO Landing" class="project-img-cover" onerror="this.style.display='none'"/>
+          <div class="project-visual-bg pv-7"></div>
+          <div class="project-visual-overlay"></div>
+          <div class="project-visual-icon">CICLO</div>
+          <span class="project-cat">UX/UI &amp; Dev</span>
+        </div>
+        <div class="project-body">
+          <h3 class="project-title">CICLO — Landing Web para Consultora de IA</h3>
+          <p class="project-desc">Landing page completa para consultora de implementación de IA. Partículas animadas, scroll effects, método interactivo y estadísticas en tiempo real. Deploy en Vercel.</p>
+          <div class="project-tools"><span class="ptool">Next.js 16</span><span class="ptool">React 19</span><span class="ptool">Framer Motion</span><span class="ptool">Tailwind</span><span class="ptool">Vercel</span></div>
           <span class="project-link-btn">Ver proyecto &nbsp;→</span>
         </div>
       </div>
@@ -830,6 +894,24 @@
         result:'Küme lanzó con una identidad sólida, cohesiva y diferenciada. La Brand Bible sirve como guía para todas las decisiones de comunicación y diseño, y la landing page está activa en producción.',
         tags:['Claude AI','Brand Strategy','HTML/CSS','Vercel','Content Strategy','Identity Design','Copywriting','Build in Public']
       },
+      trainer:{
+        cat:'UX/UI & Desarrollo Web',
+        title:'Personal Trainer — Sitio Web Responsive',
+        meta:[{l:'Stack',v:'HTML5 + CSS3 + JS'},{l:'Tipo',v:'Mobile-first'},{l:'Rol',v:'Frontend Dev'}],
+        challenge:'Una personal trainer necesitaba presencia digital profesional para captar nuevos clientes. El sitio tenía que verse impecable en celular (donde llega la mayoría del tráfico), transmitir confianza y tener un camino claro hacia el contacto.',
+        solution:'Desarrollé un sitio responsive completo con enfoque mobile-first: hero con llamada a la acción clara, sección de servicios y metodología, testimonios de clientes reales, galería y formulario de contacto directo por WhatsApp. Animaciones CSS suaves y diseño limpio que transmite profesionalismo y energía.',
+        result:'Sitio funcional y responsive en producción. El cliente tiene una presencia digital sólida que convierte visitas en consultas de entrenamiento.',
+        tags:['HTML5','CSS3','JavaScript','Responsive','Mobile-first','WhatsApp CTA','Animaciones CSS']
+      },
+      ciclo:{
+        cat:'UX/UI & Desarrollo Web',
+        title:'CICLO — Landing Web para Consultora de IA',
+        meta:[{l:'Stack',v:'Next.js 16 + React 19'},{l:'Animaciones',v:'Framer Motion + MagicUI'},{l:'Rol',v:'Frontend Dev'}],
+        challenge:'Joaquín Verón necesitaba una landing page de alto impacto para su consultora de implementación de IA (CICLO). El sitio tenía que transmitir modernidad, metodología clara y generar confianza en potenciales clientes del sector enterprise. Sin una base de diseño previa, todo se construyó desde cero.',
+        solution:'Desarrollé la landing completa con Next.js 16 y React 19, usando Framer Motion para animaciones de entrada escalonadas y MagicUI para efectos premium: Particles en el hero, ScrollRobot interactivo, ShimmerButton, AuroraBorder, Marquee de tecnologías y NumberTicker para estadísticas animadas. El método CICLO (Consult · Implement · Capacitate · Launch · Operate) se presenta en cards interactivas con glow de colores. Diseño dark con acentos cyan/emerald. Deploy automático en Vercel con dominio personalizado.',
+        result:'Landing funcional en producción. El diseño moderno con partículas y animaciones de scroll posiciona a CICLO como una consultora de IA con identidad visual propia, diferenciándola de competidores con sitios genéricos.',
+        tags:['Next.js 16','React 19','TypeScript','Framer Motion','Tailwind CSS v4','shadcn/ui','MagicUI','Vercel','Responsive','Dark Theme']
+      },
       tecno:{
         cat:'Marketing & IA',
         title:'Tecnorain + Tecnofix — Estrategia Digital',
@@ -856,6 +938,50 @@
     function closeProject(){ document.getElementById('projectModal').classList.remove('open'); document.body.style.overflow = ''; }
     function handleOverlayClick(e){ if(e.target===document.getElementById('projectModal')) closeProject(); }
     document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ closeProject(); closeMM(); closeDashboard(); } });
+
+    /* ── AVATAR BACKGROUND REMOVAL (canvas) ── */
+    /* Removes yellow (#FFD700 area) and black outer ring from avatar JPEG */
+    function removeAvatarBg() {
+      var img = document.querySelector('.avatar-img');
+      if (!img) return;
+      var canvas = document.createElement('canvas');
+      var ctx = canvas.getContext('2d');
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      try {
+        ctx.drawImage(img, 0, 0);
+        var d = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        var px = d.data;
+        var cx = canvas.width / 2, cy = canvas.height / 2;
+        var maxR = Math.min(cx, cy) * 0.98;
+        for (var i = 0; i < px.length; i += 4) {
+          var r = px[i], g = px[i+1], b = px[i+2];
+          var idx = i / 4;
+          var x = (idx % canvas.width) - cx;
+          var y = Math.floor(idx / canvas.width) - cy;
+          var dist = Math.sqrt(x*x + y*y);
+          /* Remove outer black ring */
+          if (dist > maxR) { px[i+3] = 0; continue; }
+          /* Remove yellow: high R+G, low B */
+          var isYellow = r > 160 && g > 140 && b < 110 && (r + g) > (b * 3.5);
+          if (isYellow) {
+            /* Soft edge: partial transparency based on how yellow the pixel is */
+            var intensity = Math.min(1, ((r - 160) / 95 + (g - 140) / 80) / 2);
+            px[i+3] = Math.max(0, Math.round(px[i+3] * (1 - intensity)));
+          }
+        }
+        ctx.putImageData(d, 0, 0);
+        img.src = canvas.toDataURL('image/png');
+        /* Make container transparent */
+        var circle = document.querySelector('.avatar-circle');
+        if (circle) circle.style.background = 'transparent';
+      } catch(e) { /* CORS or tainted canvas — keep original */ }
+    }
+    var avatarEl = document.querySelector('.avatar-img');
+    if (avatarEl) {
+      if (avatarEl.complete && avatarEl.naturalWidth) removeAvatarBg();
+      else avatarEl.addEventListener('load', removeAvatarBg);
+    }
   </script>
 </body>
 </html>
