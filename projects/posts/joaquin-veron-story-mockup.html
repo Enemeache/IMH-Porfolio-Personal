@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=1080"/>
+<title>Joaquín Verón — Story Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    width: 1080px;
+    background: #0a0a0a;
+    font-family: 'DM Sans', Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ============================
+     WRAPPER — 3 stories en columna
+     ============================ */
+  .stories-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    padding: 48px;
+    background: #050505;
+  }
+
+  /* ============================
+     STORY BASE
+     ============================ */
+  .story {
+    width: 984px;
+    height: 1749px; /* 9:16 proporcional */
+    position: relative;
+    overflow: hidden;
+    background: #0a0a0a;
+    border-radius: 24px;
+  }
+
+  /* ==============================
+     STORY 1 — PRESENTACIÓN HERO
+     ============================== */
+  .s1 {
+    background: #0a0a0a;
+  }
+
+  .s1 .noise {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.5;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Grid de líneas decorativas */
+  .s1 .grid-lines {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(198,255,0,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(198,255,0,0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+    z-index: 1;
+  }
+
+  /* Barra de progreso story (decorativa) */
+  .story-progress {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    right: 40px;
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+  }
+
+  .story-progress span {
+    flex: 1;
+    height: 3px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.25);
+  }
+
+  .story-progress span.active {
+    background: #fff;
+  }
+
+  /* Avatar + nombre arriba */
+  .story-header {
+    position: absolute;
+    top: 64px;
+    left: 40px;
+    right: 40px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 10;
+  }
+
+  .avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: 2px solid #c6ff00;
+    background: linear-gradient(135deg, #c6ff00 0%, #1a1a1a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    color: #0a0a0a;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+  }
+
+  .story-username {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.2;
+  }
+
+  .story-username span {
+    display: block;
+    font-size: 17px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.5);
+    margin-top: 2px;
+  }
+
+  /* ——— S1: CONTENIDO CENTRAL ——— */
+  .s1 .center-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 200px 60px 240px;
+    z-index: 5;
+  }
+
+  .s1 .eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #c6ff00;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .s1 .eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 40px;
+    height: 2px;
+    background: #c6ff00;
+    flex-shrink: 0;
+  }
+
+  .s1 .big-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 190px;
+    font-weight: 400;
+    line-height: 0.88;
+    color: #fff;
+    letter-spacing: 0.01em;
+    margin-bottom: 48px;
+  }
+
+  .s1 .big-title .accent {
+    color: #c6ff00;
+    display: block;
+  }
+
+  .s1 .big-title .outline {
+    -webkit-text-stroke: 2px #fff;
+    color: transparent;
+    display: block;
+  }
+
+  .s1 .sub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 22px;
+    font-weight: 300;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.6);
+    max-width: 680px;
+    margin-bottom: 56px;
+  }
+
+  .s1 .pill-tag {
+    background: rgba(198,255,0,0.1);
+    border: 1px solid rgba(198,255,0,0.35);
+    border-radius: 100px;
+    padding: 14px 32px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #c6ff00;
+  }
+
+  /* Círculo decorativo */
+  .s1 .deco-circle {
+    position: absolute;
+    right: -120px;
+    top: 380px;
+    width: 520px;
+    height: 520px;
+    border-radius: 50%;
+    border: 1px solid rgba(198,255,0,0.12);
+    z-index: 2;
+  }
+
+  .s1 .deco-circle::before {
+    content: '';
+    position: absolute;
+    inset: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(198,255,0,0.08);
+  }
+
+  /* Número grande de fondo */
+  .s1 .bg-number {
+    position: absolute;
+    bottom: 200px;
+    right: 40px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 400px;
+    font-weight: 400;
+    color: rgba(198,255,0,0.04);
+    line-height: 1;
+    z-index: 2;
+    user-select: none;
+  }
+
+  /* CTA abajo */
+  .s1 .bottom-cta {
+    position: absolute;
+    bottom: 60px;
+    left: 60px;
+    right: 60px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .swipe-up {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .swipe-up .arrow {
+    width: 48px;
+    height: 48px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: #fff;
+  }
+
+  .swipe-up .swipe-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .s1 .logo-bottom {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 0.12em;
+    color: rgba(255,255,255,0.3);
+  }
+
+  /* ============================
+     STORY 2 — SERVICIOS / PLANES
+     ============================ */
+  .s2 {
+    background: #0a0a0a;
+  }
+
+  .s2 .bg-accent-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    background: linear-gradient(to bottom, #c6ff00, transparent 70%);
+    z-index: 3;
+  }
+
+  .s2 .content {
+    position: absolute;
+    inset: 0;
+    padding: 200px 64px 100px;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .s2 .section-tag {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #c6ff00;
+    margin-bottom: 20px;
+  }
+
+  .s2 .title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 120px;
+    line-height: 0.9;
+    color: #fff;
+    letter-spacing: 0.01em;
+    margin-bottom: 56px;
+  }
+
+  .s2 .title .line2 {
+    color: #c6ff00;
+  }
+
+  .planes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .plan-card {
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 36px 44px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    background: rgba(255,255,255,0.03);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .plan-card.featured {
+    background: rgba(198,255,0,0.08);
+    border-color: rgba(198,255,0,0.4);
+  }
+
+  .plan-card.featured::before {
+    content: 'MÁS ELEGIDO';
+    position: absolute;
+    top: 20px;
+    right: 28px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: #0a0a0a;
+    background: #c6ff00;
+    padding: 5px 14px;
+    border-radius: 100px;
+  }
+
+  .plan-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 64px;
+    color: rgba(198,255,0,0.25);
+    line-height: 1;
+    min-width: 60px;
+    flex-shrink: 0;
+  }
+
+  .plan-card.featured .plan-num {
+    color: #c6ff00;
+  }
+
+  .plan-info {
+    flex: 1;
+  }
+
+  .plan-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: #fff;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+
+  .plan-desc {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 19px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.4;
+  }
+
+  .plan-arrow {
+    font-size: 28px;
+    color: rgba(255,255,255,0.2);
+    flex-shrink: 0;
+  }
+
+  .plan-card.featured .plan-arrow {
+    color: #c6ff00;
+  }
+
+  .s2 .bottom-text {
+    text-align: center;
+    padding-top: 40px;
+    padding-bottom: 60px;
+  }
+
+  .s2 .bottom-text p {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .s2 .bottom-text strong {
+    color: #c6ff00;
+    font-weight: 600;
+  }
+
+  /* ============================
+     STORY 3 — MOTIVACIONAL / FRASE
+     ============================ */
+  .s3 {
+    background: #c6ff00;
+  }
+
+  .s3 .top-strip {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: #0a0a0a;
+    z-index: 10;
+  }
+
+  .s3 .center-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 180px 70px;
+    z-index: 5;
+  }
+
+  .s3 .quote-mark {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 200px;
+    color: rgba(0,0,0,0.08);
+    line-height: 0.7;
+    margin-bottom: -40px;
+  }
+
+  .s3 .quote-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 130px;
+    font-weight: 400;
+    line-height: 0.9;
+    color: #0a0a0a;
+    letter-spacing: 0.01em;
+    margin-bottom: 48px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .s3 .quote-text .ghost {
+    color: transparent;
+    -webkit-text-stroke: 3px rgba(0,0,0,0.3);
+  }
+
+  .s3 .quote-author {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: rgba(0,0,0,0.6);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding-top: 32px;
+    border-top: 1px solid rgba(0,0,0,0.2);
+    width: 100%;
+  }
+
+  .s3 .deco-lines {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 300px;
+    height: 300px;
+    z-index: 2;
+    opacity: 0.12;
+  }
+
+  .s3 .bottom-brand {
+    position: absolute;
+    bottom: 70px;
+    left: 70px;
+    right: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 10;
+  }
+
+  .s3 .brand-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    letter-spacing: 0.12em;
+    color: rgba(0,0,0,0.5);
+  }
+
+  .s3 .ig-handle {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: rgba(0,0,0,0.45);
+    letter-spacing: 0.04em;
+  }
+
+  /* Story progress para s2 y s3 */
+  .s2 .story-progress span:first-child,
+  .s2 .story-progress span:nth-child(2) { background: #fff; }
+
+  .s3 .story-progress span { background: rgba(0,0,0,0.2); }
+  .s3 .story-progress span:first-child,
+  .s3 .story-progress span:nth-child(2),
+  .s3 .story-progress span:nth-child(3) { background: rgba(0,0,0,0.6); }
+
+  .s3 .story-header .avatar {
+    background: #0a0a0a;
+    border-color: #0a0a0a;
+    color: #c6ff00;
+  }
+
+  .s3 .story-username { color: #0a0a0a; }
+  .s3 .story-username span { color: rgba(0,0,0,0.45); }
+
+  /* ============================
+     STORY 4 — TRANSFORMACIÓN / PROCESO
+     ============================ */
+  .s4 {
+    background: #111;
+  }
+
+  .s4 .content {
+    position: absolute;
+    inset: 0;
+    padding: 180px 64px 80px;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .s4 .top-section {}
+
+  .s4 .eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #c6ff00;
+    margin-bottom: 20px;
+  }
+
+  .s4 .title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 110px;
+    line-height: 0.88;
+    color: #fff;
+    letter-spacing: 0.01em;
+    margin-bottom: 36px;
+  }
+
+  .s4 .title .dark-line {
+    color: rgba(255,255,255,0.2);
+  }
+
+  .s4 .body-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 22px;
+    font-weight: 300;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.55);
+    max-width: 780px;
+  }
+
+  .steps-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 32px;
+    padding: 30px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+
+  .step-item:first-child {
+    border-top: 1px solid rgba(255,255,255,0.07);
+  }
+
+  .step-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 0.1em;
+    color: #c6ff00;
+    min-width: 36px;
+    padding-top: 4px;
+  }
+
+  .step-body {}
+
+  .step-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+
+  .step-desc {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.5;
+  }
+
+  .s4 .bottom-cta {
+    background: #c6ff00;
+    border-radius: 16px;
+    padding: 36px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .s4 .bottom-cta .cta-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 40px;
+    color: #0a0a0a;
+    letter-spacing: 0.04em;
+  }
+
+  .s4 .bottom-cta .cta-arrow {
+    font-size: 36px;
+    color: #0a0a0a;
+  }
+
+  /* ============================
+     LABEL DEL MOCK
+     ============================ */
+  .story-label {
+    text-align: center;
+    padding: 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.25);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+<div class="stories-wrapper">
+
+  <!-- ============ STORY 1 — HERO PRESENTACIÓN ============ -->
+  <div class="story-label">Story 01 — Presentación</div>
+  <div class="story s1">
+    <div class="noise"></div>
+    <div class="grid-lines"></div>
+    <div class="deco-circle"></div>
+    <span class="bg-number">JV</span>
+
+    <!-- Progress bar -->
+    <div class="story-progress">
+      <span class="active"></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <!-- Header -->
+    <div class="story-header">
+      <div class="avatar">JV</div>
+      <div class="story-username">
+        joaco.veron
+        <span>Hace 2 minutos</span>
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="center-content">
+      <p class="eyebrow">Personal Trainer IFBB Internacional</p>
+      <h1 class="big-title">
+        MEJORÁ<br>
+        <span class="accent">TU</span>
+        <span class="outline">CUERPO</span>
+      </h1>
+      <p class="sub">Procesos reales, resultados sostenibles.<br>Sin dietas extremas. Sin excusas.</p>
+      <span class="pill-tag">Consulta gratis →</span>
+    </div>
+
+    <!-- Bottom -->
+    <div class="bottom-cta">
+      <span class="logo-bottom">JOACO.VERÓN</span>
+      <div class="swipe-up">
+        <div class="arrow">↑</div>
+        <span class="swipe-text">Ver más</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ STORY 2 — PLANES ============ -->
+  <div class="story-label">Story 02 — Planes & Servicios</div>
+  <div class="story s2">
+    <div class="bg-accent-bar"></div>
+
+    <!-- Progress bar -->
+    <div class="story-progress">
+      <span></span>
+      <span class="active"></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <!-- Header -->
+    <div class="story-header">
+      <div class="avatar">JV</div>
+      <div class="story-username">
+        joaco.veron
+        <span>Hace 2 minutos</span>
+      </div>
+    </div>
+
+    <div class="content">
+      <div>
+        <p class="section-tag">Planes de entrenamiento</p>
+        <h2 class="title">ELEGÍ<br><span class="line2">TU PLAN</span></h2>
+      </div>
+
+      <div class="planes-list">
+        <div class="plan-card">
+          <span class="plan-num">01</span>
+          <div class="plan-info">
+            <div class="plan-name">BASE</div>
+            <div class="plan-desc">Guía mensual + seguimiento<br>por WhatsApp</div>
+          </div>
+          <span class="plan-arrow">›</span>
+        </div>
+
+        <div class="plan-card featured">
+          <span class="plan-num">02</span>
+          <div class="plan-info">
+            <div class="plan-name">PERSONALIZADO</div>
+            <div class="plan-desc">Check-ins quincenales +<br>contacto semanal</div>
+          </div>
+          <span class="plan-arrow">›</span>
+        </div>
+
+        <div class="plan-card">
+          <span class="plan-num">03</span>
+          <div class="plan-info">
+            <div class="plan-name">PREMIUM</div>
+            <div class="plan-desc">Soporte diario + evaluación<br>semanal completa</div>
+          </div>
+          <span class="plan-arrow">›</span>
+        </div>
+      </div>
+
+      <div class="bottom-text">
+        <p>Todos incluyen rutina + nutrición + seguimiento</p>
+        <p style="margin-top:12px; font-size:22px; color:rgba(255,255,255,0.6)">
+          Escribime y empezamos <strong>hoy</strong>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ STORY 3 — FRASE MOTIVACIONAL ============ -->
+  <div class="story-label">Story 03 — Frase / Motivación</div>
+  <div class="story s3">
+    <div class="top-strip"></div>
+
+    <!-- SVG decorativo esquina -->
+    <svg class="deco-lines" viewBox="0 0 300 300" fill="none">
+      <line x1="0" y1="300" x2="300" y2="0" stroke="#0a0a0a" stroke-width="1"/>
+      <line x1="60" y1="300" x2="300" y2="60" stroke="#0a0a0a" stroke-width="1"/>
+      <line x1="120" y1="300" x2="300" y2="120" stroke="#0a0a0a" stroke-width="1"/>
+      <line x1="180" y1="300" x2="300" y2="180" stroke="#0a0a0a" stroke-width="1"/>
+      <line x1="240" y1="300" x2="300" y2="240" stroke="#0a0a0a" stroke-width="1"/>
+    </svg>
+
+    <!-- Progress bar -->
+    <div class="story-progress">
+      <span></span>
+      <span></span>
+      <span class="active"></span>
+      <span></span>
+    </div>
+
+    <!-- Header -->
+    <div class="story-header">
+      <div class="avatar">JV</div>
+      <div class="story-username">
+        joaco.veron
+        <span>Hace 2 minutos</span>
+      </div>
+    </div>
+
+    <div class="center-content">
+      <div class="quote-mark">"</div>
+      <h2 class="quote-text">
+        EL CUERPO<br>
+        LOGRA LO<br>
+        <span class="ghost">QUE LA</span><br>
+        MENTE<br>
+        DECIDE.
+      </h2>
+      <p class="quote-author">— Joaquín Verón · Entrenador IFBB</p>
+    </div>
+
+    <div class="bottom-brand">
+      <span class="brand-name">JOACO.VERÓN</span>
+      <span class="ig-handle">@joaco.veron</span>
+    </div>
+  </div>
+
+  <!-- ============ STORY 4 — PROCESO / CTA ============ -->
+  <div class="story-label">Story 04 — Proceso & CTA</div>
+  <div class="story s4">
+    <!-- Progress bar -->
+    <div class="story-progress">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span class="active"></span>
+    </div>
+
+    <!-- Header -->
+    <div class="story-header">
+      <div class="avatar">JV</div>
+      <div class="story-username">
+        joaco.veron
+        <span>Hace 2 minutos</span>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="top-section">
+        <p class="eyebrow">Cómo trabajamos</p>
+        <h2 class="title">TU<br><span class="dark-line">PROCESO</span></h2>
+        <p class="body-text">Sin fórmulas genéricas. Un plan diseñado para vos, con seguimiento real.</p>
+      </div>
+
+      <div class="steps-list">
+        <div class="step-item">
+          <span class="step-num">01</span>
+          <div class="step-body">
+            <div class="step-title">Diagnóstico inicial</div>
+            <div class="step-desc">Analizamos tu punto de partida, objetivos y rutina actual.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <span class="step-num">02</span>
+          <div class="step-body">
+            <div class="step-title">Plan personalizado</div>
+            <div class="step-desc">Rutina + guía nutricional diseñada para tu cuerpo y estilo de vida.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <span class="step-num">03</span>
+          <div class="step-body">
+            <div class="step-title">Seguimiento continuo</div>
+            <div class="step-desc">Check-ins, ajustes semanales y acceso directo a Joaco.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <span class="step-num">04</span>
+          <div class="step-body">
+            <div class="step-title">Resultados reales</div>
+            <div class="step-desc">Progreso medible, hábitos que se sostienen en el tiempo.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom-cta">
+        <span class="cta-text">EMPEZÁ HOY →</span>
+        <span class="cta-arrow">↗</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

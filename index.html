@@ -162,6 +162,11 @@
     .ptool{padding:3px 9px;border:1px solid var(--border);font-family:'IBM Plex Mono',monospace;font-size:.56rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);}
     .project-link-btn{display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);transition:gap .2s,color .2s;cursor:pointer;}
     .project-card:hover .project-link-btn{gap:16px;color:var(--accent);}
+    /* Botones "abrir en vivo" dentro de cards */
+    .view-btns{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;}
+    .view-btn{background:transparent;border:1px solid var(--border);color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:.57rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:5px 11px;cursor:pointer;transition:background .2s,border-color .2s,color .2s;}
+    .view-btn:hover{background:var(--accent-dim);border-color:var(--accent);color:var(--accent);}
+    .view-btn.accent{border-color:rgba(6,182,212,0.4);color:var(--accent);background:var(--accent-dim);}
 
     /* PROJECT MODAL */
     .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:200;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(6px);}
@@ -255,22 +260,37 @@
       .hamburger{display:flex;}
       nav{padding:16px 24px;}
       #hero{grid-template-columns:1fr;grid-template-rows:auto auto auto;padding:0 24px 48px;min-height:100svh;}
-      .hero-main{padding-top:110px;padding-bottom:24px;}
+      .hero-main{padding-top:110px;padding-bottom:32px;}
       .hero-name{font-size:clamp(2.6rem,9vw,4rem);margin-bottom:20px;}
       .hero-desc{font-size:.86rem;margin-bottom:28px;}
-      .hero-actions{flex-direction:column;align-items:flex-start;gap:10px;}
+      .hero-actions{flex-direction:column;align-items:stretch;gap:10px;}
       .btn-fill,.btn-outline{width:100%;justify-content:center;}
-      .hero-avatar-col{grid-column:1;grid-row:2;padding-top:0;padding-bottom:24px;flex-direction:row;justify-content:flex-start;align-items:flex-end;gap:24px;}
-      .avatar-outer{transform:scale(.8);transform-origin:left bottom;}
-      .speech-bubble{top:-78px;left:40%;}
+      /* Avatar: centrado abajo del texto */
+      .hero-avatar-col{grid-column:1;grid-row:2;padding-top:0;padding-bottom:32px;flex-direction:column;justify-content:center;align-items:center;}
+      .avatar-outer{transform:scale(.72);transform-origin:center top;animation:none;}
+      .speech-bubble{top:-82px;left:50%;transform:translateX(-50%);}
+      .avatar-circle{width:220px;height:220px;}
       .hero-bottom{grid-column:1;grid-row:3;flex-direction:column;align-items:flex-start;gap:16px;padding:20px 0 28px;}
       .hero-stats{gap:24px;}
+      /* Sections */
       section{padding:64px 24px;}
+      .about-grid{grid-template-columns:1fr;gap:40px;}
+      /* Services */
+      .service-item{grid-template-columns:50px 1fr;gap:16px;padding:28px 0;}
+      .service-arrow{display:none;}
+      /* Projects */
       .projects-grid{grid-template-columns:1fr;}
+      .projects-header{flex-direction:column;align-items:flex-start;gap:16px;}
+      .view-btns{flex-direction:row;}
+      /* Stack */
       .tools-grid{grid-template-columns:repeat(auto-fill,minmax(90px,1fr));}
+      /* Process */
       .process-grid{grid-template-columns:1fr;}
       .process-item{padding:32px 24px;}
-      footer{padding:20px 24px;flex-direction:column;text-align:center;}
+      /* Contact */
+      #contact{grid-template-columns:1fr;gap:40px;padding:64px 24px;}
+      footer{padding:20px 24px;flex-direction:column;text-align:center;gap:8px;}
+      /* Modal */
       .modal-overlay{padding:0;align-items:flex-end;}
       .modal-box{max-height:92svh;width:100%;}
       .modal-meta{grid-template-columns:1fr 1fr;}
@@ -279,12 +299,14 @@
     }
     @media(max-width:480px){
       nav{padding:14px 20px;}
-      #hero{padding:0 20px 32px;}
-      .hero-name{font-size:clamp(2.2rem,10vw,3rem);}
-      section{padding:52px 20px;}
-      .service-item{grid-template-columns:40px 1fr;gap:14px;}
-      .service-arrow{display:none;}
+      #hero{padding:0 16px 28px;}
+      .hero-main{padding-top:90px;}
+      .hero-name{font-size:clamp(2rem,10vw,3rem);}
+      section{padding:48px 16px;}
+      .service-item{grid-template-columns:36px 1fr;gap:12px;}
       .modal-meta{grid-template-columns:1fr;}
+      .hero-skills{gap:14px;}
+      .hero-stat-num{font-size:1.5rem;}
     }
   </style>
 </head>
@@ -515,9 +537,13 @@
         </div>
         <div class="project-body">
           <h3 class="project-title">Küme — Estrategia de Marca Completa</h3>
-          <p class="project-desc">Brand Bible de 40+ páginas, identidad visual completa, calendario de 30 días, landing page funcional y estrategia de posicionamiento para agencia de marketing.</p>
+          <p class="project-desc">Brand Bible de 40+ páginas, identidad visual completa, calendario de 30 días, landing page y estrategia de posicionamiento para agencia de marketing.</p>
           <div class="project-tools"><span class="ptool">Claude AI</span><span class="ptool">HTML/CSS</span><span class="ptool">Canva</span><span class="ptool">Vercel</span></div>
-          <span class="project-link-btn">Ver proyecto &nbsp;→</span>
+          <div class="view-btns">
+            <button class="view-btn accent" onclick="event.stopPropagation();openViewer('./projects/kume-web/index.html','Küme — Landing Web')">Landing →</button>
+            <button class="view-btn" onclick="event.stopPropagation();openViewer('./projects/kume-web/instagram-templates.html','Küme — Templates Instagram')">Templates →</button>
+            <button class="view-btn" onclick="event.stopPropagation();openViewer('./projects/kume-web/blog/cuanto-cuesta-agencia-marketing-argentina.html','Küme — Blog SEO')">Blog →</button>
+          </div>
         </div>
       </div>
 
@@ -534,9 +560,9 @@
           <h3 class="project-title">Joaquín Verón — Personal Trainer IFBB</h3>
           <p class="project-desc">Landing page completa: hero, 4 pilares de servicio, 3 planes de precios, testimonios verificados, sponsors y CTAs directos a WhatsApp. Responsive y en producción.</p>
           <div class="project-tools"><span class="ptool">HTML5</span><span class="ptool">CSS3</span><span class="ptool">JavaScript</span><span class="ptool">Vercel</span></div>
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px;">
-            <span class="project-link-btn">Ver proyecto &nbsp;→</span>
-            <a href="https://joaquin-vero.vercel.app/" target="_blank" onclick="event.stopPropagation()" style="font-family:'IBM Plex Mono',monospace;font-size:.58rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--green);text-decoration:none;border:1px solid rgba(16,185,129,0.3);padding:3px 9px;">↗ Live</a>
+          <div class="view-btns" style="margin-top:10px;">
+            <a href="https://joaquin-vero.vercel.app/" target="_blank" onclick="event.stopPropagation()" class="view-btn accent" style="text-decoration:none;display:inline-block;">↗ Ver web live</a>
+            <button class="view-btn" onclick="event.stopPropagation();openViewer('./projects/posts/joaquin-veron-story-mockup.html','Joaco Verón — Story Mockup')">Story mockup →</button>
           </div>
         </div>
       </div>
@@ -574,16 +600,52 @@
         </div>
       </div>
 
+      <!-- 9. Nexus AI — Landing Concept -->
+      <div class="project-card reveal" data-cat="ux" onclick="openViewer('./projects/ai-landing/index.html','Nexus AI — Landing Concept')">
+        <div class="project-visual" style="background:linear-gradient(135deg,#03050F 0%,#080C20 100%);height:250px;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:22px;">
+          <div class="project-visual-overlay"></div>
+          <div class="project-visual-icon" style="font-size:2.5rem;letter-spacing:.05em;">AI</div>
+          <span class="project-cat">UX/UI &amp; Dev</span>
+        </div>
+        <div class="project-body">
+          <span class="live-badge">Interactivo — abre en vivo</span>
+          <h3 class="project-title">Nexus AI — Landing Concept</h3>
+          <p class="project-desc">Landing page futurista para producto de IA. Aurora text, dot-pattern background, secciones animadas y dark design. Tailwind CSS, totalmente funcional.</p>
+          <div class="project-tools"><span class="ptool">HTML/CSS</span><span class="ptool">Tailwind</span><span class="ptool">JavaScript</span><span class="ptool">Dark UI</span></div>
+          <span class="project-link-btn">Abrir en vivo &nbsp;→</span>
+        </div>
+      </div>
+
+      <!-- 10. Küme — Posts Instagram -->
+      <div class="project-card reveal d1" data-cat="mkt" onclick="openViewer('./projects/posts/post-01-brand-statement.html','Küme — Brand Statement Post')">
+        <div class="project-visual" style="background:linear-gradient(135deg,#0E2318 0%,#142D22 100%);height:250px;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:22px;">
+          <div class="project-visual-overlay"></div>
+          <div class="project-visual-icon" style="color:rgba(196,151,58,0.08);font-size:2rem;">POST</div>
+          <span class="project-cat cat-mkt">Marketing &amp; IA</span>
+        </div>
+        <div class="project-body">
+          <span class="live-badge">Diseño interactivo en vivo</span>
+          <h3 class="project-title">Küme — Posts &amp; Stories Instagram</h3>
+          <p class="project-desc">Piezas de contenido para redes de Küme. Post brand statement, carrusel de errores comunes y story mockups diseñados en código con identidad visual de la agencia.</p>
+          <div class="project-tools"><span class="ptool">HTML/CSS</span><span class="ptool">Brand Design</span><span class="ptool">Social Media</span><span class="ptool">Küme</span></div>
+          <div class="view-btns">
+            <button class="view-btn accent" onclick="event.stopPropagation();openViewer('./projects/posts/post-01-brand-statement.html','Küme — Brand Statement')">Post 01 →</button>
+            <button class="view-btn" onclick="event.stopPropagation();openViewer('./projects/posts/post-02-errores.html','Küme — 5 Errores')">Post 02 →</button>
+            <button class="view-btn" onclick="event.stopPropagation();openViewer('./projects/posts/joaquin-veron-story-mockup.html','Joaco Verón — Story')">Story JV →</button>
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
 
-  <!-- Dashboard iframe overlay -->
-  <div class="iframe-overlay" id="dashboardOverlay">
+  <!-- Generic live viewer overlay -->
+  <div class="iframe-overlay" id="viewerOverlay">
     <div class="iframe-topbar">
-      <span class="iframe-title">Informes Comparativos — Cuartos Congelados | Marzo 2026</span>
-      <button class="iframe-close" onclick="closeDashboard()">&#x2715;&nbsp; Cerrar</button>
+      <span class="iframe-title" id="viewerTitle">Proyecto en vivo</span>
+      <button class="iframe-close" onclick="closeViewer()">&#x2715;&nbsp; Cerrar</button>
     </div>
-    <iframe class="iframe-frame" id="dashboardFrame" src="" title="Dashboard Cuartos Congelados" allowfullscreen></iframe>
+    <iframe class="iframe-frame" id="viewerFrame" src="" allowfullscreen></iframe>
   </div>
 
   <!-- Project modal -->
@@ -759,16 +821,21 @@
       });
     });
 
-    function openDashboard(){
-      document.getElementById('dashboardFrame').src = './dashboards/DASHBOARD_MENSUAL_MARZO_2026.html';
-      document.getElementById('dashboardOverlay').classList.add('open');
+    /* ── Viewer genérico para todos los proyectos ── */
+    function openViewer(src, title) {
+      document.getElementById('viewerFrame').src = src;
+      document.getElementById('viewerTitle').textContent = title || 'Proyecto en vivo';
+      document.getElementById('viewerOverlay').classList.add('open');
       document.body.style.overflow = 'hidden';
     }
-    function closeDashboard(){
-      document.getElementById('dashboardOverlay').classList.remove('open');
-      document.getElementById('dashboardFrame').src = '';
+    function closeViewer() {
+      document.getElementById('viewerOverlay').classList.remove('open');
+      document.getElementById('viewerFrame').src = '';
       document.body.style.overflow = '';
     }
+    /* Alias para el card del dashboard interactivo */
+    function openDashboard() { openViewer('./dashboards/DASHBOARD_MENSUAL_MARZO_2026.html', 'Informes Comparativos — Cuartos Congelados'); }
+    function closeDashboard() { closeViewer(); }
 
     var projects = {
       dashboard:{
@@ -850,7 +917,7 @@
     }
     function closeProject(){ document.getElementById('projectModal').classList.remove('open'); document.body.style.overflow = ''; }
     function handleOverlayClick(e){ if(e.target===document.getElementById('projectModal')) closeProject(); }
-    document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ closeProject(); closeMM(); closeDashboard(); } });
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ closeProject(); closeMM(); closeViewer(); } });
 
     /* Avatar is now a pure inline SVG — no canvas processing needed */
   </script>
