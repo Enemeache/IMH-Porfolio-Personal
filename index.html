@@ -76,29 +76,8 @@
     .bubble-line1{font-family:'IBM Plex Mono',monospace;font-size:.72rem;font-weight:600;color:var(--accent);letter-spacing:.06em;display:block;margin-bottom:2px;}
     .bubble-line2{font-family:'Plus Jakarta Sans',sans-serif;font-size:.82rem;color:var(--ink);}
 
-    /* Avatar circle — background removed via JS canvas */
-    .avatar-circle{width:260px;height:260px;border-radius:50%;overflow:hidden;position:relative;background:transparent;}
-    .avatar-img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;background:transparent;}
-    /* Subtle cyan glow ring around avatar */
-    .avatar-circle::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:2px solid rgba(6,182,212,0.25);box-shadow:0 0 30px rgba(6,182,212,0.1);pointer-events:none;}
-
-    /* Water drop animation (from thermos to mate area) */
-    .pour-drops{position:absolute;top:0;left:0;width:250px;height:250px;pointer-events:none;}
-    .drop{position:absolute;width:5px;height:9px;background:rgba(100,210,255,0.85);border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;opacity:0;}
-    .drop.d1{top:52%;left:69%;animation:drop-fall 1.4s ease-in infinite 0s;}
-    .drop.d2{top:50%;left:67%;animation:drop-fall 1.4s ease-in infinite 0.45s;}
-    .drop.d3{top:54%;left:71%;animation:drop-fall 1.4s ease-in infinite 0.9s;}
-    @keyframes drop-fall{0%{opacity:0;transform:translateY(0) rotate(-10deg);}15%{opacity:.9;}100%{opacity:0;transform:translateY(28px) rotate(-10deg);}}
-
-    /* Steam above mate */
-    .steam{position:absolute;width:3px;border-radius:2px;background:rgba(255,255,255,0.35);opacity:0;}
-    .steam.s1{top:26%;left:30%;height:14px;animation:steam-up 2.2s ease-out infinite 0s;}
-    .steam.s2{top:24%;left:35%;height:10px;animation:steam-up 2.2s ease-out infinite 0.75s;}
-    .steam.s3{top:27%;left:28%;height:8px;animation:steam-up 2.2s ease-out infinite 1.3s;}
-    @keyframes steam-up{0%{opacity:0;transform:translateY(0) scaleX(1);}30%{opacity:.6;}100%{opacity:0;transform:translateY(-22px) scaleX(1.8) translateX(4px);}}
-
-    /* SVG legs below avatar circle */
-    .avatar-legs{display:block;margin:0 auto;margin-top:-8px;}
+    /* Inline SVG avatar */
+    #avatarSVG{display:block;filter:drop-shadow(0 8px 28px rgba(6,182,212,0.12));}
 
     /* Avatar animations */
     @keyframes pour-motion{0%,100%{transform:translateY(0) rotate(0deg);}20%{transform:translateY(-5px) rotate(-2deg);}50%{transform:translateY(-8px) rotate(-1.5deg);}75%{transform:translateY(-3px) rotate(-0.5deg);}}
@@ -352,80 +331,231 @@
           <span class="bubble-line2">Bienvenido/a ✦</span>
         </div>
 
-        <!-- Circle-cropped avatar (removes yellow bg corners) -->
-        <div class="avatar-circle">
-          <img class="avatar-img" src="./img/avatar.png" alt="Ignacio Montero Horianski" onerror="this.parentElement.style.background='linear-gradient(135deg,#06B6D4,#7C3AED)';this.style.display='none'"/>
-          <!-- Water drops animation -->
-          <div class="pour-drops">
-            <span class="drop d1"></span>
-            <span class="drop d2"></span>
-            <span class="drop d3"></span>
-            <!-- Steam from mate -->
-            <span class="steam s1"></span>
-            <span class="steam s2"></span>
-            <span class="steam s3"></span>
-          </div>
-        </div>
+        <!-- ═══ PURE SVG AVATAR — dibujado desde cero ═══ -->
+        <svg id="avatarSVG" viewBox="0 0 260 425" width="260" height="425" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <style>
+              /* Drop animation from thermos spout */
+              .wd{opacity:0;}
+              .wd1{animation:wdFall 1.7s ease-in 0s infinite;}
+              .wd2{animation:wdFall 1.7s ease-in 0.58s infinite;}
+              .wd3{animation:wdFall 1.7s ease-in 1.16s infinite;}
+              @keyframes wdFall{0%{opacity:0;transform:translate(0,0);}14%{opacity:.9;}100%{opacity:0;transform:translate(-14px,30px);}}
+              /* Steam animation from mate */
+              .ws{opacity:0;}
+              .ws1{animation:wsUp 2.5s ease-out 0s infinite;}
+              .ws2{animation:wsUp 2.5s ease-out 0.85s infinite;}
+              .ws3{animation:wsUp 2.5s ease-out 1.7s infinite;}
+              @keyframes wsUp{0%{opacity:0;transform:translateY(0) scaleX(1);}28%{opacity:.55;}100%{opacity:0;transform:translateY(-24px) scaleX(2) translateX(5px);}}
+            </style>
+            <!-- Skin gradient — tono moreno/oliva cálido -->
+            <radialGradient id="sg" cx="38%" cy="32%" r="65%">
+              <stop offset="0%" stop-color="#D8976E"/>
+              <stop offset="100%" stop-color="#B06B2A"/>
+            </radialGradient>
+            <!-- Jeans dark navy -->
+            <linearGradient id="jg" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#152232"/>
+              <stop offset="50%" stop-color="#1E2F44"/>
+              <stop offset="100%" stop-color="#152232"/>
+            </linearGradient>
+            <!-- Gray shirt -->
+            <linearGradient id="tg" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#747E8A"/>
+              <stop offset="50%" stop-color="#929DA8"/>
+              <stop offset="100%" stop-color="#747E8A"/>
+            </linearGradient>
+          </defs>
 
-        <!-- SVG Legs — musculosas, estilo atlético -->
-        <svg class="avatar-legs" width="230" height="138" viewBox="0 0 230 138" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- ══════ LEGS ══════ -->
           <!-- Waistband -->
-          <path d="M46 0 L184 0 L180 16 L50 16 Z" fill="#2D3748"/>
-          <rect x="46" y="0" width="138" height="5" fill="#374151"/>
+          <path d="M64 280 L196 280 L192 294 L68 294 Z" fill="#2D3748"/>
+          <rect x="64" y="280" width="132" height="4" fill="#374151"/>
           <!-- Belt buckle -->
-          <rect x="101" y="2" width="28" height="12" rx="2" fill="#4A5568"/>
-          <rect x="106" y="4" width="18" height="8" rx="1" fill="#1C2531"/>
-          <rect x="109" y="6" width="12" height="4" rx="0.5" fill="#06B6D4" opacity="0.4"/>
+          <rect x="108" y="282" width="44" height="12" rx="2" fill="#4A5568"/>
+          <rect x="114" y="285" width="32" height="6" rx="1" fill="#1C2531"/>
+          <rect x="118" y="286" width="24" height="3" rx="0.5" fill="rgba(6,182,212,0.38)"/>
 
-          <!-- LEFT THIGH — ancho y musculoso -->
-          <path d="M50 16 C42 22 36 38 36 58 C36 72 40 82 48 88 C56 94 68 94 74 88 C82 80 84 64 82 46 C80 30 78 18 76 16 Z" fill="#1B2F50"/>
-          <!-- Left quad definition -->
-          <path d="M54 22 C50 38 48 56 50 70" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="5" stroke-linecap="round"/>
-          <path d="M68 20 C66 36 68 56 70 68" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="3" stroke-linecap="round"/>
+          <!-- Left thigh (ancho, musculoso) -->
+          <path d="M68 294 C56 302 48 324 50 346 C52 362 62 372 76 376 C90 380 106 374 112 362 C120 348 118 328 114 310 C110 294 104 286 96 294 Z" fill="url(#jg)"/>
+          <path d="M74 306 C70 326 70 348 76 364" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="5" stroke-linecap="round"/>
 
-          <!-- RIGHT THIGH — ancho y musculoso -->
-          <path d="M180 16 L154 16 C152 18 150 30 148 46 C146 64 148 80 156 88 C162 94 174 94 182 88 C190 82 194 72 194 58 C194 38 188 22 180 16 Z" fill="#1B2F50"/>
-          <!-- Right quad definition -->
-          <path d="M176 22 C180 38 182 56 180 70" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="5" stroke-linecap="round"/>
-          <path d="M162 20 C160 36 162 56 160 68" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="3" stroke-linecap="round"/>
+          <!-- Right thigh -->
+          <path d="M192 294 L164 294 C156 286 150 294 146 310 C142 328 140 348 148 362 C154 374 170 380 184 376 C198 372 208 362 210 346 C212 324 204 302 192 294 Z" fill="url(#jg)"/>
+          <path d="M186 306 C190 326 190 348 184 364" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="5" stroke-linecap="round"/>
 
-          <!-- LEFT KNEE cap -->
-          <ellipse cx="60" cy="90" rx="18" ry="10" fill="#16273F"/>
-          <ellipse cx="60" cy="89" rx="12" ry="6" fill="rgba(255,255,255,0.04)"/>
+          <!-- Knees -->
+          <ellipse cx="82" cy="378" rx="21" ry="10" fill="#101E30"/>
+          <ellipse cx="178" cy="378" rx="21" ry="10" fill="#101E30"/>
 
-          <!-- RIGHT KNEE cap -->
-          <ellipse cx="170" cy="90" rx="18" ry="10" fill="#16273F"/>
-          <ellipse cx="170" cy="89" rx="12" ry="6" fill="rgba(255,255,255,0.04)"/>
+          <!-- Left calf -->
+          <path d="M50 384 C46 396 52 410 64 418 C74 424 92 422 100 414 C108 406 108 392 106 382 C106 376 100 374 92 374 C80 374 52 380 50 384 Z" fill="url(#jg)"/>
+          <path d="M58 388 C56 400 60 412 66 417" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="4" stroke-linecap="round"/>
 
-          <!-- LEFT CALF — definido, gemelos prominentes -->
-          <path d="M42 92 C40 100 42 114 50 122 C56 128 66 130 72 126 C78 122 82 112 82 100 C82 94 76 90 68 90 C60 90 48 92 42 92 Z" fill="#1B2F50"/>
-          <!-- Calf muscle highlight -->
-          <path d="M52 96 C50 106 52 118 56 124" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="4" stroke-linecap="round"/>
-          <path d="M66 92 C68 102 68 116 66 124" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="3" stroke-linecap="round"/>
+          <!-- Right calf -->
+          <path d="M154 382 C152 374 162 374 174 374 C186 374 210 376 212 382 C212 392 208 406 200 414 C192 422 174 424 164 418 C152 410 154 396 154 384 Z" fill="url(#jg)"/>
+          <path d="M202 388 C204 400 200 412 194 417" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="4" stroke-linecap="round"/>
 
-          <!-- RIGHT CALF -->
-          <path d="M148 100 C148 90 154 90 162 90 C170 90 190 94 188 100 C188 112 182 122 176 126 C170 130 160 128 154 122 C146 114 148 100 148 100 Z" fill="#1B2F50"/>
-          <!-- Calf muscle highlight -->
-          <path d="M178 96 C180 106 178 118 174 124" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="4" stroke-linecap="round"/>
-          <path d="M164 92 C162 102 162 116 164 124" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="3" stroke-linecap="round"/>
+          <!-- Left shoe -->
+          <path d="M38 420 C38 413 50 409 66 408 L102 408 C112 408 118 412 118 418 C118 424 110 428 96 428 C76 428 38 428 38 420 Z" fill="#0D1117"/>
+          <rect x="42" y="408" width="68" height="7" rx="1" fill="#161B22"/>
+          <path d="M52 413 C64 409 88 410 100 413" fill="none" stroke="rgba(6,182,212,0.55)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="38" y1="422" x2="118" y2="422" stroke="rgba(6,182,212,0.3)" stroke-width="1"/>
 
-          <!-- LEFT SHOE — zapatilla deportiva -->
-          <path d="M34 130 C34 125 40 122 52 121 L72 121 C80 121 86 124 86 128 C86 133 80 136 70 136 C56 136 34 136 34 130 Z" fill="#0D1117"/>
-          <path d="M36 126 L82 126" stroke="#1C2A40" stroke-width="1"/>
-          <rect x="38" y="121" width="42" height="6" rx="1" fill="#161B22"/>
-          <!-- Swoosh detail -->
-          <path d="M44 124 C50 121 62 122 70 124" fill="none" stroke="rgba(6,182,212,0.5)" stroke-width="1.5" stroke-linecap="round"/>
-          <!-- Sole accent -->
-          <line x1="34" y1="131" x2="86" y2="131" stroke="rgba(6,182,212,0.3)" stroke-width="1"/>
+          <!-- Right shoe -->
+          <path d="M222 420 C222 413 210 409 194 408 L158 408 C148 408 142 412 142 418 C142 424 150 428 164 428 C184 428 222 428 222 420 Z" fill="#0D1117"/>
+          <rect x="150" y="408" width="68" height="7" rx="1" fill="#161B22"/>
+          <path d="M208 413 C196 409 172 410 160 413" fill="none" stroke="rgba(6,182,212,0.55)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="142" y1="422" x2="222" y2="422" stroke="rgba(6,182,212,0.3)" stroke-width="1"/>
 
-          <!-- RIGHT SHOE -->
-          <path d="M196 130 C196 125 190 122 178 121 L158 121 C150 121 144 124 144 128 C144 133 150 136 160 136 C174 136 196 136 196 130 Z" fill="#0D1117"/>
-          <path d="M146 126 L194 126" stroke="#1C2A40" stroke-width="1"/>
-          <rect x="150" y="121" width="42" height="6" rx="1" fill="#161B22"/>
-          <!-- Swoosh detail -->
-          <path d="M186 124 C180 121 168 122 160 124" fill="none" stroke="rgba(6,182,212,0.5)" stroke-width="1.5" stroke-linecap="round"/>
-          <!-- Sole accent -->
-          <line x1="144" y1="131" x2="196" y2="131" stroke="rgba(6,182,212,0.3)" stroke-width="1"/>
+          <!-- ══════ LEFT ARM UPPER (behind torso) ══════ -->
+          <path d="M54 180 C42 196 34 222 36 254 C38 268 50 276 62 272 C72 268 78 254 74 236 C70 218 64 194 66 180 Z" fill="url(#tg)"/>
+
+          <!-- ══════ TORSO — remera gris ══════ -->
+          <path d="M54 180 C40 198 36 240 42 278 L218 278 C224 240 220 198 206 180 C196 172 168 166 130 166 C92 166 64 172 54 180 Z" fill="url(#tg)"/>
+          <!-- V-neck collar shadow -->
+          <path d="M112 170 C120 192 140 192 148 170" fill="rgba(80,90,100,0.45)"/>
+          <!-- Center shirt fold -->
+          <line x1="130" y1="195" x2="130" y2="270" stroke="rgba(255,255,255,0.06)" stroke-width="1.8"/>
+          <!-- Small red triangle logo on chest -->
+          <path d="M150 218 L161 235 L139 235 Z" fill="#E63946" opacity="0.92"/>
+          <!-- Shoulder muscle bulge -->
+          <ellipse cx="54" cy="182" rx="22" ry="15" fill="#8B949E"/>
+          <ellipse cx="206" cy="182" rx="22" ry="15" fill="#8B949E"/>
+
+          <!-- ══════ LEFT FOREARM + MATE ══════ -->
+          <!-- Forearm skin -->
+          <path d="M38 248 C30 264 28 282 34 300 C40 314 56 316 62 304 C68 292 66 272 60 254 Z" fill="url(#sg)"/>
+          <!-- Hand (simplified oval) -->
+          <ellipse cx="42" cy="306" rx="16" ry="13" fill="url(#sg)"/>
+
+          <!-- MATE GOURD (madera café) -->
+          <path d="M14 314 C10 324 12 342 26 348 C36 352 56 352 68 348 C80 342 80 324 76 314 C72 304 62 298 42 298 C22 298 18 304 14 314 Z" fill="#7B4D1E"/>
+          <!-- Gourd highlight wood grain -->
+          <path d="M20 316 C18 328 20 340 26 346" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="3" stroke-linecap="round"/>
+          <path d="M56 300 C64 306 70 314 72 322" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="2"/>
+          <!-- Mate metal rim -->
+          <ellipse cx="42" cy="300" rx="22" ry="7" fill="#B4BCC8"/>
+          <ellipse cx="42" cy="300" rx="16" ry="5" fill="#8090A0"/>
+          <!-- Yerba (dark mate content) -->
+          <ellipse cx="42" cy="303" rx="14" ry="4" fill="#2A1A08"/>
+          <!-- Bombilla (straw) -->
+          <line x1="42" y1="298" x2="26" y2="268" stroke="#C4CCD8" stroke-width="3.5" stroke-linecap="round"/>
+          <!-- Filter ball at bottom of bombilla -->
+          <circle cx="26" cy="267" r="5.5" fill="#B0B8C8"/>
+          <circle cx="26" cy="267" r="3.5" fill="#C8D0DC"/>
+
+          <!-- Steam from mate (animated) -->
+          <line class="ws ws1" x1="32" y1="295" x2="32" y2="281" stroke="rgba(210,228,255,0.55)" stroke-width="3" stroke-linecap="round"/>
+          <line class="ws ws2" x1="42" y1="293" x2="42" y2="280" stroke="rgba(210,228,255,0.5)" stroke-width="2.5" stroke-linecap="round"/>
+          <line class="ws ws3" x1="52" y1="295" x2="52" y2="282" stroke="rgba(210,228,255,0.45)" stroke-width="2" stroke-linecap="round"/>
+
+          <!-- ══════ RIGHT ARM + THERMOS ══════ -->
+          <!-- Upper right arm (shirt, going up-right toward thermos) -->
+          <path d="M206 182 C220 170 236 154 240 132 C244 112 234 104 224 108 C214 112 210 130 212 152 C214 168 210 178 206 182 Z" fill="url(#tg)"/>
+          <!-- Forearm skin (going up to grip thermos) -->
+          <path d="M236 130 C243 116 246 102 240 90 C234 78 222 76 216 84 C210 92 213 110 220 126 Z" fill="url(#sg)"/>
+          <!-- Hand gripping thermos -->
+          <ellipse cx="233" cy="90" rx="14" ry="13" fill="url(#sg)"/>
+
+          <!-- THERMOS (dark with cyan accents) -->
+          <!-- Body -->
+          <rect x="220" y="42" width="30" height="60" rx="7" fill="#1A2134"/>
+          <!-- Top cap -->
+          <rect x="222" y="33" width="26" height="13" rx="6" fill="#252E46"/>
+          <!-- Cap glow ring -->
+          <rect x="224" y="34" width="22" height="6" rx="3" fill="rgba(6,182,212,0.48)"/>
+          <!-- Bottom cap -->
+          <rect x="222" y="98" width="26" height="6" rx="3" fill="#252E46"/>
+          <!-- Handle loop -->
+          <path d="M220 58 C205 58 201 72 204 82 C207 92 216 98 220 96" fill="none" stroke="#252E46" stroke-width="7" stroke-linecap="round"/>
+          <!-- Brand accent stripes -->
+          <rect x="225" y="60" width="21" height="2.5" rx="1" fill="rgba(6,182,212,0.48)"/>
+          <rect x="225" y="68" width="21" height="2.5" rx="1" fill="rgba(6,182,212,0.26)"/>
+          <rect x="225" y="76" width="15" height="2" rx="1" fill="rgba(6,182,212,0.14)"/>
+          <!-- Spout top opening -->
+          <ellipse cx="235" cy="42" rx="9" ry="4.5" fill="#323C52"/>
+          <ellipse cx="235" cy="41" rx="5" ry="2.5" fill="rgba(6,182,212,0.52)"/>
+
+          <!-- Water drops from thermos spout (animated) -->
+          <ellipse class="wd wd1" cx="233" cy="48" rx="3" ry="5" fill="rgba(100,210,255,0.9)"/>
+          <ellipse class="wd wd2" cx="237" cy="50" rx="2.5" ry="4.2" fill="rgba(100,210,255,0.85)"/>
+          <ellipse class="wd wd3" cx="229" cy="52" rx="2" ry="3.5" fill="rgba(100,210,255,0.75)"/>
+
+          <!-- ══════ HEAD ══════ -->
+          <!-- Hair back layer (dark, short slightly styled) -->
+          <path d="M86 90 C82 64 97 40 118 32 C126 28 142 26 154 30 C172 38 184 62 178 90 C170 76 164 64 156 60 C148 57 138 62 130 62 C122 62 112 57 104 60 C96 64 90 76 86 90 Z" fill="#160B02"/>
+          <!-- Hair highlight / texture -->
+          <path d="M106 44 C116 38 144 36 158 44" fill="none" stroke="rgba(70,42,8,0.55)" stroke-width="3" stroke-linecap="round"/>
+          <path d="M120 35 C126 30 134 30 140 35" fill="none" stroke="rgba(70,42,8,0.4)" stroke-width="2" stroke-linecap="round"/>
+
+          <!-- Face oval -->
+          <ellipse cx="130" cy="98" rx="50" ry="58" fill="url(#sg)"/>
+
+          <!-- Ears -->
+          <ellipse cx="81" cy="100" rx="10" ry="15" fill="url(#sg)"/>
+          <path d="M83 91 C80 99 80 109 83 116" fill="none" stroke="rgba(140,72,22,0.5)" stroke-width="2.2" stroke-linecap="round"/>
+          <ellipse cx="179" cy="100" rx="10" ry="15" fill="url(#sg)"/>
+          <path d="M177 91 C180 99 180 109 177 116" fill="none" stroke="rgba(140,72,22,0.5)" stroke-width="2.2" stroke-linecap="round"/>
+
+          <!-- Neck -->
+          <rect x="114" y="148" width="32" height="26" rx="9" fill="#BB7230"/>
+
+          <!-- Beard / stubble (dark overlay on lower face) -->
+          <!-- Full chin/jaw dark area -->
+          <path d="M86 128 C88 152 108 168 130 172 C152 168 172 152 174 128" fill="rgba(18,8,1,0.33)"/>
+          <!-- Cheek stubble patches -->
+          <rect x="84" y="118" width="32" height="25" rx="9" fill="rgba(18,8,1,0.21)"/>
+          <rect x="144" y="118" width="32" height="25" rx="9" fill="rgba(18,8,1,0.21)"/>
+          <!-- Mustache/upper lip -->
+          <path d="M112 126 C120 135 140 135 148 126" fill="rgba(18,8,1,0.24)"/>
+          <!-- Stubble texture dots -->
+          <circle cx="126" cy="154" r="1.5" fill="rgba(18,8,1,0.32)"/>
+          <circle cx="134" cy="158" r="1.5" fill="rgba(18,8,1,0.32)"/>
+          <circle cx="142" cy="154" r="1.5" fill="rgba(18,8,1,0.32)"/>
+          <circle cx="118" cy="144" r="1.2" fill="rgba(18,8,1,0.26)"/>
+          <circle cx="152" cy="144" r="1.2" fill="rgba(18,8,1,0.26)"/>
+          <circle cx="130" cy="160" r="1.2" fill="rgba(18,8,1,0.28)"/>
+
+          <!-- Eyebrows (thick, dark, slightly arched) -->
+          <path d="M98 82 C104 77 120 77 124 82" fill="none" stroke="#120800" stroke-width="5" stroke-linecap="round"/>
+          <path d="M136 82 C140 77 156 77 162 82" fill="none" stroke="#120800" stroke-width="5" stroke-linecap="round"/>
+
+          <!-- Eyes — whites -->
+          <ellipse cx="111" cy="92" rx="14" ry="11" fill="white"/>
+          <ellipse cx="149" cy="92" rx="14" ry="11" fill="white"/>
+          <!-- Iris (dark brown warm) -->
+          <circle cx="113" cy="94" r="8" fill="#38200A"/>
+          <circle cx="151" cy="94" r="8" fill="#38200A"/>
+          <!-- Pupil -->
+          <circle cx="114" cy="95" r="5" fill="#080402"/>
+          <circle cx="152" cy="95" r="5" fill="#080402"/>
+          <!-- Eye shine (top right of iris) -->
+          <circle cx="118" cy="90" r="2.5" fill="rgba(255,255,255,0.92)"/>
+          <circle cx="156" cy="90" r="2.5" fill="rgba(255,255,255,0.92)"/>
+          <!-- Small secondary shine -->
+          <circle cx="111" cy="97" r="1.2" fill="rgba(255,255,255,0.35)"/>
+          <circle cx="149" cy="97" r="1.2" fill="rgba(255,255,255,0.35)"/>
+          <!-- Upper eyelid crease -->
+          <path d="M97 87 C104 82 120 82 125 87" fill="none" stroke="rgba(15,6,0,0.6)" stroke-width="2" stroke-linecap="round"/>
+          <path d="M135 87 C140 82 156 82 163 87" fill="none" stroke="rgba(15,6,0,0.6)" stroke-width="2" stroke-linecap="round"/>
+          <!-- Lower eyelid shadow -->
+          <path d="M97 98 C104 106 120 106 125 98" fill="none" stroke="rgba(160,85,28,0.28)" stroke-width="1.5"/>
+          <path d="M135 98 C140 106 156 106 163 98" fill="none" stroke="rgba(160,85,28,0.28)" stroke-width="1.5"/>
+
+          <!-- Nose (subtle, friendly cartoon) -->
+          <path d="M126 104 C124 116 124 122 130 127 C136 122 136 116 134 104" fill="none" stroke="rgba(120,60,15,0.5)" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- Nostrils -->
+          <ellipse cx="122" cy="126" rx="6" ry="4" fill="rgba(115,55,14,0.33)"/>
+          <ellipse cx="138" cy="126" rx="6" ry="4" fill="rgba(115,55,14,0.33)"/>
+
+          <!-- Smile / mouth (amplia, amistosa) -->
+          <path d="M108 138 C116 150 144 150 152 138" fill="none" stroke="#6A2A0E" stroke-width="3.2" stroke-linecap="round"/>
+          <!-- Teeth (visible, wide smile) -->
+          <path d="M112 140 C120 149 140 149 148 140" fill="white" opacity="0.91"/>
+          <!-- Smile cheek lines -->
+          <path d="M106 133 C104 140 108 146 112 144" fill="none" stroke="rgba(140,65,18,0.3)" stroke-width="2" stroke-linecap="round"/>
+          <path d="M154 133 C156 140 152 146 148 144" fill="none" stroke="rgba(140,65,18,0.3)" stroke-width="2" stroke-linecap="round"/>
         </svg>
       </div>
     </div>
@@ -943,49 +1073,7 @@
     function handleOverlayClick(e){ if(e.target===document.getElementById('projectModal')) closeProject(); }
     document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ closeProject(); closeMM(); closeDashboard(); } });
 
-    /* ── AVATAR BACKGROUND REMOVAL (canvas) ── */
-    /* Removes yellow (#FFD700 area) and black outer ring from avatar JPEG */
-    function removeAvatarBg() {
-      var img = document.querySelector('.avatar-img');
-      if (!img) return;
-      var canvas = document.createElement('canvas');
-      var ctx = canvas.getContext('2d');
-      canvas.width = img.naturalWidth;
-      canvas.height = img.naturalHeight;
-      try {
-        ctx.drawImage(img, 0, 0);
-        var d = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        var px = d.data;
-        var cx = canvas.width / 2, cy = canvas.height / 2;
-        var maxR = Math.min(cx, cy) * 0.98;
-        for (var i = 0; i < px.length; i += 4) {
-          var r = px[i], g = px[i+1], b = px[i+2];
-          var idx = i / 4;
-          var x = (idx % canvas.width) - cx;
-          var y = Math.floor(idx / canvas.width) - cy;
-          var dist = Math.sqrt(x*x + y*y);
-          /* Remove outer black ring */
-          if (dist > maxR) { px[i+3] = 0; continue; }
-          /* Remove yellow: high R+G, low B */
-          var isYellow = r > 160 && g > 140 && b < 110 && (r + g) > (b * 3.5);
-          if (isYellow) {
-            /* Soft edge: partial transparency based on how yellow the pixel is */
-            var intensity = Math.min(1, ((r - 160) / 95 + (g - 140) / 80) / 2);
-            px[i+3] = Math.max(0, Math.round(px[i+3] * (1 - intensity)));
-          }
-        }
-        ctx.putImageData(d, 0, 0);
-        img.src = canvas.toDataURL('image/png');
-        /* Make container transparent */
-        var circle = document.querySelector('.avatar-circle');
-        if (circle) circle.style.background = 'transparent';
-      } catch(e) { /* CORS or tainted canvas — keep original */ }
-    }
-    var avatarEl = document.querySelector('.avatar-img');
-    if (avatarEl) {
-      if (avatarEl.complete && avatarEl.naturalWidth) removeAvatarBg();
-      else avatarEl.addEventListener('load', removeAvatarBg);
-    }
+    /* Avatar is now a pure inline SVG — no canvas processing needed */
   </script>
 </body>
 </html>
