@@ -568,20 +568,114 @@
         </div>
       </div>
 
-      <!-- 8. CICLO — Web de Joaco -->
-      <div class="project-card reveal" data-cat="ux" onclick="openProject('ciclo')">
+      <!-- 8. CICLO — Consultora de IA -->
+      <div class="project-card reveal" data-cat="ux" onclick="openViewer('https://enemeache.github.io/ciclo-web/','CICLO — Consultora de IA')">
         <div class="project-visual pv-7">
-          <img src="./img/ciclo-hero.png" alt="CICLO Landing" class="project-img-cover" onerror="this.style.display='none'"/>
-          <div class="project-visual-bg pv-7"></div>
+          <div class="project-visual-bg pv-7" style="z-index:0"></div>
+          <svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <!-- bg -->
+            <rect width="480" height="250" fill="#090B10"/>
+            <!-- dot pattern -->
+            <defs>
+              <pattern id="dots-ciclo" x="0" y="0" width="18" height="18" patternUnits="userSpaceOnUse">
+                <circle cx="1" cy="1" r="0.7" fill="rgba(255,255,255,0.09)"/>
+              </pattern>
+              <radialGradient id="ciclo-glow" cx="50%" cy="30%" r="50%">
+                <stop offset="0%" stop-color="rgba(34,211,238,0.18)"/>
+                <stop offset="60%" stop-color="rgba(74,222,128,0.04)"/>
+                <stop offset="100%" stop-color="transparent"/>
+              </radialGradient>
+            </defs>
+            <rect width="480" height="250" fill="url(#dots-ciclo)"/>
+            <rect width="480" height="250" fill="url(#ciclo-glow)"/>
+            <!-- ripple rings -->
+            <circle cx="240" cy="100" r="80" fill="none" stroke="rgba(34,211,238,0.07)" stroke-width="1"/>
+            <circle cx="240" cy="100" r="110" fill="none" stroke="rgba(34,211,238,0.04)" stroke-width="1"/>
+            <!-- nav bar -->
+            <rect width="480" height="26" fill="rgba(9,11,16,0.92)"/>
+            <text x="14" y="17" fill="white" font-size="10" font-family="sans-serif" font-weight="800" letter-spacing="0.5">CICLO<tspan fill="#22d3ee">.</tspan></text>
+            <text x="200" y="17" fill="rgba(255,255,255,0.35)" font-size="6.5" font-family="sans-serif">Método</text>
+            <text x="238" y="17" fill="rgba(255,255,255,0.35)" font-size="6.5" font-family="sans-serif">Servicios</text>
+            <text x="278" y="17" fill="rgba(255,255,255,0.35)" font-size="6.5" font-family="sans-serif">Casos</text>
+            <text x="313" y="17" fill="rgba(255,255,255,0.35)" font-size="6.5" font-family="sans-serif">Por qué CICLO</text>
+            <rect x="378" y="6" width="84" height="14" rx="4" fill="rgba(34,211,238,0.15)" stroke="rgba(34,211,238,0.3)" stroke-width="0.7"/>
+            <text x="420" y="16" fill="#22d3ee" font-size="6" font-family="sans-serif" font-weight="700" text-anchor="middle">Agendá diagnóstico</text>
+            <!-- badge -->
+            <rect x="152" y="34" width="176" height="13" rx="6" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.1)" stroke-width="0.6"/>
+            <circle cx="162" cy="40.5" r="3" fill="#34d399"/>
+            <text x="172" y="44" fill="rgba(34,211,238,0.9)" font-size="6" font-family="sans-serif" font-weight="600">AI Adoption que realmente funciona</text>
+            <!-- hero headline -->
+            <text x="240" y="65" fill="white" font-size="17" font-family="sans-serif" font-weight="900" text-anchor="middle" letter-spacing="-0.3">Operamos con tu equipo</text>
+            <text x="240" y="84" fill="url(#ciclo-grad)" font-size="17" font-family="sans-serif" font-weight="900" text-anchor="middle" letter-spacing="-0.3">hasta que sean autónomos</text>
+            <defs>
+              <linearGradient id="ciclo-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#22d3ee"/>
+                <stop offset="50%" stop-color="#5eead4"/>
+                <stop offset="100%" stop-color="#4ade80"/>
+              </linearGradient>
+            </defs>
+            <!-- terminal -->
+            <rect x="120" y="92" width="240" height="16" rx="4" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.08)" stroke-width="0.6"/>
+            <text x="130" y="103" fill="#22d3ee" font-size="6.5" font-family="monospace">ciclo</text>
+            <text x="153" y="103" fill="rgba(255,255,255,0.2)" font-size="6.5" font-family="monospace"> ~ </text>
+            <text x="165" y="103" fill="#4ade80" font-size="6.5" font-family="monospace">$</text>
+            <text x="173" y="103" fill="rgba(255,255,255,0.65)" font-size="6.5" font-family="monospace">analizar mis procesos de negocio</text>
+            <!-- CICLO steps -->
+            <rect x="14" y="117" width="58" height="46" rx="5" fill="rgba(255,255,255,0.03)" stroke="rgba(34,211,238,0.15)" stroke-width="0.7"/>
+            <text x="22" y="133" fill="#22d3ee" font-size="13" font-family="sans-serif" font-weight="900">C</text>
+            <text x="17" y="145" fill="rgba(255,255,255,0.7)" font-size="5.5" font-family="sans-serif" font-weight="700">Consult</text>
+            <text x="17" y="156" fill="rgba(255,255,255,0.3)" font-size="4.5" font-family="sans-serif">Diagnóstico</text>
+
+            <rect x="78" y="117" width="58" height="46" rx="5" fill="rgba(255,255,255,0.03)" stroke="rgba(74,222,128,0.15)" stroke-width="0.7"/>
+            <text x="86" y="133" fill="#4ade80" font-size="13" font-family="sans-serif" font-weight="900">I</text>
+            <text x="81" y="145" fill="rgba(255,255,255,0.7)" font-size="5.5" font-family="sans-serif" font-weight="700">Implement</text>
+            <text x="81" y="156" fill="rgba(255,255,255,0.3)" font-size="4.5" font-family="sans-serif">Integración IA</text>
+
+            <rect x="142" y="117" width="58" height="46" rx="5" fill="rgba(255,255,255,0.03)" stroke="rgba(52,211,153,0.15)" stroke-width="0.7"/>
+            <text x="151" y="133" fill="#34d399" font-size="13" font-family="sans-serif" font-weight="900">C</text>
+            <text x="145" y="145" fill="rgba(255,255,255,0.7)" font-size="5.5" font-family="sans-serif" font-weight="700">Capacitate</text>
+            <text x="145" y="156" fill="rgba(255,255,255,0.3)" font-size="4.5" font-family="sans-serif">Entrenamiento</text>
+
+            <rect x="206" y="117" width="58" height="46" rx="5" fill="rgba(255,255,255,0.03)" stroke="rgba(45,212,191,0.15)" stroke-width="0.7"/>
+            <text x="215" y="133" fill="#2dd4bf" font-size="13" font-family="sans-serif" font-weight="900">L</text>
+            <text x="209" y="145" fill="rgba(255,255,255,0.7)" font-size="5.5" font-family="sans-serif" font-weight="700">Launch</text>
+            <text x="209" y="156" fill="rgba(255,255,255,0.3)" font-size="4.5" font-family="sans-serif">Lanzamiento</text>
+
+            <rect x="270" y="117" width="58" height="46" rx="5" fill="rgba(255,255,255,0.03)" stroke="rgba(56,189,248,0.15)" stroke-width="0.7"/>
+            <text x="279" y="133" fill="#38bdf8" font-size="13" font-family="sans-serif" font-weight="900">O</text>
+            <text x="273" y="145" fill="rgba(255,255,255,0.7)" font-size="5.5" font-family="sans-serif" font-weight="700">Operate</text>
+            <text x="273" y="156" fill="rgba(255,255,255,0.3)" font-size="4.5" font-family="sans-serif">Autonomía total</text>
+
+            <!-- stats -->
+            <rect x="338" y="117" width="128" height="46" rx="5" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.07)" stroke-width="0.7"/>
+            <text x="352" y="136" fill="white" font-size="14" font-family="sans-serif" font-weight="900">40<tspan font-size="9">+</tspan></text>
+            <text x="352" y="148" fill="rgba(255,255,255,0.35)" font-size="5" font-family="sans-serif">Proyectos</text>
+            <text x="390" y="136" fill="white" font-size="14" font-family="sans-serif" font-weight="900">8</text>
+            <text x="390" y="148" fill="rgba(255,255,255,0.35)" font-size="5" font-family="sans-serif">Industrias</text>
+            <text x="422" y="136" fill="white" font-size="14" font-family="sans-serif" font-weight="900">87<tspan font-size="9">%</tspan></text>
+            <text x="420" y="148" fill="rgba(255,255,255,0.35)" font-size="5" font-family="sans-serif">Adopción real</text>
+
+            <!-- footer code line -->
+            <text x="14" y="176" fill="rgba(34,211,238,0.25)" font-size="5.5" font-family="monospace">// hecho con IA, para equipos que usan IA · Buenos Aires, Argentina · hola@ciclo.ai</text>
+            <!-- bottom gradient fade -->
+            <rect width="480" height="60" y="190" fill="url(#ciclo-fade)"/>
+            <defs>
+              <linearGradient id="ciclo-fade" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="transparent"/>
+                <stop offset="100%" stop-color="#090B10"/>
+              </linearGradient>
+            </defs>
+          </svg>
           <div class="project-visual-overlay"></div>
-          <div class="project-visual-icon">CICLO</div>
           <span class="project-cat">UX/UI &amp; Dev</span>
         </div>
         <div class="project-body">
           <h3 class="project-title">CICLO — Landing Web para Consultora de IA</h3>
-          <p class="project-desc">Landing page completa para consultora de implementación de IA. Partículas animadas, scroll effects, método interactivo y estadísticas en tiempo real. Deploy en Vercel.</p>
-          <div class="project-tools"><span class="ptool">Next.js 16</span><span class="ptool">React 19</span><span class="ptool">Framer Motion</span><span class="ptool">Tailwind</span><span class="ptool">Vercel</span></div>
-          <span class="project-link-btn">Ver proyecto &nbsp;→</span>
+          <p class="project-desc">Landing page completa para consultora de implementación de IA. Partículas animadas, scroll effects, método C·I·C·L·O interactivo y estadísticas en tiempo real.</p>
+          <div class="project-tools"><span class="ptool">Next.js 16</span><span class="ptool">React 19</span><span class="ptool">Framer Motion</span><span class="ptool">Tailwind</span><span class="ptool">MagicUI</span></div>
+          <div class="view-btns">
+            <button class="view-btn accent" onclick="event.stopPropagation();openViewer('https://enemeache.github.io/ciclo-web/','CICLO — Consultora de IA')">Ver live →</button>
+          </div>
         </div>
       </div>
 
