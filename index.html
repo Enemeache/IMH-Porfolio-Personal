@@ -443,38 +443,23 @@
     </div>
     <div class="projects-grid">
 
-      <!-- 1. Dashboard KPIs -->
-      <div class="project-card reveal" data-cat="datos" onclick="openProject('dashboard')">
+      <!-- 1. Dashboard KPIs (unificado) -->
+      <div class="project-card reveal" data-cat="datos" onclick="openDashboard()">
         <div class="project-visual pv-1">
-          <img src="./img/dashboard-hero.png" alt="Dashboard" class="project-img-cover" onerror="this.style.display='none'"/>
+          <img src="./img/dashboard-hero.png" alt="Dashboard KPIs" class="project-img-cover" onerror="this.style.display='none'"/>
           <div class="project-visual-bg pv-1"></div>
           <div class="project-visual-overlay"></div>
           <div class="project-visual-icon">BI</div>
           <span class="project-cat">Datos &amp; BI</span>
         </div>
         <div class="project-body">
-          <h3 class="project-title">Dashboard KPIs de Producción</h3>
-          <p class="project-desc">Dashboard interactivo en Power BI con visualización UX/UI optimizada para seguimiento de KPIs de producción en tiempo real.</p>
-          <div class="project-tools"><span class="ptool">Power BI</span><span class="ptool">SQL Server</span><span class="ptool">Excel</span><span class="ptool">DAX</span></div>
-          <span class="project-link-btn">Ver proyecto &nbsp;→</span>
-        </div>
-      </div>
-
-      <!-- 2. Informes Comparativos (LIVE) -->
-      <div class="project-card reveal d1" data-cat="datos" onclick="openDashboard()">
-        <div class="project-visual pv-2">
-          <img src="./img/dashboard-hero.png" alt="Informes Comparativos Dashboard" class="project-img-cover" onerror="this.style.display='none'"/>
-          <div class="project-visual-bg pv-2"></div>
-          <div class="project-visual-overlay"></div>
-          <div class="project-visual-icon">DATA</div>
-          <span class="project-cat">Datos &amp; BI</span>
-        </div>
-        <div class="project-body">
           <span class="live-badge">Dashboard interactivo en vivo</span>
-          <h3 class="project-title">Informes Comparativos — Cuartos Congelados</h3>
-          <p class="project-desc">Dashboard mensual 100% interactivo: KPIs por producto, filtros dinámicos, gráficos comparativos, análisis de márgenes. Hacé click para probarlo.</p>
-          <div class="project-tools"><span class="ptool">HTML/CSS/JS</span><span class="ptool">Chart.js</span><span class="ptool">Data Viz</span></div>
-          <span class="project-link-btn">Ver en vivo &nbsp;→</span>
+          <h3 class="project-title">Dashboard KPIs de Producción</h3>
+          <p class="project-desc">Dashboard mensual 100% interactivo: KPIs por producto, filtros dinámicos, gráficos comparativos y análisis de márgenes. Conectado a SQL Server, diseñado en Power BI y replicado en web con Chart.js.</p>
+          <div class="project-tools"><span class="ptool">Power BI</span><span class="ptool">SQL Server</span><span class="ptool">Chart.js</span><span class="ptool">DAX</span><span class="ptool">HTML/CSS/JS</span></div>
+          <div class="view-btns">
+            <button class="view-btn accent" onclick="event.stopPropagation();openDashboard()">Ver dashboard →</button>
+          </div>
         </div>
       </div>
 
