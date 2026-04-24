@@ -137,10 +137,12 @@
     .project-card{background:var(--card);overflow:hidden;cursor:pointer;}
     .project-card.hidden{display:none;}
     .project-visual{height:250px;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:22px;}
-    .project-img-cover{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.25,.46,.45,.94);}
+    .project-img-cover{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.25,.46,.45,.94);z-index:1;}
     .project-card:hover .project-img-cover{transform:scale(1.07);}
-    .project-visual-bg{position:absolute;inset:0;transition:transform .6s cubic-bezier(.25,.46,.45,.94);}
+    .project-visual-bg{position:absolute;inset:0;transition:transform .6s cubic-bezier(.25,.46,.45,.94);z-index:0;}
     .project-card:hover .project-visual-bg{transform:scale(1.05);}
+    .project-visual-svg{position:absolute;inset:0;width:100%;height:100%;z-index:1;transition:transform .6s cubic-bezier(.25,.46,.45,.94);}
+    .project-card:hover .project-visual-svg{transform:scale(1.04);}
     .pv-1{background:linear-gradient(135deg,#061833 0%,#082040 100%);}
     .pv-2{background:linear-gradient(135deg,#041A1A 0%,#062626 100%);}
     .pv-3{background:linear-gradient(135deg,#120C2A 0%,#1A1038 100%);}
@@ -148,9 +150,9 @@
     .pv-5{background:linear-gradient(135deg,#0A1A0D 0%,#0E2312 100%);}
     .pv-6{background:linear-gradient(135deg,#0A0F1A 0%,#0E1528 100%);}
     .pv-7{background:linear-gradient(135deg,#021A1A 0%,#062828 100%);}
-    .project-visual-icon{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:3.5rem;font-weight:600;color:rgba(255,255,255,.035);letter-spacing:.1em;}
-    .project-visual-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.7) 0%,rgba(0,0,0,.15) 60%,transparent 100%);}
-    .project-cat{position:relative;z-index:1;display:inline-flex;align-items:center;gap:8px;padding:5px 12px;background:rgba(6,182,212,0.14);border:1px solid rgba(6,182,212,0.3);font-family:'IBM Plex Mono',monospace;font-size:.56rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(6,182,212,.9);}
+    .project-visual-icon{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:3.5rem;font-weight:600;color:rgba(255,255,255,.035);letter-spacing:.1em;z-index:0;}
+    .project-visual-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.65) 0%,rgba(0,0,0,.1) 55%,transparent 100%);z-index:2;}
+    .project-cat{position:relative;z-index:3;display:inline-flex;align-items:center;gap:8px;padding:5px 12px;background:rgba(6,182,212,0.14);border:1px solid rgba(6,182,212,0.3);font-family:'IBM Plex Mono',monospace;font-size:.56rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(6,182,212,.9);}
     .project-cat.cat-auto{background:rgba(124,58,237,0.14);border-color:rgba(124,58,237,0.3);color:rgba(124,58,237,.9);}
     .project-cat.cat-mkt{background:rgba(16,185,129,0.14);border-color:rgba(16,185,129,0.3);color:rgba(16,185,129,.9);}
     .project-body{padding:26px 28px;}
@@ -162,6 +164,10 @@
     .ptool{padding:3px 9px;border:1px solid var(--border);font-family:'IBM Plex Mono',monospace;font-size:.56rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);}
     .project-link-btn{display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);transition:gap .2s,color .2s;cursor:pointer;}
     .project-card:hover .project-link-btn{gap:16px;color:var(--accent);}
+    .view-btns{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;}
+    .view-btn{background:transparent;border:1px solid var(--border);color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:.57rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:5px 11px;cursor:pointer;transition:background .2s,border-color .2s,color .2s;}
+    .view-btn:hover{background:var(--accent-dim);border-color:var(--accent);color:var(--accent);}
+    .view-btn.accent{border-color:rgba(6,182,212,0.4);color:var(--accent);background:var(--accent-dim);}
 
     /* PROJECT MODAL */
     .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:200;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(6px);}
@@ -509,15 +515,36 @@
       <div class="project-card reveal" data-cat="mkt" onclick="openProject('kume')">
         <div class="project-visual pv-5">
           <div class="project-visual-bg pv-5"></div>
+          <svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <rect width="480" height="250" fill="#0A1A0D"/>
+            <rect width="480" height="38" fill="#1B3A2D"/>
+            <text x="20" y="24" fill="#C4973A" font-size="13" font-family="Georgia,serif" font-weight="600">Küme</text>
+            <text x="340" y="23" fill="rgba(196,151,58,0.6)" font-size="7" font-family="sans-serif">Servicios · Blog · Contacto</text>
+            <text x="20" y="78" fill="#F5EFE0" font-size="26" font-family="Georgia,serif" font-style="italic">Hacemos que tu</text>
+            <text x="20" y="108" fill="#C4973A" font-size="26" font-family="Georgia,serif" font-style="italic">marca tenga algo</text>
+            <text x="20" y="138" fill="#F5EFE0" font-size="26" font-family="Georgia,serif" font-style="italic">real para decir.</text>
+            <text x="20" y="162" fill="rgba(245,239,224,0.4)" font-size="8" font-family="sans-serif">Marketing digital para emprendedores y pymes en Argentina</text>
+            <rect x="20" y="174" width="130" height="28" fill="#C4973A"/>
+            <text x="32" y="192" fill="#0A1A0D" font-size="8" font-family="sans-serif" font-weight="700">CONSULTA GRATIS →</text>
+            <rect x="20" y="218" width="72" height="17" rx="2" fill="rgba(196,151,58,0.12)" stroke="rgba(196,151,58,0.35)" stroke-width="1"/>
+            <text x="28" y="230" fill="rgba(196,151,58,0.8)" font-size="6.5" font-family="sans-serif">Redes Sociales</text>
+            <rect x="98" y="218" width="60" height="17" rx="2" fill="rgba(196,151,58,0.12)" stroke="rgba(196,151,58,0.35)" stroke-width="1"/>
+            <text x="106" y="230" fill="rgba(196,151,58,0.8)" font-size="6.5" font-family="sans-serif">Diseño Web</text>
+            <rect x="164" y="218" width="50" height="17" rx="2" fill="rgba(196,151,58,0.12)" stroke="rgba(196,151,58,0.35)" stroke-width="1"/>
+            <text x="172" y="230" fill="rgba(196,151,58,0.8)" font-size="6.5" font-family="sans-serif">Branding</text>
+          </svg>
           <div class="project-visual-overlay"></div>
-          <div class="project-visual-icon">KÜME</div>
           <span class="project-cat cat-mkt">Marketing &amp; IA</span>
         </div>
         <div class="project-body">
-          <h3 class="project-title">Küme — Estrategia de Marca Completa</h3>
-          <p class="project-desc">Brand Bible de 40+ páginas, identidad visual completa, calendario de 30 días, landing page funcional y estrategia de posicionamiento para agencia de marketing.</p>
+          <h3 class="project-title">Küme — Agencia de Marketing Digital</h3>
+          <p class="project-desc">Landing web, Brand Bible de 40+ páginas, templates Instagram, blog SEO y calendarios editoriales. Identidad visual completa verde+dorado.</p>
           <div class="project-tools"><span class="ptool">Claude AI</span><span class="ptool">HTML/CSS</span><span class="ptool">Canva</span><span class="ptool">Vercel</span></div>
-          <span class="project-link-btn">Ver proyecto &nbsp;→</span>
+          <div class="view-btns">
+            <button class="view-btn accent" onclick="event.stopPropagation();openViewer('./projects/kume-web/index.html','Küme — Landing Web')">Landing →</button>
+            <button class="view-btn" onclick="event.stopPropagation();openViewer('./projects/kume-web/instagram-templates.html','Küme — Templates Instagram')">Templates →</button>
+            <button class="view-btn" onclick="event.stopPropagation();openViewer('./projects/kume-web/blog/cuanto-cuesta-agencia-marketing-argentina.html','Küme — Blog SEO')">Blog →</button>
+          </div>
         </div>
       </div>
 
@@ -562,8 +589,29 @@
       <div class="project-card reveal d1" data-cat="mkt" onclick="openProject('tecno')">
         <div class="project-visual pv-6">
           <div class="project-visual-bg pv-6"></div>
+          <svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <rect width="480" height="250" fill="#0A0F1A"/>
+            <text x="20" y="36" fill="rgba(6,182,212,0.5)" font-size="7" font-family="sans-serif" letter-spacing="3">ESTRATEGIA DE CONTENIDO</text>
+            <text x="20" y="62" fill="white" font-size="20" font-family="sans-serif" font-weight="700">TECNORAIN</text>
+            <text x="20" y="82" fill="rgba(255,255,255,0.4)" font-size="12" font-family="sans-serif" font-weight="400">+ TECNOFIX</text>
+            <line x1="20" y1="94" x2="200" y2="94" stroke="rgba(6,182,212,0.3)" stroke-width="1"/>
+            <text x="20" y="116" fill="rgba(6,182,212,0.9)" font-size="7" font-family="sans-serif" font-weight="600">01 — EDUCACIÓN TÉCNICA</text>
+            <text x="20" y="132" fill="rgba(6,182,212,0.9)" font-size="7" font-family="sans-serif" font-weight="600">02 — CASOS DE ÉXITO</text>
+            <text x="20" y="148" fill="rgba(6,182,212,0.9)" font-size="7" font-family="sans-serif" font-weight="600">03 — DETRÁS DE ESCENA</text>
+            <text x="20" y="164" fill="rgba(6,182,212,0.9)" font-size="7" font-family="sans-serif" font-weight="600">04 — CONFIANZA Y GARANTÍA</text>
+            <text x="20" y="180" fill="rgba(6,182,212,0.9)" font-size="7" font-family="sans-serif" font-weight="600">05 — PROMOCIONES</text>
+            <rect x="250" y="50" width="200" height="170" rx="4" fill="rgba(6,182,212,0.05)" stroke="rgba(6,182,212,0.15)" stroke-width="1"/>
+            <text x="260" y="70" fill="rgba(6,182,212,0.7)" font-size="6" font-family="sans-serif" font-weight="600">CALENDARIO 30 DÍAS</text>
+            <rect x="260" y="78" width="24" height="20" rx="2" fill="rgba(6,182,212,0.15)"/><text x="266" y="92" fill="white" font-size="8" font-family="sans-serif">L</text>
+            <rect x="288" y="78" width="24" height="20" rx="2" fill="rgba(6,182,212,0.15)"/><text x="294" y="92" fill="white" font-size="8" font-family="sans-serif">M</text>
+            <rect x="316" y="78" width="24" height="20" rx="2" fill="rgba(6,182,212,0.25)"/><text x="322" y="92" fill="white" font-size="8" font-family="sans-serif">X</text>
+            <rect x="344" y="78" width="24" height="20" rx="2" fill="rgba(6,182,212,0.15)"/><text x="350" y="92" fill="white" font-size="8" font-family="sans-serif">J</text>
+            <rect x="372" y="78" width="24" height="20" rx="2" fill="rgba(6,182,212,0.25)"/><text x="378" y="92" fill="white" font-size="8" font-family="sans-serif">V</text>
+            <rect x="260" y="102" width="136" height="14" rx="2" fill="rgba(6,182,212,0.1)"/><text x="265" y="113" fill="rgba(6,182,212,0.8)" font-size="6" font-family="sans-serif">Caso real: instalación industrial</text>
+            <rect x="260" y="120" width="100" height="14" rx="2" fill="rgba(16,185,129,0.1)"/><text x="265" y="131" fill="rgba(16,185,129,0.8)" font-size="6" font-family="sans-serif">Tip técnico semanal</text>
+            <rect x="260" y="138" width="120" height="14" rx="2" fill="rgba(6,182,212,0.1)"/><text x="265" y="149" fill="rgba(6,182,212,0.8)" font-size="6" font-family="sans-serif">Promo: garantía extendida</text>
+          </svg>
           <div class="project-visual-overlay"></div>
-          <div class="project-visual-icon">TECNO</div>
           <span class="project-cat cat-mkt">Marketing &amp; IA</span>
         </div>
         <div class="project-body">
@@ -574,10 +622,107 @@
         </div>
       </div>
 
+      <!-- 9. Nexus AI — Landing Concept -->
+      <div class="project-card reveal" data-cat="ux" onclick="openViewer('./projects/ai-landing/index.html','Nexus AI — Landing Concept')">
+        <div class="project-visual" style="background:#030712;height:250px;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:22px;">
+          <svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <rect width="480" height="250" fill="#030712"/>
+            <pattern id="dp" x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="7" cy="7" r="0.8" fill="rgba(255,255,255,0.13)"/></pattern>
+            <rect width="480" height="250" fill="url(#dp)"/>
+            <radialGradient id="ag2" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="rgba(124,58,237,0.28)"/><stop offset="100%" stop-color="transparent"/></radialGradient>
+            <rect width="480" height="250" fill="url(#ag2)"/>
+            <rect x="165" y="28" width="150" height="18" rx="9" fill="rgba(124,58,237,0.2)" stroke="rgba(124,58,237,0.45)" stroke-width="1"/>
+            <text x="240" y="41" fill="rgba(167,139,250,0.9)" font-size="7" font-family="sans-serif" text-anchor="middle">✦ AI-POWERED PLATFORM</text>
+            <text x="240" y="88" fill="#a78bfa" font-size="38" font-family="sans-serif" font-weight="900" text-anchor="middle">NEXUS</text>
+            <text x="240" y="126" fill="#60a5fa" font-size="38" font-family="sans-serif" font-weight="900" text-anchor="middle">AI</text>
+            <text x="240" y="150" fill="rgba(255,255,255,0.4)" font-size="8" font-family="sans-serif" text-anchor="middle">Intelligence at Scale — Built for the future</text>
+            <rect x="160" y="163" width="160" height="28" rx="14" fill="#7C3AED"/>
+            <text x="240" y="181" fill="white" font-size="9" font-family="sans-serif" font-weight="700" text-anchor="middle">Get Started Free →</text>
+            <text x="100" y="218" fill="rgba(255,255,255,0.55)" font-size="15" font-family="sans-serif" font-weight="700" text-anchor="middle">99.9%</text>
+            <text x="240" y="218" fill="rgba(255,255,255,0.55)" font-size="15" font-family="sans-serif" font-weight="700" text-anchor="middle">10x</text>
+            <text x="380" y="218" fill="rgba(255,255,255,0.55)" font-size="15" font-family="sans-serif" font-weight="700" text-anchor="middle">24/7</text>
+            <text x="100" y="232" fill="rgba(255,255,255,0.25)" font-size="6" font-family="sans-serif" text-anchor="middle">Uptime SLA</text>
+            <text x="240" y="232" fill="rgba(255,255,255,0.25)" font-size="6" font-family="sans-serif" text-anchor="middle">Faster than GPT-4</text>
+            <text x="380" y="232" fill="rgba(255,255,255,0.25)" font-size="6" font-family="sans-serif" text-anchor="middle">Support</text>
+          </svg>
+          <div class="project-visual-overlay"></div>
+          <span class="project-cat">UX/UI &amp; Dev</span>
+        </div>
+        <div class="project-body">
+          <span class="live-badge">Abre en vivo</span>
+          <h3 class="project-title">Nexus AI — Landing Concept</h3>
+          <p class="project-desc">Landing page futurista para plataforma de IA. Aurora gradient text, dot-pattern, secciones animadas y dark design con Tailwind CSS. Totalmente funcional.</p>
+          <div class="project-tools"><span class="ptool">HTML/CSS</span><span class="ptool">Tailwind</span><span class="ptool">JavaScript</span><span class="ptool">Dark UI</span></div>
+          <span class="project-link-btn">Abrir en vivo &nbsp;→</span>
+        </div>
+      </div>
+
+      <!-- 10. Küme — Posts & Stories Instagram -->
+      <div class="project-card reveal d1" data-cat="mkt" onclick="openViewer('./projects/posts/post-01-brand-statement.html','Küme — Brand Statement')">
+        <div class="project-visual" style="background:#060E08;height:250px;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:22px;">
+          <svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <rect width="480" height="250" fill="#050905"/>
+            <!-- Post 01 preview -->
+            <rect x="18" y="18" width="130" height="215" rx="3" fill="#1B3A2D"/>
+            <rect x="30" y="36" width="106" height="1" fill="rgba(196,151,58,0.5)"/>
+            <text x="36" y="68" fill="#C4973A" font-size="9" font-family="Georgia,serif" font-style="italic">Hacemos que</text>
+            <text x="36" y="82" fill="#C4973A" font-size="9" font-family="Georgia,serif" font-style="italic">tu marca tenga</text>
+            <text x="36" y="100" fill="#F5EFE0" font-size="9.5" font-family="Georgia,serif" font-weight="600">algo real</text>
+            <text x="36" y="114" fill="#F5EFE0" font-size="9.5" font-family="Georgia,serif" font-weight="600">para decir.</text>
+            <rect x="30" y="206" width="106" height="1" fill="rgba(196,151,58,0.5)"/>
+            <text x="36" y="220" fill="rgba(196,151,58,0.7)" font-size="6" font-family="sans-serif">@kume.agenciamkt</text>
+            <!-- Post 02 preview -->
+            <rect x="158" y="18" width="130" height="215" rx="3" fill="#F5EFE0"/>
+            <text x="168" y="42" fill="#1B3A2D" font-size="8" font-family="sans-serif" font-weight="700">5 ERRORES QUE</text>
+            <text x="168" y="54" fill="#C4973A" font-size="8" font-family="sans-serif" font-weight="700">COMETEN LAS</text>
+            <text x="168" y="66" fill="#1B3A2D" font-size="8" font-family="sans-serif" font-weight="700">MARCAS ONLINE</text>
+            <line x1="168" y1="75" x2="278" y2="75" stroke="#1B3A2D" stroke-width="0.5"/>
+            <text x="168" y="91" fill="#1B3A2D" font-size="6.5" font-family="sans-serif">01 — Sin estrategia</text>
+            <text x="168" y="105" fill="#1B3A2D" font-size="6.5" font-family="sans-serif">02 — Ignorar al cliente</text>
+            <text x="168" y="119" fill="#1B3A2D" font-size="6.5" font-family="sans-serif">03 — Copiar a la competencia</text>
+            <text x="168" y="133" fill="#1B3A2D" font-size="6.5" font-family="sans-serif">04 — No medir resultados</text>
+            <text x="168" y="147" fill="#1B3A2D" font-size="6.5" font-family="sans-serif">05 — Falta de consistencia</text>
+            <text x="168" y="220" fill="rgba(27,58,45,0.5)" font-size="6" font-family="sans-serif">@kume.agenciamkt</text>
+            <!-- Story mockup preview -->
+            <rect x="298" y="18" width="164" height="215" rx="3" fill="#0a0a0a"/>
+            <rect x="298" y="18" width="164" height="215" rx="3" fill="rgba(181,225,43,0.05)"/>
+            <text x="380" y="80" fill="white" font-size="22" font-family="sans-serif" font-weight="900" text-anchor="middle">MEJORÁ</text>
+            <text x="380" y="103" fill="#B5E12B" font-size="22" font-family="sans-serif" font-weight="900" text-anchor="middle">TU</text>
+            <text x="380" y="126" fill="white" font-size="15" font-family="sans-serif" font-weight="300" text-anchor="middle" letter-spacing="2">CUERPO</text>
+            <text x="380" y="152" fill="rgba(255,255,255,0.4)" font-size="6" font-family="sans-serif" text-anchor="middle">Joaco Verón · IFBB</text>
+            <rect x="316" y="165" width="128" height="22" rx="11" fill="rgba(181,225,43,0.2)" stroke="#B5E12B" stroke-width="1"/>
+            <text x="380" y="180" fill="#B5E12B" font-size="7" font-family="sans-serif" font-weight="700" text-anchor="middle">CONSULTA GRATIS →</text>
+            <text x="380" y="215" fill="rgba(255,255,255,0.3)" font-size="6" font-family="sans-serif" text-anchor="middle">@joaco.veron</text>
+          </svg>
+          <div class="project-visual-overlay"></div>
+          <span class="project-cat cat-mkt">Marketing &amp; IA</span>
+        </div>
+        <div class="project-body">
+          <span class="live-badge">Diseño interactivo en vivo</span>
+          <h3 class="project-title">Posts &amp; Stories — Küme + Joaco Verón</h3>
+          <p class="project-desc">Piezas de contenido para redes: brand statement Küme, carrusel de errores de marketing y story mockup para Joaquín Verón. Diseñadas en código HTML/CSS.</p>
+          <div class="project-tools"><span class="ptool">HTML/CSS</span><span class="ptool">Brand Design</span><span class="ptool">Social Media</span></div>
+          <div class="view-btns">
+            <button class="view-btn accent" onclick="event.stopPropagation();openViewer('./projects/posts/post-01-brand-statement.html','Küme — Brand Statement')">Post 01 →</button>
+            <button class="view-btn" onclick="event.stopPropagation();openViewer('./projects/posts/post-02-errores.html','Küme — 5 Errores')">Post 02 →</button>
+            <button class="view-btn" onclick="event.stopPropagation();openViewer('./projects/posts/joaquin-veron-story-mockup.html','Joaco Verón — Story')">Story JV →</button>
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
 
-  <!-- Dashboard iframe overlay -->
+  <!-- Generic live viewer overlay -->
+  <div class="iframe-overlay" id="viewerOverlay">
+    <div class="iframe-topbar">
+      <span class="iframe-title" id="viewerTitle">Proyecto en vivo</span>
+      <button class="iframe-close" onclick="closeViewer()">&#x2715;&nbsp; Cerrar</button>
+    </div>
+    <iframe class="iframe-frame" id="viewerFrame" src="" allowfullscreen></iframe>
+  </div>
+
+  <!-- Dashboard overlay (alias) -->
   <div class="iframe-overlay" id="dashboardOverlay">
     <div class="iframe-topbar">
       <span class="iframe-title">Informes Comparativos — Cuartos Congelados | Marzo 2026</span>
@@ -759,6 +904,17 @@
       });
     });
 
+    function openViewer(src, title){
+      document.getElementById('viewerFrame').src = src;
+      document.getElementById('viewerTitle').textContent = title || 'Proyecto';
+      document.getElementById('viewerOverlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeViewer(){
+      document.getElementById('viewerOverlay').classList.remove('open');
+      document.getElementById('viewerFrame').src = '';
+      document.body.style.overflow = '';
+    }
     function openDashboard(){
       document.getElementById('dashboardFrame').src = './dashboards/DASHBOARD_MENSUAL_MARZO_2026.html';
       document.getElementById('dashboardOverlay').classList.add('open');
@@ -850,7 +1006,7 @@
     }
     function closeProject(){ document.getElementById('projectModal').classList.remove('open'); document.body.style.overflow = ''; }
     function handleOverlayClick(e){ if(e.target===document.getElementById('projectModal')) closeProject(); }
-    document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ closeProject(); closeMM(); closeDashboard(); } });
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ closeProject(); closeMM(); closeDashboard(); closeViewer(); } });
 
     /* Avatar is now a pure inline SVG — no canvas processing needed */
   </script>

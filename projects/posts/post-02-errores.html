@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=1080"/>
+<title>Post 02 — 5 Errores</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    width: 1080px;
+    height: 1080px;
+    overflow: hidden;
+    background: #F5EFE0;
+    font-family: 'DM Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .canvas {
+    width: 1080px;
+    height: 1080px;
+    position: relative;
+    background: #F5EFE0;
+    padding: 80px 88px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  /* Borde superior dorado grueso */
+  .canvas::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: #C4973A;
+  }
+
+  /* TOP */
+  .top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .numero-grande {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 200px;
+    font-weight: 300;
+    line-height: 1;
+    color: rgba(27,58,45,0.06);
+    position: absolute;
+    right: 60px;
+    top: 40px;
+    letter-spacing: -0.04em;
+    user-select: none;
+  }
+
+  .categoria {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #C4973A;
+  }
+
+  /* HEADLINE */
+  .headline-block {
+    position: relative;
+    z-index: 2;
+  }
+
+  .headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 64px;
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: #1B3A2D;
+    margin-bottom: 16px;
+  }
+
+  .headline em {
+    font-style: italic;
+    color: #C4973A;
+  }
+
+  .sub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: rgba(27,58,45,0.55);
+    line-height: 1.6;
+    max-width: 480px;
+  }
+
+  /* LISTA */
+  .lista {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0;
+    position: relative;
+    z-index: 2;
+    margin: 32px 0;
+  }
+
+  .item {
+    display: flex;
+    align-items: flex-start;
+    gap: 28px;
+    padding: 22px 0;
+    border-bottom: 1px solid rgba(27,58,45,0.1);
+  }
+
+  .item:first-child {
+    border-top: 1px solid rgba(27,58,45,0.1);
+  }
+
+  .item-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #C4973A;
+    letter-spacing: 0.1em;
+    min-width: 24px;
+    padding-top: 3px;
+  }
+
+  .item-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: #1B3A2D;
+    line-height: 1.5;
+  }
+
+  .item-text strong {
+    font-weight: 600;
+  }
+
+  /* BOTTOM */
+  .bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    z-index: 2;
+  }
+
+  .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    color: #1B3A2D;
+  }
+
+  .cta {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(27,58,45,0.5);
+    letter-spacing: 0.06em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .cta::after {
+    content: '→';
+    color: #C4973A;
+    font-size: 16px;
+  }
+</style>
+</head>
+<body>
+<div class="canvas">
+  <span class="numero-grande">5</span>
+
+  <div class="top">
+    <span class="categoria">Contenido estratégico</span>
+  </div>
+
+  <div class="headline-block">
+    <h1 class="headline">5 errores que<br>frenan tu negocio<br>en <em>Instagram.</em></h1>
+    <p class="sub">Deslizá. Probablemente cometés más de uno.</p>
+  </div>
+
+  <div class="lista">
+    <div class="item">
+      <span class="item-num">01</span>
+      <p class="item-text"><strong>Bio sin propósito.</strong> Decís qué sos, no qué problema resolvés.</p>
+    </div>
+    <div class="item">
+      <span class="item-num">02</span>
+      <p class="item-text"><strong>Contenido sin estrategia.</strong> Publicás cuando tenés ganas, no cuando es útil.</p>
+    </div>
+    <div class="item">
+      <span class="item-num">03</span>
+      <p class="item-text"><strong>Estética inconsistente.</strong> Tu feed parece hecho por 4 personas distintas.</p>
+    </div>
+    <div class="item">
+      <span class="item-num">04</span>
+      <p class="item-text"><strong>Hablás de vos, no de tu cliente.</strong> Cada post dice "nosotros" en lugar de "vos".</p>
+    </div>
+    <div class="item">
+      <span class="item-num">05</span>
+      <p class="item-text"><strong>Sin próximo paso claro.</strong> El que te visita no sabe cómo contratarte.</p>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <span class="logo">küme</span>
+    <span class="cta">Consultanos sin cargo</span>
+  </div>
+</div>
+</body>
+</html>
