@@ -549,7 +549,7 @@
       </div>
 
       <!-- 7. Joaquín Verón — Personal Trainer -->
-      <div class="project-card reveal" data-cat="ux" onclick="openProject('trainer')">
+      <div class="project-card reveal" data-cat="ux" onclick="openViewer('https://joaquin-vero.vercel.app/','Joaquín Verón — Personal Trainer IFBB')">
         <div class="project-visual pv-3">
           <img src="./img/trainer-hero.png" alt="Joaquín Verón Personal Trainer" class="project-img-cover" onerror="this.style.display='none'"/>
           <div class="project-visual-bg pv-3"></div>
@@ -561,9 +561,8 @@
           <h3 class="project-title">Joaquín Verón — Personal Trainer IFBB</h3>
           <p class="project-desc">Landing page completa: hero, 4 pilares de servicio, 3 planes de precios, testimonios verificados, sponsors y CTAs directos a WhatsApp. Responsive y en producción.</p>
           <div class="project-tools"><span class="ptool">HTML5</span><span class="ptool">CSS3</span><span class="ptool">JavaScript</span><span class="ptool">Vercel</span></div>
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px;">
-            <span class="project-link-btn">Ver proyecto &nbsp;→</span>
-            <a href="https://joaquin-vero.vercel.app/" target="_blank" onclick="event.stopPropagation()" style="font-family:'IBM Plex Mono',monospace;font-size:.58rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--green);text-decoration:none;border:1px solid rgba(16,185,129,0.3);padding:3px 9px;">↗ Live</a>
+          <div class="view-btns">
+            <button class="view-btn accent" onclick="event.stopPropagation();openViewer('https://joaquin-vero.vercel.app/','Joaquín Verón — Personal Trainer IFBB')">Ver live →</button>
           </div>
         </div>
       </div>
