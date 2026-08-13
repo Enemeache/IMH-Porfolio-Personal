@@ -1,0 +1,1862 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>MenuQR — Descubrí los mejores restaurantes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+button{cursor:pointer;font-family:inherit;border:none;background:none}
+input,select,textarea{font-family:inherit;border:none;outline:none;background:none}
+img{display:block}
+a{text-decoration:none;color:inherit}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-thumb{background:#2a2a32;border-radius:2px}
+
+:root{
+  --bg:#06060A; --bg2:#0D0D12; --bg3:#141419; --bg4:#1B1B22; --bg5:#22222A;
+  --b:#1E1E26; --b2:#2A2A34; --b3:#38383F;
+  --text:#F2EDE6; --t2:#918C86; --t3:#565250;
+  --accent:#C8912A; --a2:#E0A83A; --abg:#C8912A12; --ab:#C8912A30;
+  --mp:#009EE3; --g:#3B7A58; --gt:#5EAF85;
+  --r:#B84040; --rt:#E07070;
+  --rad:16px; --rads:10px; --radxs:6px; --pill:100px;
+  --shadow:0 8px 40px rgba(0,0,0,.6);
+  --max:1180px;
+}
+
+/* ══ NAV ══ */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(6,6,10,.82);backdrop-filter:blur(24px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.nav-inner{
+  max-width:var(--max);margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:13px 24px;
+}
+.nav-brand{display:flex;align-items:center;gap:10px;cursor:pointer}
+.nav-logo{
+  width:32px;height:32px;border-radius:8px;background:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Fraunces',serif;font-size:13px;color:#000;
+}
+.nav-name{font-family:'Fraunces',serif;font-size:17px;font-weight:300;color:var(--text);letter-spacing:.3px}
+.nav-tagline{font-size:11px;color:var(--t3);margin-top:1px}
+.nav-right{display:flex;align-items:center;gap:8px}
+.btn-nav{
+  padding:7px 14px;border-radius:var(--pill);font-size:13px;
+  border:1px solid var(--b2);color:var(--t2);transition:all .18s;
+}
+.btn-nav:hover{border-color:var(--b3);color:var(--text)}
+.btn-nav-accent{
+  padding:7px 16px;border-radius:var(--pill);font-size:13px;font-weight:500;
+  background:var(--accent);color:#000;transition:opacity .15s;
+}
+.btn-nav-accent:active{opacity:.85}
+
+/* ══ HERO — Full bleed with photo ══ */
+.hero-wrap{
+  position:relative;height:580px;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:0;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background-image:url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1400&q=85');
+  background-size:cover;background-position:center;
+  filter:brightness(.38) saturate(.9);
+  transform:scale(1.04);
+  transition:transform 8s ease;
+}
+.hero-bg.loaded{transform:scale(1)}
+.hero-grad{
+  position:absolute;inset:0;
+  background:linear-gradient(
+    160deg,
+    rgba(6,6,10,.4) 0%,
+    rgba(6,6,10,.15) 40%,
+    rgba(6,6,10,.6) 100%
+  );
+}
+.hero-grad-bottom{
+  position:absolute;bottom:0;left:0;right:0;height:200px;
+  background:linear-gradient(to bottom,transparent,var(--bg));
+}
+.hero-content{
+  position:relative;z-index:2;
+  text-align:center;padding:0 24px;max-width:760px;
+  padding-top:64px;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 14px;border-radius:var(--pill);
+  background:rgba(200,145,42,.15);border:1px solid rgba(200,145,42,.35);
+  font-size:12px;color:var(--accent);margin-bottom:20px;letter-spacing:.3px;
+}
+.hero-title{
+  font-family:'Fraunces',serif;
+  font-size:clamp(40px,6.5vw,68px);
+  font-weight:200;color:var(--text);line-height:1.05;
+  letter-spacing:-.5px;margin-bottom:18px;
+}
+.hero-title em{font-style:italic;color:var(--accent)}
+.hero-sub{
+  font-size:16px;color:rgba(242,237,230,.65);
+  max-width:420px;margin:0 auto 36px;line-height:1.65;font-weight:300;
+}
+
+/* Search */
+.search-bar{
+  max-width:580px;margin:0 auto;
+  display:flex;align-items:center;gap:0;
+  background:rgba(255,255,255,.07);backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:var(--pill);padding:5px 5px 5px 22px;
+  transition:border-color .18s,background .18s;
+}
+.search-bar:focus-within{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.22)}
+.search-bar svg{width:16px;height:16px;fill:none;stroke:rgba(255,255,255,.4);stroke-width:2;stroke-linecap:round;flex-shrink:0}
+.search-bar input{
+  flex:1;font-size:15px;color:var(--text);background:transparent;
+  padding:5px 14px;
+}
+.search-bar input::placeholder{color:rgba(242,237,230,.35)}
+.btn-search{
+  padding:11px 24px;background:var(--accent);color:#000;
+  border-radius:var(--pill);font-size:14px;font-weight:600;
+  transition:opacity .15s;flex-shrink:0;
+}
+.btn-search:active{opacity:.85}
+
+/* Stats */
+.hero-stats{
+  max-width:var(--max);margin:0 auto;
+  display:flex;align-items:center;justify-content:center;gap:0;
+  padding:0 24px 36px;flex-wrap:wrap;
+  position:relative;z-index:2;
+}
+.stat{
+  text-align:center;padding:24px 32px;
+  position:relative;
+}
+.stat::after{
+  content:'';position:absolute;right:0;top:50%;transform:translateY(-50%);
+  height:32px;width:1px;background:var(--b2);
+}
+.stat:last-child::after{display:none}
+.stat-n{font-family:'Fraunces',serif;font-size:28px;font-weight:300;color:var(--text);line-height:1}
+.stat-l{font-size:12px;color:var(--t3);margin-top:5px;letter-spacing:.3px}
+
+/* ══ FEATURED ══ */
+.section-header{
+  max-width:var(--max);margin:0 auto;
+  display:flex;align-items:flex-end;justify-content:space-between;
+  padding:40px 24px 20px;
+}
+.section-title{
+  font-family:'Fraunces',serif;font-size:26px;font-weight:300;color:var(--text);line-height:1.2;
+}
+.section-title span{color:var(--accent);font-style:italic}
+.section-sub{font-size:13px;color:var(--t3);margin-top:4px}
+.section-link{font-size:13px;color:var(--t2);display:flex;align-items:center;gap:4px;transition:color .15s}
+.section-link:hover{color:var(--text)}
+.section-link svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2}
+
+.featured-wrap{max-width:var(--max);margin:0 auto;padding:0 24px 48px;overflow:hidden}
+.featured-scroll{
+  display:flex;gap:14px;overflow-x:auto;scrollbar-width:none;
+  padding-bottom:6px;margin-left:-2px;padding-left:2px;
+}
+.featured-scroll::-webkit-scrollbar{display:none}
+
+.feat-card{
+  flex-shrink:0;width:300px;border-radius:var(--rad);overflow:hidden;
+  background:var(--bg2);border:1px solid var(--b);cursor:pointer;
+  transition:transform .18s,border-color .18s;position:relative;
+}
+.feat-card:hover{transform:translateY(-3px);border-color:var(--b2)}
+.feat-img{height:180px;overflow:hidden;position:relative;background:var(--bg3)}
+.feat-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.feat-card:hover .feat-img img{transform:scale(1.06)}
+.feat-img-grad{position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(to bottom,transparent,rgba(13,13,18,.9))}
+.feat-open-badge{
+  position:absolute;top:10px;left:10px;
+  padding:3px 9px;border-radius:var(--pill);font-size:10px;font-weight:600;
+  backdrop-filter:blur(8px);
+}
+.feat-body{padding:14px 15px 16px}
+.feat-cuisine{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+.feat-name{font-family:'Fraunces',serif;font-size:19px;font-weight:300;color:var(--text);margin-bottom:8px;line-height:1.2}
+.feat-row{display:flex;align-items:center;justify-content:space-between}
+.feat-rating{display:flex;align-items:center;gap:5px}
+.feat-stars{color:var(--accent);font-size:11px;letter-spacing:-1px}
+.feat-rval{font-size:13px;font-weight:600;color:var(--text)}
+.feat-rcount{font-size:11px;color:var(--t3)}
+.feat-hood{font-size:12px;color:var(--t3);display:flex;align-items:center;gap:3px;margin-top:7px}
+.feat-hood svg{width:10px;height:10px;fill:none;stroke:currentColor;stroke-width:2;flex-shrink:0}
+
+/* ══ FILTERS ══ */
+.filters-wrap{
+  position:sticky;top:58px;z-index:90;
+  background:rgba(6,6,10,.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255,255,255,.05);
+}
+.filters-inner{
+  max-width:var(--max);margin:0 auto;
+  padding:10px 24px;display:flex;align-items:center;gap:7px;
+  overflow-x:auto;scrollbar-width:none;white-space:nowrap;
+}
+.filters-inner::-webkit-scrollbar{display:none}
+.filter-label{font-size:10px;color:var(--t3);letter-spacing:1px;text-transform:uppercase;flex-shrink:0;margin-right:4px}
+.chip{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:6px 14px;border-radius:var(--pill);
+  font-size:12px;color:var(--t2);
+  background:var(--bg3);border:1px solid var(--b);
+  flex-shrink:0;transition:all .18s;cursor:pointer;
+}
+.chip:hover{border-color:var(--b2);color:var(--text)}
+.chip.act{background:var(--abg);border-color:var(--ab);color:var(--accent);font-weight:500}
+.chip svg{width:10px;height:10px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.chip-sep{width:1px;height:16px;background:var(--b2);flex-shrink:0;margin:0 4px}
+.sort-wrap{display:flex;align-items:center;gap:7px;flex-shrink:0}
+.sort-label{font-size:12px;color:var(--t3);white-space:nowrap}
+.sort-select{
+  background:var(--bg3);border:1px solid var(--b);color:var(--text);
+  padding:6px 28px 6px 11px;border-radius:var(--rads);font-size:12px;cursor:pointer;
+  appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23565250' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 9px center;
+}
+
+/* ══ RESULTS ══ */
+.main-wrap{max-width:var(--max);margin:0 auto;padding:28px 24px 80px}
+.results-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:10px}
+.results-count{font-size:14px;color:var(--t3)}
+.results-count strong{color:var(--t2);font-weight:500}
+.view-toggles{display:flex;gap:4px}
+.view-btn{
+  width:32px;height:32px;border-radius:var(--rads);
+  display:flex;align-items:center;justify-content:center;
+  background:var(--bg3);border:1px solid var(--b);color:var(--t3);transition:all .15s;
+}
+.view-btn.act{background:var(--bg4);border-color:var(--b2);color:var(--text)}
+.view-btn svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2}
+
+/* ══ RESTAURANT CARDS ══ */
+.rest-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:18px}
+.rest-grid.list-view{grid-template-columns:1fr}
+
+.rcard{
+  background:var(--bg2);border:1px solid var(--b);border-radius:var(--rad);
+  overflow:hidden;cursor:pointer;position:relative;
+  transition:border-color .2s,transform .15s,box-shadow .2s;
+}
+.rcard:hover{border-color:var(--b2);transform:translateY(-3px);box-shadow:0 16px 48px rgba(0,0,0,.5)}
+.rcard:active{transform:scale(.99)}
+
+/* Image — taller, more presence */
+.rcard-img{height:220px;position:relative;overflow:hidden;background:var(--bg3)}
+.rcard-img img{width:100%;height:100%;object-fit:cover;transition:transform .45s}
+.rcard:hover .rcard-img img{transform:scale(1.07)}
+.rcard-img-grad{
+  position:absolute;bottom:0;left:0;right:0;height:120px;
+  background:linear-gradient(to bottom,transparent,rgba(13,13,18,.85));
+  pointer-events:none;
+}
+
+/* Inline name on image */
+.rcard-over{
+  position:absolute;bottom:0;left:0;right:0;padding:14px 14px 13px;
+  display:flex;flex-direction:column;gap:3px;
+}
+.rcard-over-name{font-family:'Fraunces',serif;font-size:20px;font-weight:300;color:#fff;line-height:1.2}
+.rcard-over-hood{font-size:11px;color:rgba(255,255,255,.55);display:flex;align-items:center;gap:3px}
+.rcard-over-hood svg{width:9px;height:9px;fill:none;stroke:currentColor;stroke-width:2;flex-shrink:0}
+
+/* Badges */
+.rcard-badges{position:absolute;top:11px;left:11px;display:flex;gap:5px;flex-wrap:wrap}
+.badge{
+  padding:3px 9px;border-radius:var(--pill);font-size:10px;font-weight:600;
+  backdrop-filter:blur(10px);letter-spacing:.3px;
+}
+.badge-open{background:rgba(28,68,46,.85);color:#7DDBA8;border:1px solid rgba(94,175,133,.25)}
+.badge-closed{background:rgba(72,28,28,.85);color:#E89090;border:1px solid rgba(224,112,112,.2)}
+.badge-new{background:rgba(200,145,42,.85);color:#000}
+.badge-trending{background:rgba(28,46,72,.85);color:#88B8E8;border:1px solid rgba(110,168,224,.2)}
+.badge-reservas{background:rgba(10,10,16,.75);color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.1)}
+.rcard-price{
+  position:absolute;top:11px;right:11px;
+  background:rgba(10,10,16,.75);backdrop-filter:blur(10px);
+  padding:3px 9px;border-radius:var(--pill);font-size:11px;font-weight:600;
+  color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.08);
+}
+
+/* Card body — minimal */
+.rcard-body{padding:13px 14px 15px}
+.rcard-cuisine{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-bottom:9px}
+.rcard-rating{display:flex;align-items:center;justify-content:space-between}
+.rating-left{display:flex;align-items:center;gap:6px}
+.stars{display:flex;gap:1px}
+.star{font-size:11px}
+.star.full{color:var(--accent)}
+.star.empty{color:var(--b2)}
+.rating-val{font-size:14px;font-weight:600;color:var(--text)}
+.rating-count{font-size:11px;color:var(--t3)}
+.avg-ticket{font-size:12px;color:var(--t2)}
+.rcard-tags{display:flex;gap:5px;margin-top:10px;flex-wrap:wrap}
+.rtag{padding:3px 9px;background:var(--bg4);border:1px solid var(--b);border-radius:var(--pill);font-size:11px;color:var(--t3)}
+
+/* Rank */
+.rank-badge{
+  position:absolute;top:11px;left:11px;
+  width:26px;height:26px;border-radius:50%;
+  background:var(--accent);color:#000;
+  font-size:11px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 12px rgba(200,145,42,.6);
+}
+
+/* List view */
+.list-view .rcard{display:flex}
+.list-view .rcard-img{width:240px;height:auto;min-height:180px;flex-shrink:0}
+.list-view .rcard-body{flex:1;display:flex;flex-direction:column;justify-content:space-between}
+
+/* Empty */
+.empty-state{text-align:center;padding:60px 20px;color:var(--t3);grid-column:1/-1}
+.empty-icon{font-size:40px;margin-bottom:12px}
+
+/* ══ PROFILE MODAL ══ */
+.prof-overlay{
+  position:fixed;inset:0;z-index:300;
+  background:rgba(0,0,0,0);transition:background .25s;pointer-events:none;
+  overflow-y:auto;
+}
+.prof-overlay.act{background:rgba(0,0,0,.9);pointer-events:all}
+.prof-sheet{
+  background:var(--bg);
+  border-radius:22px 22px 0 0;
+  transform:translateY(100%);transition:transform .32s cubic-bezier(.32,0,.67,0);
+  margin-top:44px;min-height:calc(100vh - 44px);position:relative;
+}
+.prof-overlay.act .prof-sheet{transform:translateY(0)}
+.prof-hero{height:360px;position:relative;overflow:hidden;background:var(--bg3)}
+.prof-hero img{width:100%;height:100%;object-fit:cover;filter:brightness(.5)}
+.prof-hero-grad{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.1) 0%,transparent 30%,rgba(6,6,10,.95) 100%)}
+.prof-close{
+  position:absolute;top:14px;right:14px;z-index:5;
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(0,0,0,.55);backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.12);
+  color:rgba(255,255,255,.8);font-size:18px;
+  display:flex;align-items:center;justify-content:center;
+}
+.prof-hero-content{position:absolute;bottom:0;left:0;right:0;padding:22px 22px 26px}
+.prof-cuisine-badge{
+  display:inline-block;padding:4px 12px;border-radius:var(--pill);
+  background:rgba(200,145,42,.18);border:1px solid rgba(200,145,42,.3);
+  font-size:11px;color:var(--accent);font-weight:500;letter-spacing:.5px;
+  text-transform:uppercase;margin-bottom:11px;
+}
+.prof-name{font-family:'Fraunces',serif;font-size:34px;font-weight:200;color:var(--text);line-height:1.1;margin-bottom:8px}
+.prof-meta{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.prof-meta-item{display:flex;align-items:center;gap:4px;font-size:13px;color:rgba(242,237,230,.6)}
+.prof-meta-item svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;flex-shrink:0}
+.prof-body{padding:0 22px 90px;max-width:840px;margin:0 auto}
+.prof-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:22px 0 26px;border-bottom:1px solid var(--b)}
+.btn-reserve{display:flex;align-items:center;justify-content:center;gap:7px;padding:14px;background:var(--accent);color:#000;border-radius:var(--rad);font-size:14px;font-weight:600;transition:opacity .15s}
+.btn-reserve:active{opacity:.85}
+.btn-reserve svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2}
+.btn-menu-link{display:flex;align-items:center;justify-content:center;gap:7px;padding:14px;background:var(--bg2);border:1px solid var(--b2);color:var(--t2);border-radius:var(--rad);font-size:14px;transition:all .15s}
+.btn-menu-link:hover{border-color:var(--b3);color:var(--text)}
+.prof-section{padding:24px 0;border-bottom:1px solid var(--b)}
+.prof-section:last-child{border-bottom:none}
+.prof-section-title{font-size:10px;font-weight:600;color:var(--t3);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:15px}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.info-item{background:var(--bg2);border:1px solid var(--b);border-radius:var(--rads);padding:13px 15px}
+.info-item-label{font-size:11px;color:var(--t3);margin-bottom:5px}
+.info-item-val{font-size:14px;color:var(--text);font-weight:500}
+.rev-list-prof{display:flex;flex-direction:column;gap:10px}
+.rev-card{background:var(--bg2);border:1px solid var(--b);border-radius:var(--rads);padding:15px}
+.rev-head{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.rev-av{width:34px;height:34px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#000;flex-shrink:0}
+.rev-name{font-size:13px;font-weight:500;color:var(--text)}
+.rev-date{font-size:11px;color:var(--t3);margin-top:2px}
+.rev-stars{display:flex;gap:2px;margin-bottom:7px}
+.rev-txt{font-size:13px;color:var(--t2);line-height:1.55}
+.menu-preview{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.menu-item-prev{display:flex;gap:10px;align-items:center;background:var(--bg2);border:1px solid var(--b);border-radius:var(--rads);padding:11px}
+.menu-item-img{width:46px;height:46px;border-radius:var(--radxs);overflow:hidden;flex-shrink:0;background:var(--bg3)}
+.menu-item-img img{width:100%;height:100%;object-fit:cover}
+.menu-item-name{font-size:13px;font-weight:500;color:var(--text);margin-bottom:3px;line-height:1.3}
+.menu-item-price{font-size:12px;color:var(--accent);font-weight:500}
+.menu-see-all{grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:5px;padding:12px;background:var(--bg2);border:1px solid var(--b);border-radius:var(--rads);font-size:13px;color:var(--t2);transition:all .15s;cursor:pointer}
+.menu-see-all:hover{border-color:var(--b3);color:var(--text)}
+
+/* ══ RESERVATION MODAL ══ */
+.res-overlay{
+  position:fixed;inset:0;z-index:400;
+  background:rgba(0,0,0,0);transition:background .22s;pointer-events:none;
+  display:flex;align-items:flex-end;justify-content:center;
+}
+.res-overlay.act{background:rgba(0,0,0,.88);pointer-events:all}
+.res-sheet{
+  background:var(--bg2);border-radius:22px 22px 0 0;
+  width:100%;max-width:520px;
+  transform:translateY(100%);transition:transform .3s cubic-bezier(.32,0,.67,0);
+  max-height:92vh;display:flex;flex-direction:column;overflow:hidden;
+  border:1px solid var(--b2);border-bottom:none;
+}
+.res-overlay.act .res-sheet{transform:translateY(0)}
+.res-handle{width:36px;height:4px;border-radius:2px;background:var(--b2);margin:10px auto 0;flex-shrink:0}
+.res-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 12px;border-bottom:1px solid var(--b);flex-shrink:0}
+.res-title{font-size:15px;font-weight:500;color:var(--text)}
+.res-rest-name{font-size:12px;color:var(--t3);margin-top:2px}
+.res-close{width:29px;height:29px;border-radius:50%;background:var(--bg3);border:1px solid var(--b2);color:var(--t2);font-size:16px;display:flex;align-items:center;justify-content:center}
+.res-steps{display:flex;gap:4px;padding:14px 18px 0;flex-shrink:0}
+.res-step-dot{flex:1;height:2px;border-radius:2px;background:var(--b);transition:background .3s}
+.res-step-dot.done{background:var(--accent)}
+.res-step-dot.active{background:var(--accent);opacity:.45}
+.res-body{flex:1;overflow-y:auto;padding:18px}
+.date-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:20px}
+.date-btn{
+  aspect-ratio:1;border-radius:var(--rads);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:11px;color:var(--t2);background:var(--bg3);border:1px solid var(--b);
+  transition:all .15s;cursor:pointer;gap:2px;
+}
+.date-btn:hover{border-color:var(--b2);color:var(--text)}
+.date-btn.act{background:var(--accent);color:#000;border-color:var(--accent);font-weight:600}
+.date-btn.past{opacity:.25;pointer-events:none}
+.date-day{font-size:9px;text-transform:uppercase;letter-spacing:.5px;opacity:.7}
+.date-n{font-size:14px;font-weight:500}
+.slots-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:20px}
+.slot-btn{padding:11px 8px;border-radius:var(--rads);text-align:center;border:1px solid var(--b);background:var(--bg3);font-size:13px;color:var(--t2);transition:all .15s;cursor:pointer}
+.slot-btn:hover{border-color:var(--b2);color:var(--text)}
+.slot-btn.act{background:var(--abg);border-color:var(--ab);color:var(--accent);font-weight:500}
+.slot-btn.full{opacity:.28;pointer-events:none;text-decoration:line-through}
+.party-ctrl{display:flex;align-items:center;background:var(--bg3);border:1px solid var(--b);border-radius:var(--pill);width:fit-content}
+.party-btn{width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--t2);transition:color .15s}
+.party-btn:active{color:var(--text)}
+.party-val{min-width:36px;text-align:center;font-size:16px;font-weight:500;color:var(--text)}
+.res-input{width:100%;background:var(--bg3);border:1px solid var(--b2);color:var(--text);padding:11px 13px;border-radius:var(--rads);font-size:14px;margin-bottom:12px;transition:border-color .15s}
+.res-input:focus{border-color:var(--b3)}
+.res-input::placeholder{color:var(--t3)}
+.res-label{font-size:12px;font-weight:500;color:var(--t2);margin-bottom:6px;display:block}
+.res-footer{padding:14px 18px 28px;border-top:1px solid var(--b);flex-shrink:0}
+.btn-res-next{width:100%;padding:14px;background:var(--accent);color:#000;border-radius:var(--rad);font-size:15px;font-weight:600;transition:opacity .15s}
+.btn-res-next:active{opacity:.85}
+.btn-res-next:disabled{background:var(--bg3);color:var(--t3);cursor:default}
+.btn-res-back{width:100%;padding:11px;background:var(--bg3);border:1px solid var(--b2);color:var(--t2);border-radius:var(--rad);font-size:14px;margin-top:8px}
+.res-success{text-align:center;padding:24px 10px}
+.res-success-icon{font-size:50px;margin-bottom:14px}
+.res-success-title{font-family:'Fraunces',serif;font-size:26px;font-weight:300;color:var(--text);margin-bottom:8px}
+.res-success-sub{font-size:14px;color:var(--t3);line-height:1.65;margin-bottom:22px}
+.res-confirm-code{display:inline-block;padding:8px 22px;background:var(--abg);border:1px solid var(--ab);border-radius:var(--pill);font-size:15px;font-weight:600;color:var(--accent);letter-spacing:3px;margin-bottom:20px}
+
+/* ══ TOAST ══ */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(70px);opacity:0;background:var(--bg4);border:1px solid var(--b2);border-radius:var(--pill);padding:10px 20px;font-size:13px;color:var(--text);white-space:nowrap;z-index:600;transition:transform .3s cubic-bezier(.34,1.56,.64,1),opacity .28s;box-shadow:var(--shadow);pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.toast.ok{color:var(--gt)}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:768px){
+  .hero-wrap{height:500px}
+  .hero-content{padding-top:76px}
+  .hero-title{font-size:36px}
+  .hero-sub{font-size:14px}
+  .hero-stats{gap:0;padding:0 16px 28px}
+  .stat{padding:18px 20px}
+  .section-header,.featured-wrap,.main-wrap{padding-left:16px;padding-right:16px}
+  .rest-grid{grid-template-columns:1fr}
+  .list-view .rcard{flex-direction:column}
+  .list-view .rcard-img{width:100%;height:200px}
+  .info-grid{grid-template-columns:1fr}
+  .menu-preview{grid-template-columns:1fr}
+  .prof-actions{grid-template-columns:1fr}
+  .prof-hero{height:280px}
+  .prof-name{font-size:26px}
+  .slots-grid{grid-template-columns:repeat(3,1fr)}
+}
+
+/* ══ NAV ══ */
+.nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(8,8,10,.94);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--b);
+}
+.nav-inner{
+  max-width:var(--max);margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;
+}
+.nav-brand{display:flex;align-items:center;gap:10px;cursor:pointer}
+.nav-logo{
+  width:34px;height:34px;border-radius:9px;background:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Fraunces',serif;font-size:14px;color:#000;font-weight:400;
+}
+.nav-name{font-family:'Fraunces',serif;font-size:18px;font-weight:300;color:var(--text)}
+.nav-right{display:flex;align-items:center;gap:8px}
+.btn-nav{
+  padding:7px 14px;border-radius:var(--pill);font-size:13px;
+  border:1px solid var(--b2);color:var(--t2);transition:all .15s;
+}
+.btn-nav:hover{border-color:var(--b3);color:var(--text)}
+.btn-nav-accent{
+  padding:7px 16px;border-radius:var(--pill);font-size:13px;font-weight:500;
+  background:var(--accent);color:#000;transition:opacity .15s;
+}
+.btn-nav-accent:active{opacity:.85}
+
+/* ══ HERO ══ */
+.hero{
+  max-width:var(--max);margin:0 auto;
+  padding:52px 20px 40px;text-align:center;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 14px;border-radius:var(--pill);
+  background:var(--abg);border:1px solid var(--ab);
+  font-size:12px;color:var(--accent);margin-bottom:18px;
+}
+.hero-title{
+  font-family:'Fraunces',serif;font-size:clamp(36px,6vw,60px);
+  font-weight:200;color:var(--text);line-height:1.08;
+  letter-spacing:-.5px;margin-bottom:16px;
+}
+.hero-title em{font-style:italic;color:var(--accent)}
+.hero-sub{font-size:16px;color:var(--t2);max-width:480px;margin:0 auto 32px;line-height:1.6}
+
+/* Search bar */
+.search-bar{
+  max-width:600px;margin:0 auto;
+  display:flex;gap:8px;align-items:center;
+  background:var(--bg2);border:1px solid var(--b2);
+  border-radius:var(--pill);padding:6px 6px 6px 20px;
+  transition:border-color .15s;
+}
+.search-bar:focus-within{border-color:var(--b3)}
+.search-bar svg{width:16px;height:16px;fill:none;stroke:var(--t3);stroke-width:2;stroke-linecap:round;flex-shrink:0}
+.search-bar input{
+  flex:1;font-size:15px;color:var(--text);background:transparent;
+  padding:4px 0;
+}
+.search-bar input::placeholder{color:var(--t3)}
+.btn-search{
+  padding:10px 20px;background:var(--accent);color:#000;
+  border-radius:var(--pill);font-size:14px;font-weight:600;
+  transition:opacity .15s;flex-shrink:0;
+}
+.btn-search:active{opacity:.85}
+
+/* Stats */
+.hero-stats{
+  display:flex;align-items:center;justify-content:center;gap:28px;
+  margin-top:28px;flex-wrap:wrap;
+}
+.stat{text-align:center}
+.stat-n{font-family:'Fraunces',serif;font-size:26px;font-weight:300;color:var(--text)}
+.stat-l{font-size:12px;color:var(--t3);margin-top:2px}
+
+/* ══ FILTERS ══ */
+.filters-wrap{
+  position:sticky;top:63px;z-index:90;
+  background:rgba(8,8,10,.94);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--b);
+}
+.filters-inner{
+  max-width:var(--max);margin:0 auto;
+  padding:12px 20px;display:flex;align-items:center;gap:8px;
+  overflow-x:auto;scrollbar-width:none;white-space:nowrap;
+}
+.filters-inner::-webkit-scrollbar{display:none}
+.filter-label{font-size:11px;color:var(--t3);letter-spacing:.5px;text-transform:uppercase;flex-shrink:0;margin-right:4px}
+
+/* Chips */
+.chip{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:6px 14px;border-radius:var(--pill);
+  font-size:12px;color:var(--t2);
+  background:var(--bg3);border:1px solid var(--b);
+  flex-shrink:0;transition:all .18s;cursor:pointer;
+}
+.chip:hover{border-color:var(--b2);color:var(--text)}
+.chip.act{background:var(--abg);border-color:var(--ab);color:var(--accent)}
+.chip svg{width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.chip-sep{width:1px;height:18px;background:var(--b);flex-shrink:0;margin:0 4px}
+
+/* Sort */
+.sort-wrap{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.sort-label{font-size:12px;color:var(--t3)}
+.sort-select{
+  background:var(--bg3);border:1px solid var(--b);
+  color:var(--text);padding:6px 10px 6px 10px;
+  border-radius:var(--rads);font-size:12px;cursor:pointer;
+  appearance:none;padding-right:24px;
+  background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23504E4A' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 8px center;
+}
+
+/* ══ MAIN GRID ══ */
+.main-wrap{max-width:var(--max);margin:0 auto;padding:24px 20px 60px}
+.results-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:20px;flex-wrap:wrap;gap:10px;
+}
+.results-count{font-size:14px;color:var(--t2)}
+.results-count strong{color:var(--text)}
+.view-toggles{display:flex;gap:4px}
+.view-btn{
+  width:32px;height:32px;border-radius:var(--rads);
+  display:flex;align-items:center;justify-content:center;
+  background:var(--bg3);border:1px solid var(--b);color:var(--t3);
+  transition:all .15s;
+}
+.view-btn.act{background:var(--bg4);border-color:var(--b2);color:var(--text)}
+.view-btn svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2}
+
+/* Restaurant grid */
+.rest-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.rest-grid.list-view{grid-template-columns:1fr}
+
+/* Restaurant card */
+.rcard{
+  background:var(--bg2);border:1px solid var(--b);border-radius:var(--rad);
+  overflow:hidden;cursor:pointer;transition:border-color .18s,transform .12s;
+  position:relative;
+}
+.rcard:hover{border-color:var(--b2);transform:translateY(-2px)}
+.rcard:active{transform:scale(.99)}
+
+.rcard-img{height:200px;position:relative;overflow:hidden;background:var(--bg3)}
+.rcard-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.rcard:hover .rcard-img img{transform:scale(1.05)}
+
+/* Badges over image */
+.rcard-badges{position:absolute;top:10px;left:10px;display:flex;gap:5px;flex-wrap:wrap}
+.badge{
+  padding:3px 9px;border-radius:var(--pill);font-size:10px;font-weight:600;
+  backdrop-filter:blur(8px);letter-spacing:.3px;
+}
+.badge-open{background:rgba(58,122,90,.8);color:#a8e8c8;border:1px solid rgba(94,175,133,.3)}
+.badge-closed{background:rgba(184,64,64,.7);color:#f0a0a0;border:1px solid rgba(224,112,112,.3)}
+.badge-new{background:rgba(200,145,42,.8);color:#000;border:1px solid rgba(200,145,42,.3)}
+.badge-trending{background:rgba(58,110,168,.8);color:#a8c8f0;border:1px solid rgba(110,168,224,.3)}
+.badge-reservas{background:rgba(0,0,0,.65);color:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.1)}
+
+.rcard-price{
+  position:absolute;top:10px;right:10px;
+  background:rgba(0,0,0,.68);backdrop-filter:blur(8px);
+  padding:3px 9px;border-radius:var(--pill);font-size:11px;font-weight:600;
+  color:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.1);
+}
+
+/* Card body */
+.rcard-body{padding:14px 15px 16px}
+.rcard-cuisine{font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px}
+.rcard-name{font-family:'Fraunces',serif;font-size:20px;font-weight:300;color:var(--text);margin-bottom:4px;line-height:1.2}
+.rcard-location{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--t3);margin-bottom:10px}
+.rcard-location svg{width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:2;flex-shrink:0}
+
+/* Rating row */
+.rcard-rating{display:flex;align-items:center;justify-content:space-between}
+.rating-left{display:flex;align-items:center;gap:6px}
+.stars{display:flex;gap:1px}
+.star{font-size:11px}
+.star.full{color:var(--accent)}
+.star.empty{color:var(--b2)}
+.rating-val{font-size:14px;font-weight:600;color:var(--text)}
+.rating-count{font-size:12px;color:var(--t3)}
+.avg-ticket{font-size:12px;color:var(--t2)}
+
+/* Tags */
+.rcard-tags{display:flex;gap:5px;margin-top:10px;flex-wrap:wrap}
+.rtag{
+  padding:3px 9px;background:var(--bg4);border:1px solid var(--b);
+  border-radius:var(--pill);font-size:11px;color:var(--t2);
+}
+
+/* List view adjustments */
+.list-view .rcard{display:flex}
+.list-view .rcard-img{width:220px;height:auto;flex-shrink:0}
+.list-view .rcard-img{min-height:170px}
+.list-view .rcard-body{flex:1;display:flex;flex-direction:column;justify-content:space-between}
+
+/* Rank badge */
+.rank-badge{
+  position:absolute;top:10px;left:10px;
+  width:28px;height:28px;border-radius:50%;
+  background:var(--accent);color:#000;
+  font-size:12px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 8px rgba(200,145,42,.5);
+}
+
+/* Empty state */
+.empty-state{text-align:center;padding:60px 20px;color:var(--t3)}
+.empty-icon{font-size:42px;margin-bottom:12px}
+
+/* ══ RESTAURANT MODAL / PROFILE ══ */
+.prof-overlay{
+  position:fixed;inset:0;z-index:300;
+  background:rgba(0,0,0,0);transition:background .22s;pointer-events:none;
+  overflow-y:auto;
+}
+.prof-overlay.act{background:rgba(0,0,0,.88);pointer-events:all}
+.prof-sheet{
+  background:var(--bg);
+  border-radius:20px 20px 0 0;
+  transform:translateY(100%);transition:transform .32s cubic-bezier(.32,0,.67,0);
+  margin-top:48px;min-height:calc(100vh - 48px);position:relative;
+}
+.prof-overlay.act .prof-sheet{transform:translateY(0)}
+
+/* Profile hero */
+.prof-hero{height:340px;position:relative;overflow:hidden;background:var(--bg3)}
+.prof-hero img{width:100%;height:100%;object-fit:cover;filter:brightness(.55)}
+.prof-hero-grad{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,rgba(8,8,10,.95) 100%)}
+.prof-close{
+  position:absolute;top:14px;right:14px;
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(0,0,0,.6);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.15);
+  color:rgba(255,255,255,.85);font-size:18px;
+  display:flex;align-items:center;justify-content:center;z-index:5;
+}
+.prof-hero-content{
+  position:absolute;bottom:0;left:0;right:0;padding:20px 20px 24px;
+}
+.prof-cuisine-badge{
+  display:inline-block;padding:4px 12px;
+  background:rgba(200,145,42,.2);border:1px solid rgba(200,145,42,.35);
+  border-radius:var(--pill);font-size:11px;color:var(--accent);
+  font-weight:500;letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px;
+}
+.prof-name{font-family:'Fraunces',serif;font-size:32px;font-weight:300;color:var(--text);line-height:1.1;margin-bottom:6px}
+.prof-meta{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.prof-meta-item{display:flex;align-items:center;gap:4px;font-size:13px;color:rgba(240,235,226,.65)}
+.prof-meta-item svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;flex-shrink:0}
+
+/* Profile body */
+.prof-body{padding:0 20px 80px;max-width:860px;margin:0 auto}
+
+/* Quick actions */
+.prof-actions{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;
+  padding:20px 0 24px;border-bottom:1px solid var(--b);
+}
+.btn-reserve{
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  padding:13px;background:var(--accent);color:#000;
+  border-radius:var(--rad);font-size:14px;font-weight:600;
+  transition:opacity .15s;
+}
+.btn-reserve:active{opacity:.85}
+.btn-reserve svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2}
+.btn-menu-link{
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  padding:13px;background:var(--bg2);border:1px solid var(--b2);color:var(--t2);
+  border-radius:var(--rad);font-size:14px;font-weight:500;
+  transition:all .15s;
+}
+.btn-menu-link:hover{border-color:var(--b3);color:var(--text)}
+
+/* Info section */
+.prof-section{padding:22px 0;border-bottom:1px solid var(--b)}
+.prof-section:last-child{border-bottom:none}
+.prof-section-title{font-size:13px;font-weight:600;color:var(--text);letter-spacing:.3px;margin-bottom:14px;text-transform:uppercase;font-size:11px;letter-spacing:1px;color:var(--t3)}
+
+/* Info grid */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.info-item{background:var(--bg2);border:1px solid var(--b);border-radius:var(--rads);padding:12px 14px}
+.info-item-label{font-size:11px;color:var(--t3);margin-bottom:4px}
+.info-item-val{font-size:14px;color:var(--text);font-weight:500}
+
+/* Reviews in profile */
+.rev-list-prof{display:flex;flex-direction:column;gap:10px}
+.rev-card{background:var(--bg2);border:1px solid var(--b);border-radius:var(--rads);padding:14px}
+.rev-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.rev-av{width:34px;height:34px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#000;flex-shrink:0}
+.rev-name{font-size:13px;font-weight:500;color:var(--text)}
+.rev-date{font-size:11px;color:var(--t3);margin-top:2px}
+.rev-stars{display:flex;gap:2px;margin-bottom:6px}
+.rev-txt{font-size:13px;color:var(--t2);line-height:1.5}
+
+/* Menu preview in profile */
+.menu-preview{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.menu-item-prev{
+  display:flex;gap:10px;align-items:center;
+  background:var(--bg2);border:1px solid var(--b);
+  border-radius:var(--rads);padding:10px;
+}
+.menu-item-img{width:46px;height:46px;border-radius:var(--radxs);overflow:hidden;flex-shrink:0;background:var(--bg3)}
+.menu-item-img img{width:100%;height:100%;object-fit:cover}
+.menu-item-name{font-size:13px;font-weight:500;color:var(--text);margin-bottom:2px;line-height:1.3}
+.menu-item-price{font-size:12px;color:var(--accent);font-weight:500}
+.menu-see-all{
+  grid-column:1/-1;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+  padding:11px;background:var(--bg2);border:1px solid var(--b);
+  border-radius:var(--rads);font-size:13px;color:var(--t2);
+  transition:all .15s;cursor:pointer;
+}
+.menu-see-all:hover{border-color:var(--b3);color:var(--text)}
+
+/* ══ RESERVATION MODAL ══ */
+.res-overlay{
+  position:fixed;inset:0;z-index:400;
+  background:rgba(0,0,0,0);transition:background .22s;pointer-events:none;
+  display:flex;align-items:flex-end;justify-content:center;
+}
+.res-overlay.act{background:rgba(0,0,0,.85);pointer-events:all}
+.res-sheet{
+  background:var(--bg2);border-radius:20px 20px 0 0;
+  width:100%;max-width:520px;
+  transform:translateY(100%);transition:transform .3s cubic-bezier(.32,0,.67,0);
+  max-height:92vh;display:flex;flex-direction:column;overflow:hidden;
+}
+.res-overlay.act .res-sheet{transform:translateY(0)}
+.res-handle{width:38px;height:4px;border-radius:2px;background:var(--b2);margin:10px auto 0;flex-shrink:0}
+.res-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px 12px;border-bottom:1px solid var(--b);flex-shrink:0;
+}
+.res-title{font-size:16px;font-weight:500;color:var(--text)}
+.res-rest-name{font-size:12px;color:var(--t3);margin-top:2px}
+.res-close{width:30px;height:30px;border-radius:50%;background:var(--bg3);border:1px solid var(--b2);color:var(--t2);font-size:17px;display:flex;align-items:center;justify-content:center}
+
+/* Steps */
+.res-steps{display:flex;gap:4px;padding:14px 18px 0;flex-shrink:0}
+.res-step-dot{
+  flex:1;height:3px;border-radius:2px;background:var(--b);transition:background .3s;
+}
+.res-step-dot.done{background:var(--accent)}
+.res-step-dot.active{background:var(--accent);opacity:.5}
+
+.res-body{flex:1;overflow-y:auto;padding:18px}
+
+/* Date picker */
+.date-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:18px}
+.date-btn{
+  aspect-ratio:1;border-radius:var(--rads);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:11px;color:var(--t2);background:var(--bg3);border:1px solid var(--b);
+  transition:all .15s;cursor:pointer;gap:2px;
+}
+.date-btn:hover{border-color:var(--b2);color:var(--text)}
+.date-btn.act{background:var(--accent);color:#000;border-color:var(--accent);font-weight:600}
+.date-btn.past{opacity:.3;pointer-events:none}
+.date-day{font-size:9px;text-transform:uppercase;letter-spacing:.5px}
+.date-n{font-size:14px;font-weight:500}
+
+/* Time slots */
+.slots-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:18px}
+.slot-btn{
+  padding:10px 8px;border-radius:var(--rads);text-align:center;
+  border:1px solid var(--b);background:var(--bg3);
+  font-size:13px;color:var(--t2);transition:all .15s;cursor:pointer;
+}
+.slot-btn:hover{border-color:var(--b2);color:var(--text)}
+.slot-btn.act{background:var(--abg);border-color:var(--ab);color:var(--accent);font-weight:500}
+.slot-btn.full{opacity:.3;pointer-events:none;text-decoration:line-through}
+
+/* Party size */
+.party-ctrl{display:flex;align-items:center;gap:0;background:var(--bg3);border:1px solid var(--b);border-radius:var(--pill);width:fit-content}
+.party-btn{width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--t2);transition:color .15s}
+.party-btn:active{color:var(--text)}
+.party-val{min-width:36px;text-align:center;font-size:16px;font-weight:500;color:var(--text)}
+
+/* Form inputs */
+.res-input{
+  width:100%;background:var(--bg3);border:1px solid var(--b2);
+  color:var(--text);padding:11px 13px;border-radius:var(--rads);
+  font-size:14px;margin-bottom:12px;transition:border-color .15s;
+}
+.res-input:focus{border-color:var(--b3)}
+.res-input::placeholder{color:var(--t3)}
+.res-label{font-size:12px;font-weight:500;color:var(--t2);margin-bottom:6px;display:block}
+
+/* Confirmation */
+.confirm-card{
+  background:var(--bg3);border:1px solid var(--b2);border-radius:var(--rad);
+  padding:16px;margin-bottom:14px;
+}
+.confirm-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--b)}
+.confirm-row:last-child{border-bottom:none}
+.confirm-label{font-size:13px;color:var(--t2)}
+.confirm-val{font-size:13px;font-weight:500;color:var(--text)}
+
+/* Res footer */
+.res-footer{padding:14px 18px 28px;border-top:1px solid var(--b);flex-shrink:0}
+.btn-res-next{
+  width:100%;padding:14px;background:var(--accent);color:#000;
+  border-radius:var(--rad);font-size:15px;font-weight:600;
+  transition:opacity .15s;
+}
+.btn-res-next:active{opacity:.85}
+.btn-res-next:disabled{background:var(--bg3);color:var(--t3);cursor:default}
+.btn-res-back{
+  width:100%;padding:11px;background:var(--bg3);border:1px solid var(--b2);
+  color:var(--t2);border-radius:var(--rad);font-size:14px;margin-top:8px;
+}
+
+/* Success */
+.res-success{text-align:center;padding:20px 10px}
+.res-success-icon{font-size:52px;margin-bottom:14px}
+.res-success-title{font-family:'Fraunces',serif;font-size:26px;font-weight:300;color:var(--text);margin-bottom:8px}
+.res-success-sub{font-size:14px;color:var(--t3);line-height:1.65;margin-bottom:22px}
+.res-confirm-code{
+  display:inline-block;padding:8px 20px;
+  background:var(--abg);border:1px solid var(--ab);
+  border-radius:var(--pill);font-size:14px;font-weight:600;
+  color:var(--accent);letter-spacing:2px;margin-bottom:20px;
+}
+
+/* ══ TOAST ══ */
+.toast{
+  position:fixed;bottom:24px;left:50%;
+  transform:translateX(-50%) translateY(70px);opacity:0;
+  background:var(--bg4);border:1px solid var(--b2);border-radius:var(--pill);
+  padding:10px 20px;font-size:13px;color:var(--text);
+  white-space:nowrap;z-index:600;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1),opacity .28s;
+  box-shadow:var(--shadow);pointer-events:none;
+}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.toast.ok{color:var(--gt)}
+
+/* ══ SECTION DIVIDER ══ */
+.section-sep{
+  display:flex;align-items:center;gap:12px;
+  max-width:var(--max);margin:0 auto 24px;padding:0 20px;
+}
+.section-sep-line{flex:1;height:1px;background:var(--b)}
+.section-sep-txt{font-size:12px;color:var(--t3);letter-spacing:.5px;text-transform:uppercase;white-space:nowrap}
+
+/* Featured */
+.featured-wrap{max-width:var(--max);margin:0 auto;padding:0 20px 32px;overflow:hidden}
+.featured-scroll{display:flex;gap:14px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+.featured-scroll::-webkit-scrollbar{display:none}
+.feat-card{
+  flex-shrink:0;width:280px;border-radius:var(--rad);overflow:hidden;
+  background:var(--bg2);border:1px solid var(--b);cursor:pointer;
+  position:relative;transition:transform .15s;
+}
+.feat-card:hover{transform:translateY(-2px)}
+.feat-img{height:160px;overflow:hidden;position:relative;background:var(--bg3)}
+.feat-img img{width:100%;height:100%;object-fit:cover}
+.feat-body{padding:12px 13px 14px}
+.feat-cuisine{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
+.feat-name{font-family:'Fraunces',serif;font-size:17px;font-weight:300;color:var(--text);margin-bottom:6px}
+.feat-row{display:flex;align-items:center;justify-content:space-between}
+.feat-rating{display:flex;align-items:center;gap:4px}
+.feat-stars{color:var(--accent);font-size:11px;letter-spacing:-1px}
+.feat-rval{font-size:12px;font-weight:600;color:var(--text)}
+.feat-rcount{font-size:11px;color:var(--t3)}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:768px){
+  .hero{padding:36px 16px 28px}
+  .hero-title{font-size:32px}
+  .main-wrap{padding:16px 14px 48px}
+  .rest-grid{grid-template-columns:1fr}
+  .list-view .rcard{flex-direction:column}
+  .list-view .rcard-img{width:100%;height:200px}
+  .info-grid{grid-template-columns:1fr}
+  .menu-preview{grid-template-columns:1fr}
+  .prof-actions{grid-template-columns:1fr}
+  .prof-hero{height:260px}
+  .slots-grid{grid-template-columns:repeat(3,1fr)}
+  .date-grid{grid-template-columns:repeat(7,1fr)}
+}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- ══════ NAV ══════ -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-brand" onclick="resetFilters()">
+      <div class="nav-logo">M</div>
+      <span class="nav-name">MenuQR</span>
+    </div>
+    <div class="nav-right">
+      <button class="btn-nav" onclick="showToast('Próximamente: login de comensales')">Iniciar sesión</button>
+      <button class="btn-nav-accent" onclick="showToast('¿Sos dueño de un restaurante? Sumate a MenuQR')">Sumar mi local</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════ HERO ══════ -->
+<div class="hero-wrap">
+  <div class="hero-bg" id="hero-bg"></div>
+  <div class="hero-grad"></div>
+  <div class="hero-grad-bottom"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9z"/></svg>
+      Más de 124 restaurantes en Argentina
+    </div>
+    <h1 class="hero-title">
+      Descubrí dónde<br><em>comer hoy</em>
+    </h1>
+    <p class="hero-sub">Menús reales, reseñas verificadas y reserva de mesa en segundos.</p>
+    <div class="search-bar">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input id="hero-search" placeholder="Restaurante, cocina, barrio..." oninput="onHeroSearch(this.value)">
+      <button class="btn-search" onclick="applyHeroSearch()">Buscar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Stats -->
+<div class="hero-stats">
+  <div class="stat"><div class="stat-n">124</div><div class="stat-l">Restaurantes</div></div>
+  <div class="stat"><div class="stat-n">8.2K</div><div class="stat-l">Reseñas verificadas</div></div>
+  <div class="stat"><div class="stat-n">4.7</div><div class="stat-l">Rating promedio</div></div>
+  <div class="stat"><div class="stat-n">2.3K</div><div class="stat-l">Reservas este mes</div></div>
+</div>
+
+<!-- ══════ FEATURED ══════ -->
+<div class="section-header">
+  <div>
+    <div class="section-title">Destacados <span>esta semana</span></div>
+    <div class="section-sub">Los más visitados y mejor puntuados por los comensales</div>
+  </div>
+  <button class="section-link" onclick="resetFilters()">Ver todos <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+</div>
+<div class="featured-wrap">
+  <div class="featured-scroll" id="featured-scroll"></div>
+</div>
+
+<!-- ══════ FILTERS ══════ -->
+<div class="filters-wrap">
+  <div class="filters-inner" id="filters-bar">
+    <span class="filter-label">Filtrar</span>
+
+    <!-- Cocina -->
+    <button class="chip act" id="chip-all" onclick="setCuisine('all',this)">Todo</button>
+    <button class="chip" onclick="setCuisine('parrilla',this)">🥩 Parrilla</button>
+    <button class="chip" onclick="setCuisine('italiana',this)">🍝 Italiana</button>
+    <button class="chip" onclick="setCuisine('japonesa',this)">🍱 Japonesa</button>
+    <button class="chip" onclick="setCuisine('bar',this)">🍹 Bar & Tragos</button>
+    <button class="chip" onclick="setCuisine('cafe',this)">☕ Café</button>
+    <button class="chip" onclick="setCuisine('peruana',this)">🌿 Peruana</button>
+    <button class="chip" onclick="setCuisine('mediterranea',this)">🫒 Mediterránea</button>
+
+    <div class="chip-sep"></div>
+
+    <!-- Price -->
+    <button class="chip" id="chip-price" onclick="cyclePrice(this)">
+      <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 1 0 0 7h5a3.5 3.5 0 1 1 0 7H6"/></svg>
+      Precio
+    </button>
+
+    <!-- Rating -->
+    <button class="chip" id="chip-rating" onclick="toggleRating(this)">
+      <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      4★ o más
+    </button>
+
+    <!-- Reservas -->
+    <button class="chip" id="chip-reservas" onclick="toggleReservas(this)">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Con reservas
+    </button>
+
+    <div class="chip-sep"></div>
+
+    <div class="sort-wrap">
+      <span class="sort-label">Ordenar:</span>
+      <select class="sort-select" id="sort-select" onchange="setSort(this.value)">
+        <option value="rating">Mejor puntuados</option>
+        <option value="reviews">Más reseñas</option>
+        <option value="price_asc">Precio: menor a mayor</option>
+        <option value="price_desc">Precio: mayor a menor</option>
+        <option value="new">Más nuevos</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ RESULTS ══════ -->
+<div class="main-wrap">
+  <div class="results-header">
+    <div class="results-count" id="results-count"></div>
+    <div class="view-toggles">
+      <button class="view-btn act" id="vbtn-grid" onclick="setView('grid',this)" title="Grilla">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      </button>
+      <button class="view-btn" id="vbtn-list" onclick="setView('list',this)" title="Lista">
+        <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="rest-grid" id="rest-grid"></div>
+</div>
+
+<!-- ══════ RESTAURANT PROFILE MODAL ══════ -->
+<div class="prof-overlay" id="prof-overlay" onclick="closeProfOnBg(event)">
+  <div class="prof-sheet" id="prof-sheet"></div>
+</div>
+
+<!-- ══════ RESERVATION MODAL ══════ -->
+<div class="res-overlay" id="res-overlay" onclick="closeResOnBg(event)">
+  <div class="res-sheet" onclick="event.stopPropagation()">
+    <div class="res-handle"></div>
+    <div class="res-header">
+      <div>
+        <div class="res-title" id="res-title">Reservar mesa</div>
+        <div class="res-rest-name" id="res-rest-name"></div>
+      </div>
+      <button class="res-close" onclick="closeRes()">×</button>
+    </div>
+    <div class="res-steps" id="res-steps"></div>
+    <div class="res-body" id="res-body"></div>
+    <div class="res-footer" id="res-footer"></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════
+const RESTAURANTS = [
+  {
+    id:1, slug:'elfuego', name:'El Fuego', cuisine:'parrilla', cuisineLabel:'Parrilla & Brasa',
+    neighborhood:'San Isidro', city:'Buenos Aires', address:'Av. del Libertador 1234, San Isidro',
+    priceLevel:3, rating:4.8, reviews:312, avgTicket:7500,
+    openNow:true, acceptsReservations:true, isNew:false, isTrending:true,
+    hero:'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=900&q=80',
+    description:'Cocina de autor con raíces en la parrilla argentina. Cortes madurados 28 días, pasta fresca artesanal y una carta de cócteles que compite con los mejores bares de Buenos Aires.',
+    tags:['Madurado','Parrilla','Pasta Fresca','Cócteles'],
+    phone:'+54 11 4723-1234', schedule:'Lun–Sáb 12:30–15:30 / 20:00–23:30',
+    timeSlots:['13:00','13:30','14:00','20:30','21:00','21:30','22:00'],
+    fullSlots:['14:00','21:00'],
+    menuHighlights:[
+      {name:'Bife de Chorizo',price:7800,img:'https://images.unsplash.com/photo-1558030006-450675393462?w=200&q=80'},
+      {name:'Burrata & Tomates',price:3200,img:'https://images.unsplash.com/photo-1567198179614-a215a8e77af5?w=200&q=80'},
+      {name:'Volcán de Chocolate',price:2800,img:'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=200&q=80'},
+      {name:'Negroni Artesanal',price:2200,img:'https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=200&q=80'},
+    ],
+    topReviews:[
+      {user:'Gonzalo A.',ini:'GA',rating:5,text:'El mejor bife de San Isidro, sin dudas. El madurado se nota en cada bocado. El servicio, impecable.',date:'hace 2 días'},
+      {user:'Fernanda L.',ini:'FL',rating:5,text:'Un descubrimiento increíble. La pasta fresca y la burrata son insuperables. Ya reservé para la próxima semana.',date:'hace 5 días'},
+      {user:'Pablo K.',ini:'PK',rating:4,text:'Muy buena experiencia. Los cócteles son excelentes. El único detalle fue la demora en el segundo plato.',date:'hace 1 semana'},
+    ],
+  },
+  {
+    id:2, slug:'la-mar', name:'La Mar Cebichería', cuisine:'peruana', cuisineLabel:'Cocina Peruana',
+    neighborhood:'Palermo', city:'Buenos Aires', address:'Arévalo 2024, Palermo',
+    priceLevel:3, rating:4.7, reviews:248, avgTicket:6800,
+    openNow:true, acceptsReservations:true, isNew:false, isTrending:true,
+    hero:'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=900&q=80',
+    description:'La auténtica cocina peruana en el corazón de Palermo. Ceviche fresco, tiraditos, causas y el mejor pisco sour del barrio. Ingredientes importados directamente de Lima.',
+    tags:['Ceviche','Pisco Sour','Fresco','Peruana'],
+    phone:'+54 11 4832-2024', schedule:'Mar–Dom 12:30–15:30 / 20:30–00:00',
+    timeSlots:['13:00','13:30','20:30','21:00','21:30','22:00','22:30'],
+    fullSlots:['21:30'],
+    menuHighlights:[
+      {name:'Ceviche Clásico',price:4200,img:'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=200&q=80'},
+      {name:'Tiradito Nikkei',price:4800,img:'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200&q=80'},
+      {name:'Causa Limeña',price:3100,img:'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=200&q=80'},
+      {name:'Pisco Sour',price:2400,img:'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=200&q=80'},
+    ],
+    topReviews:[
+      {user:'Valentina C.',ini:'VC',rating:5,text:'El ceviche más fresco que comí en Buenos Aires. La leche de tigre es adictiva. Ya es mi lugar favorito en Palermo.',date:'hace 3 días'},
+      {user:'Martín R.',ini:'MR',rating:5,text:'El tiradito nikkei es una obra de arte. El servicio atento y rápido. Reserven con anticipación.',date:'hace 1 semana'},
+    ],
+  },
+  {
+    id:3, slug:'osaka-ba', name:'Osaka', cuisine:'japonesa', cuisineLabel:'Fusión Nikkei',
+    neighborhood:'Puerto Madero', city:'Buenos Aires', address:'Juana Manso 1164, Puerto Madero',
+    priceLevel:4, rating:4.9, reviews:189, avgTicket:12000,
+    openNow:false, acceptsReservations:true, isNew:false, isTrending:false,
+    hero:'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=900&q=80',
+    description:'El referente de la cocina nikkei en Argentina. Una fusión magistral entre la precisión japonesa y los ingredientes latinoamericanos. Experiencia gastronómica única.',
+    tags:['Nikkei','Omakase','Lujo','Vista al río'],
+    phone:'+54 11 5775-3400', schedule:'Lun–Dom 12:30–15:00 / 20:00–23:00',
+    timeSlots:['13:00','20:00','20:30','21:00','21:30'],
+    fullSlots:['13:00','20:00'],
+    menuHighlights:[
+      {name:'Omakase 8 pasos',price:28000,img:'https://images.unsplash.com/photo-1484980972926-edee96e0960d?w=200&q=80'},
+      {name:'Sashimi Premium',price:9800,img:'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=200&q=80'},
+      {name:'Wagyu Tataki',price:12400,img:'https://images.unsplash.com/photo-1544025162-d76594e86ebd?w=200&q=80'},
+      {name:'Mochi Helado',price:3200,img:'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=200&q=80'},
+    ],
+    topReviews:[
+      {user:'Diego F.',ini:'DF',rating:5,text:'El omakase es una experiencia que vale cada peso. Servicio ceremonioso y presentaciones que son obras de arte.',date:'hace 4 días'},
+      {user:'Sofía T.',ini:'ST',rating:5,text:'El mejor restaurante de Buenos Aires sin discusión. El wagyu tataki es indescriptible.',date:'hace 2 semanas'},
+    ],
+  },
+  {
+    id:4, slug:'il-mattino', name:'Il Mattino', cuisine:'italiana', cuisineLabel:'Cocina Italiana',
+    neighborhood:'Recoleta', city:'Buenos Aires', address:'Quintana 188, Recoleta',
+    priceLevel:3, rating:4.6, reviews:156, avgTicket:5800,
+    openNow:true, acceptsReservations:true, isNew:false, isTrending:false,
+    hero:'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=900&q=80',
+    description:'Trattoria familiar con recetas de la nonna traídas de Nápoles. Pasta fresca tirada a mano, risotti cremosos y una selección de vinos italianos y argentinos que sorprende.',
+    tags:['Pasta Fresca','Risotto','Trattoria','Familiar'],
+    phone:'+54 11 4804-1880', schedule:'Mar–Dom 12:00–15:30 / 19:30–23:00',
+    timeSlots:['12:30','13:00','13:30','20:00','20:30','21:00'],
+    fullSlots:[],
+    menuHighlights:[
+      {name:'Tagliatelle al Ragù',price:4200,img:'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=200&q=80'},
+      {name:'Risotto ai Funghi',price:4800,img:'https://images.unsplash.com/photo-1476124369491-e7addf5db371?w=200&q=80'},
+      {name:'Tiramisú della Casa',price:2400,img:'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=200&q=80'},
+      {name:'Lambrusco Reggiano',price:1800,img:'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=200&q=80'},
+    ],
+    topReviews:[
+      {user:'Ana P.',ini:'AP',rating:5,text:'La pasta fresca es la mejor que comí en Buenos Aires. La nonna sabe lo que hace. Reserven el Tiramisú.',date:'hace 1 semana'},
+      {user:'Javier M.',ini:'JM',rating:4,text:'Ambiente acogedor y comida auténtica. El risotto ai funghi es tremendo. Un poco de demora en hora pico.',date:'hace 2 semanas'},
+    ],
+  },
+  {
+    id:5, slug:'florería-atlántico', name:'Florería Atlántico', cuisine:'bar', cuisineLabel:'Bar & Coctelería',
+    neighborhood:'Retiro', city:'Buenos Aires', address:'Arroyo 872, Retiro',
+    priceLevel:3, rating:4.8, reviews:421, avgTicket:4500,
+    openNow:true, acceptsReservations:false, isNew:false, isTrending:true,
+    hero:'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=900&q=80',
+    description:'El mejor bar de coctelería de Argentina y entre los 50 mejores del mundo. Tragos únicos con ingredientes argentinos, ambiente underground y carta de tapas para acompañar.',
+    tags:['World\'s 50 Best','Cócteles','Underground','Tapas'],
+    phone:'+54 11 4313-6093', schedule:'Lun–Sáb 18:00–02:00',
+    timeSlots:['18:00','19:00','20:00','21:00','22:00'],
+    fullSlots:['20:00','21:00'],
+    menuHighlights:[
+      {name:'Negroni de Mar',price:2800,img:'https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=200&q=80'},
+      {name:'Tarta de Ciervo',price:3400,img:'https://images.unsplash.com/photo-1544025162-d76594e86ebd?w=200&q=80'},
+      {name:'Spritz Atlántico',price:2400,img:'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=200&q=80'},
+      {name:'Empanadas de Rabo',price:1800,img:'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=200&q=80'},
+    ],
+    topReviews:[
+      {user:'Roberto V.',ini:'RV',rating:5,text:'El mejor bar del mundo sin exagerar. Los cócteles son obras de arte. El espacio underground es increíble.',date:'hace 3 días'},
+      {user:'Lucía S.',ini:'LS',rating:5,text:'Imprescindible en Buenos Aires. Lleguen temprano porque se llena. El Negroni de Mar es adictivo.',date:'hace 1 semana'},
+    ],
+  },
+  {
+    id:6, slug:'proper', name:'Proper', cuisine:'parrilla', cuisineLabel:'Parrilla Moderna',
+    neighborhood:'San Telmo', city:'Buenos Aires', address:'Gral. Urquiza 1139, San Telmo',
+    priceLevel:2, rating:4.5, reviews:203, avgTicket:4200,
+    openNow:true, acceptsReservations:true, isNew:false, isTrending:false,
+    hero:'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=900&q=80',
+    description:'Parrilla moderna en el corazón de San Telmo. Sin pretensiones, con excelente producto. Cortes a la brasa, guarniciones creativas y vinos de pequeñas bodegas.',
+    tags:['Parrilla','San Telmo','Informal','Bodegas pequeñas'],
+    phone:'+54 11 4300-1139', schedule:'Mar–Dom 12:30–15:00 / 20:00–23:30',
+    timeSlots:['13:00','13:30','20:00','20:30','21:00','21:30'],
+    fullSlots:['20:30'],
+    menuHighlights:[
+      {name:'Entraña a la Brasa',price:4800,img:'https://images.unsplash.com/photo-1558030006-450675393462?w=200&q=80'},
+      {name:'Provoleta al Tomillo',price:2200,img:'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200&q=80'},
+      {name:'Papas Rústicas',price:1400,img:'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=200&q=80'},
+      {name:'Malbec de Autor',price:3200,img:'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=200&q=80'},
+    ],
+    topReviews:[
+      {user:'Camila R.',ini:'CR',rating:5,text:'La mejor relación precio-calidad de San Telmo. La entraña perfecta y los vinos de autor son una joya.',date:'hace 5 días'},
+      {user:'Facundo M.',ini:'FM',rating:4,text:'Muy buen producto, ambiente relajado y precios razonables. El lugar tiene onda.',date:'hace 2 semanas'},
+    ],
+  },
+  {
+    id:7, slug:'cafe-tortoni', name:'Café Tortoni', cuisine:'cafe', cuisineLabel:'Café Histórico',
+    neighborhood:'Monserrat', city:'Buenos Aires', address:'Av. de Mayo 829, Monserrat',
+    priceLevel:1, rating:4.3, reviews:892, avgTicket:1800,
+    openNow:true, acceptsReservations:false, isNew:false, isTrending:false,
+    hero:'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=900&q=80',
+    description:'El café más antiguo de Buenos Aires, desde 1858. Un ícono de la cultura porteña donde se reunieron Borges, García Lorca y Gardel. Medialunas, submarinos y la atmósfera de siempre.',
+    tags:['Histórico','Café','Medialunas','Tango'],
+    phone:'+54 11 4342-4328', schedule:'Lun–Dom 08:00–22:00',
+    timeSlots:[],
+    fullSlots:[],
+    menuHighlights:[
+      {name:'Submarino',price:850,img:'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=200&q=80'},
+      {name:'Medialunas (x4)',price:750,img:'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=200&q=80'},
+      {name:'Café con Leche',price:620,img:'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=200&q=80'},
+      {name:'Tarta de Manzana',price:1100,img:'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=200&q=80'},
+    ],
+    topReviews:[
+      {user:'María G.',ini:'MG',rating:5,text:'Obligatorio si visitás Buenos Aires. El lugar tiene una magia especial. Los mozos de smoking son un lujo.',date:'hace 1 día'},
+      {user:'Carlos M.',ini:'CM',rating:4,text:'Historia y buenos cafés. Puede estar un poco saturado de turistas pero vale la visita.',date:'hace 1 semana'},
+    ],
+  },
+  {
+    id:8, slug:'narda-comedor', name:'Narda Comedor', cuisine:'mediterranea', cuisineLabel:'Cocina Mediterránea',
+    neighborhood:'Chacarita', city:'Buenos Aires', address:'Charlone 70, Chacarita',
+    priceLevel:3, rating:4.7, reviews:178, avgTicket:6200,
+    openNow:false, acceptsReservations:true, isNew:true, isTrending:false,
+    hero:'https://images.unsplash.com/photo-1476124369491-e7addf5db371?w=900&q=80',
+    description:'El comedor de Narda Lepes. Una propuesta honesta, de mercado, que cambia según la temporada. Ingredientes locales, técnica impecable y el encanto de Chacarita como telón de fondo.',
+    tags:['Mercado','Temporada','Sustentable','Nuevo'],
+    phone:'+54 11 4554-7011', schedule:'Mar–Sáb 12:30–15:00 / 20:00–22:30',
+    timeSlots:['13:00','13:30','20:00','20:30','21:00'],
+    fullSlots:['20:00'],
+    menuHighlights:[
+      {name:'Burrata de Estación',price:3800,img:'https://images.unsplash.com/photo-1567198179614-a215a8e77af5?w=200&q=80'},
+      {name:'Risotto de Zapallito',price:4400,img:'https://images.unsplash.com/photo-1476124369491-e7addf5db371?w=200&q=80'},
+      {name:'Salmón Patagónico',price:6200,img:'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=200&q=80'},
+      {name:'Crème Brûlée',price:2600,img:'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=200&q=80'},
+    ],
+    topReviews:[
+      {user:'Gabriela N.',ini:'GN',rating:5,text:'El mejor comedor de Chacarita. La propuesta de mercado es refrescante y cada plato sorprende. Volvería todas las semanas.',date:'hace 2 días'},
+      {user:'Tomás P.',ini:'TP',rating:4,text:'Muy buena cocina honesta y de producto. El risotto de zapallito es extraordinario.',date:'hace 10 días'},
+    ],
+  },
+];
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let state = {
+  cuisine: 'all',
+  priceFilter: null,      // null | 1 | 2 | 3 | 4
+  ratingFilter: false,
+  reservasFilter: false,
+  sort: 'rating',
+  view: 'grid',
+  search: '',
+  curRest: null,
+  resStep: 1,
+  res: {date:null, time:null, party:2, name:'', phone:'', email:''},
+};
+
+// ══════════════════════════════════════════
+// FILTER & SORT
+// ══════════════════════════════════════════
+function getFiltered() {
+  let list = [...RESTAURANTS];
+
+  if (state.search) {
+    const q = state.search.toLowerCase();
+    list = list.filter(r =>
+      r.name.toLowerCase().includes(q) ||
+      r.cuisine.toLowerCase().includes(q) ||
+      r.cuisineLabel.toLowerCase().includes(q) ||
+      r.neighborhood.toLowerCase().includes(q) ||
+      r.tags.some(t => t.toLowerCase().includes(q))
+    );
+  }
+  if (state.cuisine !== 'all') list = list.filter(r => r.cuisine === state.cuisine);
+  if (state.priceFilter) list = list.filter(r => r.priceLevel === state.priceFilter);
+  if (state.ratingFilter) list = list.filter(r => r.rating >= 4);
+  if (state.reservasFilter) list = list.filter(r => r.acceptsReservations);
+
+  switch(state.sort) {
+    case 'rating':    list.sort((a,b) => b.rating-a.rating); break;
+    case 'reviews':   list.sort((a,b) => b.reviews-a.reviews); break;
+    case 'price_asc': list.sort((a,b) => a.priceLevel-b.priceLevel); break;
+    case 'price_desc':list.sort((a,b) => b.priceLevel-a.priceLevel); break;
+    case 'new':       list.sort((a,b) => (b.isNew?1:0)-(a.isNew?1:0)); break;
+  }
+  return list;
+}
+
+// ══════════════════════════════════════════
+// FILTER ACTIONS
+// ══════════════════════════════════════════
+function setCuisine(c, btn) {
+  state.cuisine = c;
+  document.querySelectorAll('.filters-inner .chip').forEach(b => {
+    if (!b.id || b.id === 'chip-all' || b.id.startsWith('chip-')) return;
+    b.classList.remove('act');
+  });
+  document.querySelectorAll('.filters-inner .chip:not([id])').forEach(b => b.classList.remove('act'));
+  document.getElementById('chip-all')?.classList.remove('act');
+  btn.classList.add('act');
+  renderGrid();
+}
+
+function cyclePrice(btn) {
+  const levels = [null,1,2,3,4];
+  const labels = ['Precio','$','$$','$$$','$$$$'];
+  const cur = levels.indexOf(state.priceFilter);
+  const next = (cur+1) % levels.length;
+  state.priceFilter = levels[next];
+  btn.textContent = '';
+  btn.innerHTML = `<svg viewBox="0 0 24 24" style="width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 1 0 0 7h5a3.5 3.5 0 1 1 0 7H6"/></svg> ${labels[next]}`;
+  btn.classList.toggle('act', state.priceFilter !== null);
+  renderGrid();
+}
+
+function toggleRating(btn) {
+  state.ratingFilter = !state.ratingFilter;
+  btn.classList.toggle('act', state.ratingFilter);
+  renderGrid();
+}
+
+function toggleReservas(btn) {
+  state.reservasFilter = !state.reservasFilter;
+  btn.classList.toggle('act', state.reservasFilter);
+  renderGrid();
+}
+
+function setSort(val) { state.sort = val; renderGrid(); }
+function setView(v, btn) {
+  state.view = v;
+  document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('act'));
+  btn.classList.add('act');
+  const grid = document.getElementById('rest-grid');
+  grid.classList.toggle('list-view', v === 'list');
+}
+
+function onHeroSearch(val) { state.search = val; }
+function applyHeroSearch() { renderGrid(); window.scrollTo({top:400,behavior:'smooth'}); }
+function resetFilters() {
+  state = {...state, cuisine:'all', priceFilter:null, ratingFilter:false, reservasFilter:false, search:'', sort:'rating'};
+  document.getElementById('hero-search').value = '';
+  document.querySelectorAll('.chip').forEach(b => b.classList.remove('act'));
+  document.getElementById('chip-all')?.classList.add('act');
+  document.getElementById('sort-select').value = 'rating';
+  renderGrid();
+}
+
+// ══════════════════════════════════════════
+// RENDER GRID
+// ══════════════════════════════════════════
+function starsHTML(rating) {
+  let s = '';
+  for(let i=1; i<=5; i++) {
+    const full = i <= Math.floor(rating);
+    const half = !full && i === Math.ceil(rating) && rating % 1 >= 0.5;
+    s += `<span class="star ${full||half?'full':'empty'}">${full?'★':half?'½':'☆'}</span>`;
+  }
+  return s;
+}
+
+function priceLabel(level) {
+  return '$'.repeat(level) + '<span style="opacity:.3">' + '$'.repeat(4-level) + '</span>';
+}
+
+function renderGrid() {
+  const list = getFiltered();
+  const grid = document.getElementById('rest-grid');
+  const count = document.getElementById('results-count');
+  count.innerHTML = `<strong>${list.length}</strong> restaurante${list.length!==1?'s':''} encontrado${list.length!==1?'s':''}`;
+
+  if (!list.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
+      <div class="empty-icon">🍽️</div>
+      <div style="font-size:16px;color:var(--t2);margin-bottom:8px">Sin resultados</div>
+      <div style="font-size:14px;color:var(--t3)">Probá con otros filtros</div>
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = list.map((r, i) => {
+    const showRank = state.sort === 'rating' && i < 3;
+    return `
+    <div class="rcard" onclick="openProfile(${r.id})">
+      <div class="rcard-img">
+        <img src="${r.hero}" alt="${r.name}" loading="lazy">
+        <div class="rcard-img-grad"></div>
+        <div class="rcard-badges">
+          ${r.openNow ? '<span class="badge badge-open">● Abierto</span>' : '<span class="badge badge-closed">Cerrado</span>'}
+          ${r.isTrending ? '<span class="badge badge-trending">↑ Trending</span>' : ''}
+          ${r.isNew ? '<span class="badge badge-new">✦ Nuevo</span>' : ''}
+          ${r.acceptsReservations ? '<span class="badge badge-reservas">📅 Reservas</span>' : ''}
+        </div>
+        <div class="rcard-price">${'$'.repeat(r.priceLevel)}<span style="opacity:.25">${'$'.repeat(4-r.priceLevel)}</span></div>
+        ${showRank ? `<div class="rank-badge">${i+1}</div>` : ''}
+        <div class="rcard-over">
+          <div class="rcard-over-name">${r.name}</div>
+          <div class="rcard-over-hood">
+            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            ${r.neighborhood}
+          </div>
+        </div>
+      </div>
+      <div class="rcard-body">
+        <div class="rcard-cuisine">${r.cuisineLabel}</div>
+        <div class="rcard-rating">
+          <div class="rating-left">
+            <div class="stars">${starsHTML(r.rating)}</div>
+            <span class="rating-val">${r.rating}</span>
+            <span class="rating-count">(${r.reviews.toLocaleString('es-AR')})</span>
+          </div>
+          <span class="avg-ticket">~$${r.avgTicket.toLocaleString('es-AR')}</span>
+        </div>
+        <div class="rcard-tags">
+          ${r.tags.slice(0,3).map(t=>`<span class="rtag">${t}</span>`).join('')}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+// FEATURED
+// ══════════════════════════════════════════
+function renderFeatured() {
+  const featured = RESTAURANTS.filter(r => r.isTrending || r.rating >= 4.7).slice(0,5);
+  document.getElementById('featured-scroll').innerHTML = featured.map(r => `
+  <div class="feat-card" onclick="openProfile(${r.id})">
+    <div class="feat-img">
+      <img src="${r.hero}" alt="${r.name}" loading="lazy">
+      <div class="feat-img-grad"></div>
+      <div class="feat-open-badge ${r.openNow ? 'badge-open' : 'badge-closed'}">${r.openNow ? '● Abierto' : 'Cerrado'}</div>
+    </div>
+    <div class="feat-body">
+      <div class="feat-cuisine">${r.cuisineLabel}</div>
+      <div class="feat-name">${r.name}</div>
+      <div class="feat-row">
+        <div class="feat-rating">
+          <span class="feat-stars">${'★'.repeat(Math.round(r.rating))}</span>
+          <span class="feat-rval">${r.rating}</span>
+          <span class="feat-rcount">(${r.reviews})</span>
+        </div>
+        <span style="font-size:11px;color:var(--t3)">${'$'.repeat(r.priceLevel)}</span>
+      </div>
+      <div class="feat-hood">
+        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        ${r.neighborhood}
+      </div>
+    </div>
+  </div>`).join('');
+}
+
+// ══════════════════════════════════════════
+// RESTAURANT PROFILE
+// ══════════════════════════════════════════
+function openProfile(id) {
+  const r = RESTAURANTS.find(x=>x.id===id);
+  if (!r) return;
+  state.curRest = r;
+  document.getElementById('prof-sheet').innerHTML = profileHTML(r);
+  document.getElementById('prof-overlay').classList.add('act');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeProfile() {
+  document.getElementById('prof-overlay').classList.remove('act');
+  document.body.style.overflow = '';
+  state.curRest = null;
+}
+
+function closeProfOnBg(e) { if(e.target===e.currentTarget) closeProfile(); }
+
+function profileHTML(r) {
+  return `
+  <div class="prof-hero">
+    <img src="${r.hero}" alt="${r.name}">
+    <div class="prof-hero-grad"></div>
+    <button class="prof-close" onclick="closeProfile()">×</button>
+    <div class="prof-hero-content">
+      <div class="prof-cuisine-badge">${r.cuisineLabel}</div>
+      <div class="prof-name">${r.name}</div>
+      <div class="prof-meta">
+        <div class="prof-meta-item">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          ${r.address}
+        </div>
+        <div class="prof-meta-item">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          ${r.rating} · ${r.reviews.toLocaleString('es-AR')} reseñas
+        </div>
+        <div class="prof-meta-item" style="color:${r.openNow?'rgba(94,175,133,.8)':'rgba(224,112,112,.8)'}">
+          ● ${r.openNow ? 'Abierto ahora' : 'Cerrado ahora'}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="prof-body">
+    <div class="prof-actions">
+      ${r.acceptsReservations
+        ? `<button class="btn-reserve" onclick="openReservation(${r.id})">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Reservar mesa
+          </button>`
+        : `<div style="display:flex;align-items:center;justify-content:center;padding:13px;background:var(--bg3);border:1px solid var(--b);border-radius:var(--rad);font-size:13px;color:var(--t3)">Sin reservas online</div>`}
+      <button class="btn-menu-link" onclick="showToast('Abriendo el menú QR de ${r.name}...')">
+        Ver menú completo
+        <svg style="width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </button>
+    </div>
+
+    <!-- Descripción -->
+    <div class="prof-section">
+      <div class="prof-section-title">Sobre el restaurante</div>
+      <p style="font-size:14px;color:var(--t2);line-height:1.7">${r.description}</p>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px">
+        ${r.tags.map(t=>`<span style="padding:4px 11px;background:var(--bg3);border:1px solid var(--b);border-radius:var(--pill);font-size:12px;color:var(--t2)">${t}</span>`).join('')}
+      </div>
+    </div>
+
+    <!-- Info -->
+    <div class="prof-section">
+      <div class="prof-section-title">Información</div>
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-item-label">Precio promedio</div>
+          <div class="info-item-val">~$${r.avgTicket.toLocaleString('es-AR')} / persona</div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-label">Nivel de precio</div>
+          <div class="info-item-val">${'$'.repeat(r.priceLevel)} ${['','Económico','Moderado','Sofisticado','Premium'][r.priceLevel]}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-label">Horario</div>
+          <div class="info-item-val" style="font-size:12px">${r.schedule}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-label">Teléfono</div>
+          <div class="info-item-val" style="font-size:13px">${r.phone}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Menú preview -->
+    <div class="prof-section">
+      <div class="prof-section-title">Del menú</div>
+      <div class="menu-preview">
+        ${r.menuHighlights.map(m=>`
+        <div class="menu-item-prev">
+          <div class="menu-item-img"><img src="${m.img}" alt="${m.name}" loading="lazy"></div>
+          <div>
+            <div class="menu-item-name">${m.name}</div>
+            <div class="menu-item-price">$${m.price.toLocaleString('es-AR')}</div>
+          </div>
+        </div>`).join('')}
+        <div class="menu-see-all" onclick="showToast('Abriendo menú completo de ${r.name}...')">
+          Ver menú completo
+          <svg style="width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reseñas -->
+    <div class="prof-section">
+      <div class="prof-section-title" style="display:flex;align-items:center;justify-content:space-between">
+        <span>Reseñas de comensales</span>
+        <div style="display:flex;align-items:center;gap:5px">
+          <span style="font-size:18px;font-weight:600;color:var(--text)">${r.rating}</span>
+          <span style="color:var(--accent);font-size:14px">${'★'.repeat(Math.round(r.rating))}</span>
+          <span style="font-size:12px;color:var(--t3)">(${r.reviews.toLocaleString('es-AR')})</span>
+        </div>
+      </div>
+      <div class="rev-list-prof">
+        ${r.topReviews.map(rev=>`
+        <div class="rev-card">
+          <div class="rev-head">
+            <div class="rev-av">${rev.ini}</div>
+            <div>
+              <div class="rev-name">${rev.user}</div>
+              <div class="rev-date">${rev.date}</div>
+            </div>
+          </div>
+          <div class="rev-stars">${starsHTML(rev.rating)}</div>
+          <div class="rev-txt">${rev.text}</div>
+        </div>`).join('')}
+        <button style="width:100%;padding:11px;background:var(--bg2);border:1px solid var(--b);border-radius:var(--rads);font-size:13px;color:var(--t2);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif" onclick="showToast('Cargando todas las reseñas...')">
+          Ver las ${r.reviews.toLocaleString('es-AR')} reseñas
+        </button>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════
+// RESERVATION FLOW
+// ══════════════════════════════════════════
+function openReservation(id) {
+  const r = RESTAURANTS.find(x=>x.id===id);
+  if (!r) return;
+  state.curRest = r;
+  state.resStep = 1;
+  state.res = {date:null, time:null, party:2, name:'', phone:'', email:''};
+  document.getElementById('res-rest-name').textContent = r.name;
+  renderResStep();
+  document.getElementById('res-overlay').classList.add('act');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeRes() {
+  document.getElementById('res-overlay').classList.remove('act');
+  document.body.style.overflow = '';
+}
+function closeResOnBg(e) { if(e.target===e.currentTarget) closeRes(); }
+
+function renderResStep() {
+  const steps = document.getElementById('res-steps');
+  steps.innerHTML = [1,2,3].map(n=>`
+    <div class="res-step-dot ${state.resStep>n?'done':state.resStep===n?'active':''}"></div>`).join('');
+
+  const body = document.getElementById('res-body');
+  const footer = document.getElementById('res-footer');
+
+  if (state.resStep === 1) renderResStep1(body, footer);
+  if (state.resStep === 2) renderResStep2(body, footer);
+  if (state.resStep === 3) renderResStep3(body, footer);
+  if (state.resStep === 4) renderResSuccess(body, footer);
+}
+
+function renderResStep1(body, footer) {
+  // Generate next 14 days
+  const days = [];
+  const dayNames = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  const monthNames = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  for(let i=0; i<14; i++) {
+    const d = new Date(); d.setDate(d.getDate()+i);
+    days.push({
+      date: d.toISOString().split('T')[0],
+      dayName: dayNames[d.getDay()],
+      dayNum: d.getDate(),
+      month: monthNames[d.getMonth()],
+      past: false,
+    });
+  }
+
+  const r = state.curRest;
+
+  body.innerHTML = `
+  <div style="margin-bottom:18px">
+    <label style="font-size:12px;font-weight:500;color:var(--t2);display:block;margin-bottom:10px">Elegí la fecha</label>
+    <div class="date-grid">
+      ${days.map(d=>`
+      <button class="date-btn${state.res.date===d.date?' act':''}" onclick="selDate('${d.date}')">
+        <span class="date-day">${d.dayName}</span>
+        <span class="date-n">${d.dayNum}</span>
+        <span style="font-size:8px;color:inherit;opacity:.7">${d.month}</span>
+      </button>`).join('')}
+    </div>
+  </div>
+
+  ${state.res.date ? `
+  <div style="margin-bottom:18px">
+    <label style="font-size:12px;font-weight:500;color:var(--t2);display:block;margin-bottom:10px">Horario disponible</label>
+    <div class="slots-grid">
+      ${r.timeSlots.map(s=>`
+      <button class="slot-btn${r.fullSlots.includes(s)?' full':''} ${state.res.time===s?' act':''}"
+        onclick="selTime('${s}')">
+        ${s}
+        ${r.fullSlots.includes(s)?'<div style="font-size:9px;margin-top:2px">Completo</div>':''}
+      </button>`).join('')}
+    </div>
+  </div>
+
+  <div>
+    <label style="font-size:12px;font-weight:500;color:var(--t2);display:block;margin-bottom:10px">¿Cuántas personas?</label>
+    <div style="display:flex;align-items:center;gap:16px">
+      <div class="party-ctrl">
+        <button class="party-btn" onclick="setParty(-1)">−</button>
+        <span class="party-val">${state.res.party}</span>
+        <button class="party-btn" onclick="setParty(1)">+</button>
+      </div>
+      <span style="font-size:13px;color:var(--t2)">${state.res.party} persona${state.res.party!==1?'s':''}</span>
+    </div>
+  </div>` : ''}`;
+
+  footer.innerHTML = `<button class="btn-res-next" ${!state.res.date||!state.res.time?'disabled':''} onclick="resNext()">Siguiente →</button>`;
+}
+
+function renderResStep2(body, footer) {
+  body.innerHTML = `
+  <div style="background:var(--bg3);border-radius:var(--rads);padding:12px 14px;margin-bottom:20px">
+    <div style="font-size:11px;color:var(--t3);margin-bottom:4px">Tu reserva</div>
+    <div style="font-size:14px;font-weight:500;color:var(--text)">${state.curRest.name}</div>
+    <div style="font-size:13px;color:var(--t2);margin-top:3px">
+      ${formatDate(state.res.date)} · ${state.res.time} · ${state.res.party} persona${state.res.party!==1?'s':''}
+    </div>
+  </div>
+
+  <label class="res-label">Nombre completo *</label>
+  <input class="res-input" id="res-name" placeholder="Tu nombre" value="${state.res.name}" oninput="state.res.name=this.value;updateResFooter()">
+
+  <label class="res-label">Teléfono *</label>
+  <input class="res-input" id="res-phone" type="tel" placeholder="+54 9 11 XXXX-XXXX" value="${state.res.phone}" oninput="state.res.phone=this.value;updateResFooter()">
+
+  <label class="res-label">Email <span style="color:var(--t3)">(opcional · te mandamos confirmación)</span></label>
+  <input class="res-input" id="res-email" type="email" placeholder="tu@email.com" value="${state.res.email}" oninput="state.res.email=this.value">
+
+  <div style="font-size:12px;color:var(--t3);line-height:1.6;padding:10px 0">
+    ⚠️ Si necesitás cancelar, por favor avisanos con al menos 2 horas de anticipación.
+  </div>`;
+
+  footer.innerHTML = `
+  <button class="btn-res-next" id="res-next-btn" ${!state.res.name||!state.res.phone?'disabled':''} onclick="resNext()">Confirmar reserva</button>
+  <button class="btn-res-back" onclick="resBack()">← Volver</button>`;
+}
+
+function renderResStep3(body, footer) {
+  const code = 'MQR' + Math.random().toString(36).substr(2,6).toUpperCase();
+  body.innerHTML = `
+  <div class="res-success">
+    <div class="res-success-icon">🎉</div>
+    <div class="res-success-title">¡Reserva confirmada!</div>
+    <div class="res-success-sub">
+      Tu mesa está reservada en <strong style="color:var(--text)">${state.curRest.name}</strong> para<br>
+      <strong style="color:var(--text)">${formatDate(state.res.date)}</strong> a las <strong style="color:var(--text)">${state.res.time}</strong><br>
+      para <strong style="color:var(--text)">${state.res.party} persona${state.res.party!==1?'s':''}</strong>.
+    </div>
+    <div class="res-confirm-code">${code}</div>
+    <div style="font-size:12px;color:var(--t3);margin-bottom:20px">Mostrá este código al llegar al restaurante</div>
+    ${state.res.email ? `<div style="font-size:13px;color:var(--gt);margin-bottom:20px">✓ Te enviamos la confirmación a ${state.res.email}</div>` : ''}
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <button style="width:100%;padding:12px;background:var(--bg3);border:1px solid var(--b2);color:var(--t2);border-radius:var(--rad);font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif" onclick="showToast('Agregando al calendario...')">
+        📅 Agregar al calendario
+      </button>
+      <button style="width:100%;padding:12px;background:var(--bg3);border:1px solid var(--b2);color:var(--t2);border-radius:var(--rad);font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif" onclick="showToast('Compartiendo por WhatsApp...')">
+        💬 Compartir por WhatsApp
+      </button>
+    </div>
+  </div>`;
+  footer.innerHTML = `<button class="btn-res-next" onclick="closeRes()">Listo</button>`;
+}
+
+function renderResSuccess(body, footer) { renderResStep3(body, footer); }
+
+// Helpers
+function selDate(d) { state.res.date=d; state.res.time=null; renderResStep(); }
+function selTime(t) {
+  if(state.curRest.fullSlots.includes(t)) return;
+  state.res.time=t; renderResStep();
+}
+function setParty(d) {
+  state.res.party = Math.max(1, Math.min(10, state.res.party+d));
+  renderResStep();
+}
+function resNext() { state.resStep++; renderResStep(); }
+function resBack() { state.resStep--; renderResStep(); }
+function updateResFooter() {
+  const btn = document.getElementById('res-next-btn');
+  if(btn) btn.disabled = !state.res.name || !state.res.phone;
+}
+function formatDate(dateStr) {
+  if(!dateStr) return '';
+  const d = new Date(dateStr+'T12:00:00');
+  const days = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+  const months = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  return `${days[d.getDay()]} ${d.getDate()} de ${months[d.getMonth()]}`;
+}
+
+// ══════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════
+let _tt;
+function showToast(msg, type='') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show' + (type?' '+type:'');
+  clearTimeout(_tt);
+  _tt = setTimeout(()=>el.classList.remove('show'), 2600);
+}
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+// Lazy-load hero bg
+const heroBg = document.getElementById('hero-bg');
+const heroImg = new Image();
+heroImg.src = 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1400&q=85';
+heroImg.onload = () => heroBg.classList.add('loaded');
+
+renderFeatured();
+renderGrid();
+</script>
+</body>
+</html>

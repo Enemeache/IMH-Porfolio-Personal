@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Método CICLO · Bot Comercial de WhatsApp con IA</title>
+<style>
+  :root{
+    --bg:#0a0e14; --panel:#111722; --panel2:#161d2b; --border:#222c3d;
+    --text:#e9eef5; --muted:#8a97a8; --accent:#25d366; --accent2:#7c6cf5; --gold:#e0a83d;
+    --wa-bg:#0b141a; --wa-head:#202c33; --wa-in:#202c33; --wa-out:#005c4b; --wa-tick:#53bdeb;
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  html,body{height:100%}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg); color:var(--text); overflow:hidden}
+  #deck{height:100vh; width:100vw; position:relative}
+  .slide{position:absolute; inset:0; display:none; flex-direction:column; justify-content:center;
+         padding:5vh 7vw; opacity:0; transition:opacity .4s}
+  .slide.active{display:flex; opacity:1}
+  .kicker{color:var(--accent); font-size:14px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; margin-bottom:18px}
+  h1{font-size:clamp(34px,5vw,64px); font-weight:700; line-height:1.08; letter-spacing:-.02em; margin-bottom:22px}
+  h2{font-size:clamp(26px,3.4vw,42px); font-weight:700; line-height:1.15; margin-bottom:18px; letter-spacing:-.01em}
+  .lead{font-size:clamp(17px,1.7vw,22px); color:var(--muted); line-height:1.6; max-width:760px}
+  .big{font-size:clamp(48px,8vw,110px); font-weight:800; line-height:1; letter-spacing:-.03em}
+  .grad{background:linear-gradient(90deg,var(--accent),var(--accent2)); -webkit-background-clip:text; background-clip:text; color:transparent}
+  .row{display:flex; gap:24px; flex-wrap:wrap; margin-top:34px}
+  .card{background:var(--panel); border:1px solid var(--border); border-radius:18px; padding:24px 26px; flex:1; min-width:210px}
+  .card h3{font-size:18px; font-weight:600; margin-bottom:10px; display:flex; align-items:center; gap:10px}
+  .card p{color:var(--muted); font-size:14.5px; line-height:1.55}
+  .dot{width:10px; height:10px; border-radius:50%; display:inline-block}
+  .pill{display:inline-flex; align-items:center; gap:8px; background:var(--panel); border:1px solid var(--border);
+        border-radius:100px; padding:8px 16px; font-size:14px; color:var(--muted); margin:4px 6px 4px 0}
+  .nav{position:fixed; bottom:22px; right:28px; display:flex; gap:10px; z-index:50}
+  .nav button{width:44px; height:44px; border-radius:50%; border:1px solid var(--border); background:var(--panel);
+              color:var(--text); font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:.2s}
+  .nav button:hover{background:var(--panel2); border-color:var(--accent)}
+  .counter{position:fixed; bottom:30px; left:28px; color:var(--muted); font-size:13px; z-index:50; letter-spacing:.05em}
+  .brand{position:fixed; top:24px; left:28px; display:flex; align-items:center; gap:11px; z-index:50}
+  .brand .logo{width:34px; height:34px; border-radius:9px; background:linear-gradient(135deg,var(--accent),var(--accent2));
+               display:flex; align-items:center; justify-content:center; font-weight:800; font-size:17px; color:#fff}
+  .brand b{font-size:15px; font-weight:600; letter-spacing:.02em}
+  .brand span{color:var(--muted); font-size:12px}
+  .progress{position:fixed; top:0; left:0; height:3px; background:linear-gradient(90deg,var(--accent),var(--accent2)); z-index:60; transition:width .4s}
+  .split{display:grid; grid-template-columns:1.05fr .95fr; gap:44px; align-items:center; width:100%}
+  @media(max-width:900px){.split{grid-template-columns:1fr}}
+
+  /* ===== WhatsApp realista ===== */
+  .phone{width:312px; max-width:86vw; margin:0 auto; background:#0a0a0a; border-radius:38px; padding:9px; border:1px solid #2c2c2c; box-shadow:0 30px 90px rgba(0,0,0,.6)}
+  .notch{height:22px; display:flex; justify-content:center; align-items:flex-start}
+  .notch::before{content:''; width:120px; height:20px; background:#0a0a0a; border-radius:0 0 14px 14px}
+  .pscreen{background:var(--wa-bg); border-radius:30px; overflow:hidden; position:relative}
+  .pwall{position:absolute; inset:0; opacity:.045;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpath d='M20 20h4v4h-4zM50 40h6v2h-6zM10 60l4 4M60 10l3 3M35 65h5v5h-5z' stroke='%23fff' stroke-width='1' fill='none'/%3E%3C/svg%3E"); pointer-events:none}
+  .ptop{background:var(--wa-head); padding:9px 12px; display:flex; align-items:center; gap:10px; position:relative; z-index:2}
+  .pback{color:#aebac1; font-size:18px}
+  .pav{width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent2)); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:15px}
+  .pmeta{flex:1; min-width:0}
+  .pname{color:#e9edef; font-size:14.5px; font-weight:600; line-height:1.2}
+  .pst{color:#8696a0; font-size:11.5px; transition:.2s}
+  .pico{color:#aebac1; font-size:17px; margin-left:4px}
+  .pchat{height:392px; overflow-y:auto; padding:12px 9px; display:flex; flex-direction:column; gap:4px; position:relative; z-index:2}
+  .pchat::-webkit-scrollbar{width:0}
+  .daychip{align-self:center; background:#1d282f; color:#8696a0; font-size:11px; padding:4px 11px; border-radius:8px; margin:6px 0}
+  .b{position:relative; max-width:80%; padding:6px 9px 7px; border-radius:8px; font-size:13.5px; line-height:1.42; color:#e9edef; white-space:pre-wrap; word-wrap:break-word; box-shadow:0 1px .5px rgba(0,0,0,.2)}
+  .b.in{align-self:flex-start; background:var(--wa-in); border-top-left-radius:2px}
+  .b.out{align-self:flex-end; background:var(--wa-out); border-top-right-radius:2px}
+  .b .meta{float:right; margin:4px 0 -2px 8px; font-size:10px; color:#8696a0; display:flex; align-items:center; gap:3px}
+  .b.out .meta{color:#a7c8bd}
+  .tick{color:var(--wa-tick); font-size:12px; letter-spacing:-3px}
+  .pbar{background:var(--wa-head); padding:7px 9px; display:flex; gap:7px; align-items:center; position:relative; z-index:2}
+  .pbar .emo{color:#8696a0; font-size:19px}
+  .pbar input{flex:1; height:38px; background:#2a3942; border:none; border-radius:20px; padding:0 14px; color:#e9edef; font-size:13.5px; outline:none}
+  .pbar input::placeholder{color:#8696a0}
+  .pbar button{width:38px; height:38px; min-width:38px; border:none; border-radius:50%; background:var(--accent); color:#0b141a; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center}
+  /* tarjeta de reunión (mensaje de confirmación) */
+  .mcard{align-self:flex-start; max-width:84%; background:var(--wa-in); border-radius:8px; border-top-left-radius:2px; overflow:hidden; box-shadow:0 1px .5px rgba(0,0,0,.2); animation:pop .3s ease}
+  @keyframes pop{from{opacity:0; transform:translateY(6px)}to{opacity:1; transform:translateY(0)}}
+  .mcard .mhead{background:#0c8c6f; padding:9px 11px; display:flex; align-items:center; gap:8px}
+  .mcard .mhead .mi{width:26px; height:26px; border-radius:6px; background:rgba(255,255,255,.18); display:flex; align-items:center; justify-content:center; font-size:14px}
+  .mcard .mhead b{color:#fff; font-size:12.5px; font-weight:600}
+  .mcard .mbody{padding:10px 12px}
+  .mcard .mrow{display:flex; align-items:center; gap:8px; font-size:12.5px; color:#e9edef; padding:3px 0}
+  .mcard .mrow .k{color:#8696a0; min-width:54px}
+  .mcard .mlink{display:block; margin-top:8px; padding:8px; text-align:center; background:#2a3942; border-radius:7px; color:var(--wa-tick); font-size:12.5px; text-decoration:none}
+  .mcard .mfoot{font-size:10px; color:#8696a0; text-align:right; padding:0 12px 7px}
+  .typing-dots span{display:inline-block; width:6px; height:6px; border-radius:50%; background:#8696a0; margin:0 1.5px; animation:bl 1.2s infinite}
+  .typing-dots span:nth-child(2){animation-delay:.2s}.typing-dots span:nth-child(3){animation-delay:.4s}
+  @keyframes bl{0%,60%,100%{opacity:.3; transform:translateY(0)}30%{opacity:1; transform:translateY(-2px)}}
+
+  .sugg{display:flex; flex-wrap:wrap; gap:7px; margin-top:14px; justify-content:center; max-width:340px; margin-left:auto; margin-right:auto}
+  .sugg button{font-size:12px; padding:7px 12px; border:1px solid var(--border); border-radius:15px; background:var(--panel); color:var(--text); cursor:pointer}
+  .sugg button:hover{border-color:var(--accent)}
+
+  .flow{display:flex; flex-direction:column; gap:0}
+  .fnode{display:flex; align-items:center; gap:12px; padding:10px 13px; border:1px solid var(--border); border-radius:11px; background:var(--panel); transition:.25s}
+  .fnode .fi{width:25px; height:25px; border-radius:7px; background:var(--panel2); display:flex; align-items:center; justify-content:center; font-size:14px}
+  .fnode .fn{font-size:12.5px; flex:1}
+  .fnode .fc{font-size:14px; color:transparent}
+  .fconn{width:2px; height:12px; background:var(--border); margin-left:24px}
+  .fnode.on{border-color:var(--accent); background:var(--panel2)}
+  .fnode.done .fc{color:var(--accent)}
+
+  .stat{text-align:center}
+  .stat .n{font-size:clamp(40px,5vw,68px); font-weight:800; letter-spacing:-.02em}
+  .stat .l{color:var(--muted); font-size:14.5px; margin-top:6px}
+
+  /* config IA */
+  .iacfg{position:fixed; top:22px; right:28px; z-index:55}
+  .iacfg .tgl{display:flex; align-items:center; gap:8px; background:var(--panel); border:1px solid var(--border); border-radius:100px; padding:6px 13px; font-size:12.5px; color:var(--muted); cursor:pointer}
+  .iacfg .tgl .dot{width:8px; height:8px}
+  .iapanel{position:absolute; top:42px; right:0; width:330px; background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:18px; display:none; box-shadow:0 20px 50px rgba(0,0,0,.5)}
+  .iapanel.open{display:block}
+  .iapanel h4{font-size:14px; margin-bottom:8px}
+  .iapanel p{font-size:12px; color:var(--muted); line-height:1.5; margin-bottom:12px}
+  .iapanel input{width:100%; height:36px; background:var(--panel2); border:1px solid var(--border); border-radius:8px; padding:0 11px; color:var(--text); font-size:12.5px; outline:none; margin-bottom:10px}
+  .iapanel .btns{display:flex; gap:8px}
+  .iapanel button{flex:1; height:34px; border-radius:8px; border:1px solid var(--border); background:var(--panel2); color:var(--text); font-size:12.5px; cursor:pointer}
+  .iapanel button.prim{background:var(--accent); color:#0b141a; border-color:var(--accent); font-weight:600}
+  .iapanel a{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+<div class="brand"><div class="logo">C</div><div><b>MÉTODO CICLO</b><br><span>Operar con IA</span></div></div>
+
+<div class="iacfg">
+  <div class="tgl" id="iaTgl"><span class="dot" id="iaDot" style="background:var(--muted)"></span><span id="iaLbl">Demo guiado</span></div>
+  <div class="iapanel" id="iaPanel">
+    <h4>Activar IA real (opcional)</h4>
+    <p>Pegá tu API key de Google Gemini (gratis en <a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a>) y el bot responderá de verdad a cualquier mensaje. La key se guarda <b>solo en este navegador</b>, nunca en el archivo.</p>
+    <input id="iaKey" type="password" placeholder="AIza..." autocomplete="off"/>
+    <div class="btns">
+      <button id="iaClear">Quitar</button>
+      <button class="prim" id="iaSave">Activar IA real</button>
+    </div>
+  </div>
+</div>
+
+<div id="deck">
+
+  <!-- 1 PORTADA -->
+  <section class="slide active" style="justify-content:center; align-items:flex-start">
+    <div class="kicker">Bot Comercial · WhatsApp + IA</div>
+    <h1>Un vendedor que no duerme,<br>no se cansa y <span class="grad">califica solo.</span></h1>
+    <p class="lead">El primer SDR con inteligencia artificial de Método CICLO. Atiende cada WhatsApp como un consultor senior: descubre, diagnostica, maneja objeciones y agenda reuniones — 24/7, sin intervención humana.</p>
+    <div class="row" style="margin-top:40px">
+      <span class="pill"><span class="dot" style="background:var(--accent)"></span> WhatsApp Business</span>
+      <span class="pill"><span class="dot" style="background:var(--accent2)"></span> IA conversacional</span>
+      <span class="pill"><span class="dot" style="background:var(--gold)"></span> Califica y agenda</span>
+    </div>
+  </section>
+
+  <!-- 2 PROBLEMA -->
+  <section class="slide" style="justify-content:center; align-items:center; text-align:center">
+    <div class="kicker">El problema que todos ignoran</div>
+    <div class="big grad">85%</div>
+    <h2 style="margin-top:18px; max-width:900px">de los leads que escriben por WhatsApp se enfrían porque nadie responde a tiempo.</h2>
+    <p class="lead" style="margin:0 auto">El primer mensaje define la venta. Un humano tarda horas; un lead caliente dura minutos. Cada conversación sin responder es un cliente que se va con la competencia.</p>
+  </section>
+
+  <!-- 3 SOLUCION -->
+  <section class="slide">
+    <div class="kicker">La solución</div>
+    <h2>No es un chatbot de preguntas frecuentes.<br>Es un <span class="grad">SDR senior</span> con criterio.</h2>
+    <div class="row">
+      <div class="card"><h3>🎯 Califica</h3><p>Detecta el dolor real, los intentos previos, la urgencia y quién decide — conversando, sin formularios.</p></div>
+      <div class="card"><h3>🧠 Razona</h3><p>Entiende mensajes con faltas, audios, preguntas trampa o gente escéptica. No sigue un libreto: piensa.</p></div>
+      <div class="card"><h3>📅 Agenda</h3><p>Conduce cada conversación hacia un único objetivo: el diagnóstico gratuito de 30 min con el founder.</p></div>
+    </div>
+  </section>
+
+  <!-- 4 DEMO -->
+  <section class="slide">
+    <div class="kicker">Demo en vivo · probalo vos</div>
+    <div class="split">
+      <div>
+        <h2 style="font-size:clamp(22px,2.6vw,32px)">Escribile como lo haría un cliente real.</h2>
+        <p class="lead" style="font-size:15.5px">El bot responde con criterio comercial. A la derecha, el flujo de automatización se ilumina con cada mensaje.</p>
+        <div class="flow" id="flow" style="margin-top:20px"></div>
+        <div class="row" style="margin-top:16px; gap:12px">
+          <div style="text-align:center"><div style="font-size:28px;font-weight:800" id="kMsg">0</div><div style="color:var(--muted);font-size:12.5px">Mensajes</div></div>
+          <div style="text-align:center"><div style="font-size:28px;font-weight:800" id="kScore">—</div><div style="color:var(--muted);font-size:12.5px">Calificación</div></div>
+          <div style="text-align:center"><div style="font-size:28px;font-weight:800" id="kMeet">—</div><div style="color:var(--muted);font-size:12.5px">Reunión</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="pscreen">
+            <div class="pwall"></div>
+            <div class="ptop">
+              <span class="pback">‹</span>
+              <div class="pav">C</div>
+              <div class="pmeta"><div class="pname">Método CICLO</div><div class="pst" id="pst">en línea</div></div>
+              <span class="pico">📹</span><span class="pico">📞</span>
+            </div>
+            <div class="pchat" id="chat"></div>
+            <div class="pbar"><span class="emo">😊</span><input id="msg" placeholder="Mensaje" autocomplete="off"/><button id="send">➤</button></div>
+          </div>
+        </div>
+        <div class="sugg" id="sugg"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 QUE RESPONDE -->
+  <section class="slide">
+    <div class="kicker">Responde absolutamente todo</div>
+    <h2>Diseñado para el caos de los mensajes reales.</h2>
+    <div class="row">
+      <div class="card"><h3>💬 Objeciones</h3><p>"Es caro", "no tengo presupuesto", "ya probamos IA", "mandame info" — las reencuadra y reconduce a la reunión.</p></div>
+      <div class="card"><h3>🎙️ Mensajes imperfectos</h3><p>Faltas de ortografía, abreviaturas, audios, preguntas sueltas. Entiende la intención y nunca se traba.</p></div>
+      <div class="card"><h3>🛡️ Casos difíciles</h3><p>Gente agresiva, preguntas técnicas, pedidos fuera de tema. Mantiene la calma, el rol y la marca.</p></div>
+    </div>
+    <div class="row" style="margin-top:20px">
+      <div class="card"><h3>🧩 Memoria</h3><p>Recuerda cada conversación por contacto. No vuelve a preguntar lo que ya sabe, aunque escriban días después.</p></div>
+      <div class="card"><h3>🤝 Handoff humano</h3><p>Cuando detecta un lead caliente o piden una persona, deriva al equipo con todo el contexto.</p></div>
+      <div class="card"><h3>🌎 24/7</h3><p>Atiende a toda hora, a cualquier volumen, sin perder un solo lead por demora.</p></div>
+    </div>
+  </section>
+
+  <!-- 6 CASOS REALES -->
+  <section class="slide" style="justify-content:center; align-items:center; text-align:center">
+    <div class="kicker">Resultados reales del Método CICLO</div>
+    <h2>La IA bien adoptada mueve la aguja.</h2>
+    <div class="row" style="max-width:1000px; margin-top:24px">
+      <div class="stat card"><div class="n grad">+32%</div><div class="l">Eficiencia en Retail<br><span style="font-size:12px">(pricing dinámico)</span></div></div>
+      <div class="stat card"><div class="n grad">-18%</div><div class="l">Costos en Logística<br><span style="font-size:12px">cierre de 5 días a 6 horas</span></div></div>
+      <div class="stat card"><div class="n grad">4×</div><div class="l">Más rápido en Finanzas<br><span style="font-size:12px">(cierre contable)</span></div></div>
+    </div>
+    <p class="lead" style="margin:30px auto 0; font-size:16px">En los tres casos, el cuello de botella no era la tecnología: era la adopción del equipo. Eso es exactamente lo que resuelve Método CICLO — y lo que el bot transmite en cada conversación.</p>
+  </section>
+
+  <!-- 7 COMO FUNCIONA -->
+  <section class="slide" style="justify-content:center; align-items:center; text-align:center">
+    <div class="kicker">Cómo funciona, por dentro</div>
+    <h2>De un "hola" a una reunión agendada, en segundos.</h2>
+    <div class="row" style="max-width:1000px; margin-top:28px">
+      <div class="card"><h3 style="justify-content:center">1 · Recibe</h3><p>El mensaje entra por WhatsApp en tiempo real.</p></div>
+      <div class="card"><h3 style="justify-content:center">2 · Piensa</h3><p>La IA interpreta, califica y decide la respuesta consultiva.</p></div>
+      <div class="card"><h3 style="justify-content:center">3 · Responde</h3><p>Contesta con tono humano y conduce a la reunión.</p></div>
+      <div class="card"><h3 style="justify-content:center">4 · Recuerda</h3><p>Guarda el contexto para la próxima vez.</p></div>
+    </div>
+    <p class="lead" style="margin:28px auto 0; font-size:16px">Construido sobre automatización profesional (n8n) + IA generativa. Escalable, sin servidores que mantener.</p>
+  </section>
+
+  <!-- 8 CIERRE -->
+  <section class="slide" style="justify-content:center; align-items:flex-start">
+    <div class="kicker">El próximo paso</div>
+    <h1>Tu próximo cliente<br>ya te está <span class="grad">escribiendo.</span></h1>
+    <p class="lead">El bot de Método CICLO convierte cada conversación de WhatsApp en una oportunidad calificada. Listo para atender, listo para vender.</p>
+    <div class="row" style="margin-top:34px">
+      <span class="pill"><span class="dot" style="background:var(--accent)"></span> +54 9 11 5906 8895</span>
+      <span class="pill"><span class="dot" style="background:var(--accent2)"></span> hola@metodociclo.com</span>
+      <span class="pill"><span class="dot" style="background:var(--gold)"></span> metodociclo.com</span>
+    </div>
+  </section>
+
+</div>
+
+<div class="counter"><span id="cur">1</span> / 8</div>
+<div class="nav"><button id="prev">‹</button><button id="next">›</button></div>
+
+<script>
+(function(){
+  /* ===== navegación ===== */
+  var slides=[].slice.call(document.querySelectorAll('.slide')), i=0;
+  var prog=document.getElementById('prog'), cur=document.getElementById('cur');
+  function show(n){i=Math.max(0,Math.min(slides.length-1,n));slides.forEach(function(s,k){s.classList.toggle('active',k===i)});prog.style.width=((i+1)/slides.length*100)+'%';cur.textContent=i+1;}
+  document.getElementById('next').onclick=function(){show(i+1)};
+  document.getElementById('prev').onclick=function(){show(i-1)};
+  document.addEventListener('keydown',function(e){
+    if(document.activeElement&&document.activeElement.tagName==='INPUT')return;
+    if(e.key==='ArrowRight'||e.key===' ')show(i+1);
+    else if(e.key==='ArrowLeft')show(i-1);
+    else if(e.key.toLowerCase()==='f'){if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen();}
+  });
+  show(0);
+
+  /* ===== config IA real ===== */
+  var KEY=localStorage.getItem('ciclo_gemini_key')||'';
+  var iaTgl=document.getElementById('iaTgl'),iaPanel=document.getElementById('iaPanel'),
+      iaDot=document.getElementById('iaDot'),iaLbl=document.getElementById('iaLbl'),
+      iaKey=document.getElementById('iaKey');
+  function refreshIA(){ if(KEY){iaDot.style.background='var(--accent)';iaLbl.textContent='IA real activa';}else{iaDot.style.background='var(--muted)';iaLbl.textContent='Demo guiado';} }
+  iaKey.value=KEY; refreshIA();
+  iaTgl.onclick=function(){iaPanel.classList.toggle('open');};
+  document.getElementById('iaSave').onclick=function(){KEY=iaKey.value.trim();localStorage.setItem('ciclo_gemini_key',KEY);refreshIA();iaPanel.classList.remove('open');};
+  document.getElementById('iaClear').onclick=function(){KEY='';iaKey.value='';localStorage.removeItem('ciclo_gemini_key');refreshIA();};
+
+  /* ===== chat ===== */
+  var chat=document.getElementById('chat'),input=document.getElementById('msg'),sendB=document.getElementById('send'),
+      sugg=document.getElementById('sugg'),pst=document.getElementById('pst'),
+      kMsg=document.getElementById('kMsg'),kScore=document.getElementById('kScore'),kMeet=document.getElementById('kMeet');
+  var locked=false,count=0;
+
+  var nodes=[{id:'in',n:'WhatsApp · entra',i:'📲'},{id:'mem',n:'Memoria por contacto',i:'🗄️'},{id:'ai',n:'IA · piensa la respuesta',i:'🧠'},{id:'agent',n:'SDR Método CICLO',i:'🤖'},{id:'out',n:'WhatsApp · responde',i:'➤'}];
+  var flow=document.getElementById('flow');
+  nodes.forEach(function(nd,k){if(k>0){var c=document.createElement('div');c.className='fconn';flow.appendChild(c);}var r=document.createElement('div');r.className='fnode';r.id='fn-'+nd.id;r.innerHTML='<div class="fi">'+nd.i+'</div><div class="fn">'+nd.n+'</div><div class="fc">✓</div>';flow.appendChild(r);});
+  function lf(id,st){var r=document.getElementById('fn-'+id);if(!r)return;r.className='fnode'+(st==='on'?' on':st==='done'?' done':'');}
+  function resetFlow(){nodes.forEach(function(n){lf(n.id,'')});}
+
+  function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function now(){return new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});}
+  function bubble(txt,who){
+    var b=document.createElement('div');b.className='b '+(who==='user'?'out':'in');
+    var tick=who==='user'?'<span class="tick">✓✓</span>':'';
+    b.innerHTML=esc(txt)+'<span class="meta">'+now()+' '+tick+'</span>';
+    chat.appendChild(b);chat.scrollTop=chat.scrollHeight;
+  }
+  function typing(){var b=document.createElement('div');b.id='typ';b.className='b in';b.innerHTML='<span class="typing-dots"><span></span><span></span><span></span></span>';chat.appendChild(b);chat.scrollTop=chat.scrollHeight;}
+  function rmTyping(){var t=document.getElementById('typ');if(t)t.remove();}
+
+  /* tarjeta de confirmación de reunión (llega tras agendar) */
+  function meetingCard(){
+    var dias=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+    var meses=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+    var d=new Date(); var add=1; while(d.getDay()===0||d.getDay()===6){add++; d=new Date(Date.now()+add*86400000);} d=new Date(Date.now()+add*86400000);
+    var fecha=dias[d.getDay()]+' '+d.getDate()+' '+meses[d.getMonth()];
+    var card=document.createElement('div'); card.className='mcard';
+    card.innerHTML=
+      '<div class="mhead"><div class="mi">📅</div><b>Reunión confirmada · Diagnóstico CICLO</b></div>'+
+      '<div class="mbody">'+
+        '<div class="mrow"><span class="k">Fecha</span><span>'+fecha+'</span></div>'+
+        '<div class="mrow"><span class="k">Hora</span><span>11:00 hs (GMT-3)</span></div>'+
+        '<div class="mrow"><span class="k">Duración</span><span>30 minutos</span></div>'+
+        '<div class="mrow"><span class="k">Con</span><span>Founder de Método CICLO</span></div>'+
+        '<a class="mlink" href="#">🎥 Unirse a la videollamada</a>'+
+      '</div>'+
+      '<div class="mfoot">'+now()+' ✓✓</div>';
+    chat.appendChild(card); chat.scrollTop=chat.scrollHeight;
+  }
+
+  /* guión de respaldo (sin IA). Pasos de la conversación de calificación. */
+  var steps=[
+    {re:/logística|logistica|empresa|hola|info|negocio|envíos|envios|buenas|automatizar|atenci/i,
+     r:'Buenas 👋 Mirá, antes de tirarte un pitch: ¿qué pasó estos últimos meses para que la IA esté en tu mesa justo ahora?',s:'C'},
+    {re:/crec|volumen|consultas|tiempo|no damos|saturad|demanda|much|repetit|mails|carga/i,
+     r:'Te escucho mil veces eso. Y casi siempre el problema no es responder rápido — es que la info está desparramada y alguien la tiene que ir a buscar cada vez.\n\n¿Ya intentaron resolverlo con alguna herramienta?',s:'B'},
+    {re:/probamos|chatgpt|bot|no funcion|apagamos|nada|dejamos|copilot|intent|algo/i,
+     r:'Y ahí está el punto. La IA rara vez falla por mala — falla porque el equipo la termina dejando de lado. Nosotros laburamos justo eso (un caso parecido en logística bajó el cierre de 5 días a 6 horas).\n\nTe propongo algo sin vueltas: 30 min con el founder y te llevás un mapa de las 2-3 cosas con mayor retorno para tu operación. ¿Te queda mejor a la mañana o a la tarde?',s:'A'}
+  ];
+  /* objeciones — tienen prioridad sobre los pasos */
+  var obj=[
+    {re:/caro|costoso|sale mucho|precio alto/i,r:'Te hago una pregunta en serio: ¿caro comparado con qué? El proyecto se cotiza recién después del diagnóstico, y esa primera charla no te cuesta nada. ¿La hacemos y después ves?'},
+    {re:/presupuesto|plata|guita|invertir|no tengo para/i,r:'Tranqui, no te pido invertir a ciegas. El diagnóstico es gratis. Si los números no dan, te lo decimos nosotros — no perdés nada.'},
+    {re:/cuanto|cuánto|precio|cuesta|vale|sale/i,r:'Depende del alcance, por eso no te tiro un número al aire. Lo bueno: el diagnóstico inicial es gratis y de ahí sale el precio real. ¿Arrancamos por ahí?'},
+    {re:/mandame info|pdf|folleto|material|mas info|más info|envia|enviá/i,r:'Te la puedo mandar, pero entre nosotros: el PDF genérico no le sirve a nadie. En 30 min el founder te arma 2-3 oportunidades para TU caso. ¿Te tiro la reunión mejor?'},
+    {re:/no tengo tiempo|ocupad|sin tiempo|despues|después|otro momento/i,r:'Justo por eso: son 30 min y salís con un mapa de dónde la IA te devuelve horas. Si no hay nada que valga la pena, no te robo un minuto más. ¿Cuándo te viene?'},
+    {re:/proveedor|ya trabajo|tenemos a|agencia|consultora|alguien ya/i,r:'Bárbaro, ¿y cómo les va? Muchas veces el proveedor resuelve una parte y queda floja la adopción. Si es el caso complementamos, sin pisar a nadie. ¿Lo charlamos?'},
+    {re:/robot|sos un bot|humano|persona real|estafa|chamuyo|no creo/i,r:'Jaja te entiendo, hay mucho humo dando vueltas con esto. Por eso no te vengo a vender magia: 30 min, mapa real de tu operación, gratis. Si es humo, lo ves vos mismo.'},
+    {re:/garant|asegur|me promet|resultado|funciona seguro/i,r:'No te prometo números al aire. Lo que sí: firmamos las métricas de adopción por contrato. El número concreto sale del diagnóstico con tus datos reales.'},
+    {re:/no me interesa|no gracias|déjalo|dejalo|para nada/i,r:'Sin drama, gracias por la sinceridad. Si en algún momento cambia el contexto, acá estoy. Éxitos 🙌'}
+  ];
+  var idx=0, ofrecida=false;
+  // Aceptación fuerte de reunión: cierra SIEMPRE (haya o no oferta previa)
+  var CIERRA=/coordin|me convenciste|me convences|reserv|agenda|cerremos|cerrá|cerra|hagámoslo|hagamoslo|me sirve|me viene|me anoto|cuando puedas|lunes|martes|mi[eé]rcoles|jueves|viernes|a la mañana|a la tarde|\b1[0-9]\s?hs?\b|\b\d{1,2}\s?(hs|horas)\b/i;
+  // Aceptación blanda: cierra solo si ya ofrecimos la reunión
+  var AFIRMA=/^(s[ií]|dale|listo|joya|de una|ok|oka|perfecto|genial|va|bueno|obvio|claro|vamos|trato)\b|quiero la reuni|quiero esa reuni|hagamos esa/i;
+  var NEGA=/no me interesa|no gracias|no quiero|para nada|otro momento|más adelante|mas adelante|ahora no|déjalo|dejalo/i;
+  function cierre(){ return {r:'Hecho 🙌 Te reservo el espacio y te paso la confirmación acá mismo. Nos vemos ahí.',s:'A',meet:true}; }
+  function scriptReply(txt){
+    var t=txt.toLowerCase();
+    if(NEGA.test(t)) return {r:'Sin drama, gracias por la franqueza. Si en algún momento cambia el contexto, acá estoy. Éxitos 🙌',s:'C'};
+    // Aceptación clara de reunión -> cerrar siempre
+    if(CIERRA.test(t)) return cierre();
+    // Aceptación blanda -> cerrar solo si ya ofrecimos
+    if(ofrecida && AFIRMA.test(t)) return cierre();
+    // Objeciones
+    for(var i=0;i<obj.length;i++){ if(obj[i].re.test(t)) return {r:obj[i].r,s:'B'}; }
+    // Pasos del guión
+    if(idx<steps.length){var st=steps[idx];idx++; return{r:st.r,s:st.s,meet:st.meet};}
+    // Ya recorrió el guión: empuja al cierre
+    return{r:'Te sigo. Para no marearte con vueltas: ¿lo cerramos en 30 min con el founder? Es gratis y te llevás algo útil sí o sí. ¿Te va mejor mañana o pasado?',s:'B'};
+  }
+
+  var SYS="Sos Tomás, del equipo de Método CICLO, conversando por WhatsApp como una persona real (no un bot). Método CICLO es un Operating Partner de IA: acompaña empresas hasta que su equipo usa la IA sin pensarlo. El 85% de los proyectos de IA fracasan por adopción, no por tecnología. TU ÚNICO OBJETIVO: que la persona agende un diagnóstico gratuito de 30 min con el founder. No vendas implementación ni des precios. Tono argentino de negocios, cálido pero profesional, anti-hype. Mensajes CORTOS de WhatsApp, una idea y una sola pregunta por mensaje, con un micro-insight antes de preguntar. Reaccioná a lo que dicen, no sigas un libreto. Manejá objeciones (caro, sin presupuesto, ya probamos IA, mandame info) reconduciendo a la reunión. Si mandan algo confuso, pedí que aclaren con onda. Casos reales que podés citar: Retail +32% eficiencia, Logística -18% costos (un COO bajó el cierre de 5 días a 6 horas), Finanzas 4x más rápido el cierre contable; en los tres el cuello era la adopción. Cerrá siempre hacia la reunión. IMPORTANTE: en el momento exacto en que la persona acepta un día/horario y la reunión queda agendada, terminá tu mensaje agregando en una línea nueva el token [AGENDADO]. No lo uses antes de que confirme el horario, ni lo expliques.";
+  var history=[];
+
+  function classifyScore(userText,botText){
+    var t=(userText+' '+botText).toLowerCase();
+    if(/reserv|agenda|confirm|nos vemos|mañana|tarde|reuni/.test(t))return'A';
+    if(/decido|coo|ceo|founder|dueñ|trimestre|urgente|presupuesto|probamos/.test(t))return'B';
+    return'C';
+  }
+
+  function aiReply(txt,cb){
+    history.push({role:'user',parts:[{text:txt}]});
+    var url='https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+encodeURIComponent(KEY);
+    fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({systemInstruction:{parts:[{text:SYS}]},contents:history,generationConfig:{maxOutputTokens:300,temperature:0.7}})})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      var out=(d&&d.candidates&&d.candidates[0]&&d.candidates[0].content&&d.candidates[0].content.parts[0].text)||null;
+      if(!out){ var fb=scriptReply(txt); cb(fb.r,fb.s,fb.meet,true); return; }
+      history.push({role:'model',parts:[{text:out}]});
+      var meet=/\[AGENDADO\]/i.test(out);
+      out=out.replace(/\[AGENDADO\]/ig,'').trim();
+      var sc=meet?'A':classifyScore(txt,out);
+      cb(out,sc,meet,false);
+    })
+    .catch(function(){ var fb=scriptReply(txt); cb(fb.r,fb.s,fb.meet,true); });
+  }
+
+  function respond(txt){
+    var seq=[['in',240],['mem',280],['ai',560],['agent',380],['out',320]],tt=0;
+    pst.textContent='escribiendo…';
+    seq.forEach(function(s,k){setTimeout(function(){if(k>0)lf(seq[k-1][0],'done');lf(s[0],'on');if(s[0]==='ai')typing();},tt);tt+=s[1];});
+    function finish(r,sc,meet){
+      lf('out','done');rmTyping();bubble(r,'bot');pst.textContent='en línea';
+      // Si el bot acaba de proponer la reunión, marcamos que ya la ofrecimos
+      if(/30 ?min|founder|mañana o (a la )?tarde|qué te queda mejor|cuándo te viene|coordinemos/i.test(r)) ofrecida=true;
+      if(sc){kScore.textContent=sc;kScore.style.color=sc==='A'?'#25d366':sc==='B'?'#e0a83d':'#e9eef5';}
+      if(meet){
+        kMeet.textContent='✅';
+        // Llega la confirmación de la reunión como segundo mensaje
+        setTimeout(function(){ pst.textContent='escribiendo…'; typing(); }, 900);
+        setTimeout(function(){ rmTyping(); meetingCard(); pst.textContent='en línea'; }, 2100);
+      }
+      locked=false;setTimeout(resetFlow,1300);
+    }
+    if(KEY){ aiReply(txt,function(r,sc,meet){ var wait=Math.max(0,tt-(560+380+320)); setTimeout(function(){finish(r,sc,meet);},Math.max(tt, 1200)); }); }
+    else { var fb=scriptReply(txt); setTimeout(function(){finish(fb.r,fb.s,fb.meet);},tt+150); }
+  }
+
+  function send(txt){if(locked||!txt.trim())return;locked=true;bubble(txt,'user');input.value='';count++;kMsg.textContent=count;sugg.innerHTML='';respond(txt);setTimeout(showSugg,2600);}
+  var sg=['Tengo una empresa de logística, 200 personas','Se nos disparó el volumen de consultas','Probamos un bot y lo apagamos','Es prioridad para este trimestre','La decisión la tomo yo','Dale, a la mañana'];
+  function showSugg(){sugg.innerHTML='';if(KEY)return;if(idx>=sg.length)return;var b=document.createElement('button');b.textContent=sg[idx];b.onclick=function(){send(sg[idx])};sugg.appendChild(b);}
+  sendB.onclick=function(){send(input.value)};
+  input.addEventListener('keydown',function(e){if(e.key==='Enter')send(input.value)});
+
+  var dc=document.createElement('div');dc.className='daychip';dc.textContent='HOY';chat.appendChild(dc);
+  bubble('Hola 👋 Soy Tomás, del equipo de Método CICLO. Antes de tirarte info genérica: ¿qué te trajo hasta acá?','bot');
+  showSugg();
+})();
+</script>
+</body>
+</html>

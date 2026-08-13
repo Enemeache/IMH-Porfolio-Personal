@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BLOCH — El color es nuestro</title>
+<meta name="description" content="Laboratorios Bloch. Pioneros del color alimentario argentino desde 1986. Colorantes, esencias y aditivos con precisión de laboratorio.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Fallbacks de render; en producción se licencia Degular + Degular Mono (tipografía oficial del dossier) -->
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700;800&family=Spline+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --magenta:#EC168E; --magenta-d:#C70E74; --magenta-ink:#820a4d;
+  --verde:#BCD759; --verde-d:#A3C238;
+  --ink:#0A090A; --ink-2:#141114;
+  --g900:#211D20; --g700:#4A454A; --g500:#7C767C; --g300:#C9C4CA; --g150:#E9E6EA; --g100:#F4F2F5; --g50:#FAF9FB;
+  --sans:'Degular','Hanken Grotesk',system-ui,-apple-system,sans-serif;
+  --mono:'Degular Mono','Spline Sans Mono',ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+html.lenis{scroll-behavior:auto}
+body{background:var(--ink);color:#fff;font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--magenta);color:#fff}
+a{text-decoration:none;color:inherit}
+.wrap{max-width:1280px;margin:0 auto;padding:0 36px}
+.mono{font-family:var(--mono)}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;font-weight:500}
+h1,h2,h3{font-family:var(--sans);font-weight:700;letter-spacing:-.03em;line-height:.98}
+h2{font-size:clamp(34px,5vw,64px)}
+h3{font-size:22px;font-weight:600;letter-spacing:-.01em;line-height:1.2}
+:focus-visible{outline:2.5px solid var(--verde);outline-offset:3px;border-radius:4px}
+
+.btn{display:inline-flex;align-items:center;gap:10px;font-weight:600;font-size:15px;padding:14px 26px;border-radius:100px;cursor:pointer;transition:.28s cubic-bezier(.2,.7,.2,1);border:1.5px solid transparent;white-space:nowrap}
+.btn .ar{transition:.28s}
+.btn:hover .ar{transform:translateX(5px)}
+.btn-magenta{background:var(--magenta);color:#fff}
+.btn-magenta:hover{background:var(--magenta-d);transform:translateY(-2px)}
+.btn-white{background:#fff;color:var(--magenta)}
+.btn-white:hover{background:var(--ink);color:#fff;transform:translateY(-2px)}
+.btn-ghost-w{border-color:rgba(255,255,255,.4);color:#fff}
+.btn-ghost-w:hover{border-color:#fff;background:rgba(255,255,255,.1)}
+
+/* ============ NAV ============ */
+nav{position:fixed;inset:0 0 auto 0;z-index:90;transition:background .35s,border-color .35s}
+nav .inner{max-width:1280px;margin:0 auto;padding:20px 36px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.logo{display:block;height:26px;width:auto;aspect-ratio:284/151.33;color:#fff;transition:color .35s}
+nav .links{display:flex;gap:2px}
+nav .links a{font-size:14px;font-weight:500;padding:8px 14px;border-radius:9px;color:rgba(255,255,255,.75);transition:.2s}
+nav .links a:hover{color:#fff;background:rgba(255,255,255,.1)}
+nav .cta-nav{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;border:1px solid rgba(255,255,255,.35);padding:10px 18px;border-radius:100px;transition:.25s}
+nav .cta-nav:hover{background:var(--magenta);border-color:var(--magenta)}
+nav.lite{background:rgba(250,249,251,.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--g150)}
+nav.lite .logo{color:var(--magenta)}
+nav.lite .links a{color:var(--g700)}
+nav.lite .links a:hover{color:var(--magenta);background:var(--g100)}
+nav.lite .cta-nav{color:var(--magenta);border-color:var(--magenta)}
+nav.lite .cta-nav:hover{color:#fff}
+
+/* ============ HERO ============ */
+#hero{position:relative;height:100vh;overflow:hidden;background:radial-gradient(1200px 800px at 50% 42%,#1d1018 0%,var(--ink) 62%)}
+#jar3d{position:absolute;inset:0;width:100%;height:100%;display:block}
+#ink{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5}
+.hero-ui{position:absolute;inset:0;z-index:6;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;padding:110px 0 34px}
+.hero-head{text-align:center}
+.hero-head .eyebrow{color:rgba(255,255,255,.55);display:block;margin-bottom:18px}
+.hero-head h1{font-size:clamp(46px,7.2vw,108px);letter-spacing:-.04em}
+.hero-head h1 .l2{display:block;color:var(--magenta)}
+.hero-foot{display:flex;align-items:flex-end;justify-content:space-between;max-width:1280px;margin:0 auto;width:100%;padding:0 36px}
+.hero-foot .spec{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.45);text-transform:uppercase;line-height:2}
+.hero-foot .scroll-hint{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:rgba(255,255,255,.6);text-transform:uppercase;display:flex;align-items:center;gap:12px}
+.scroll-hint .line{width:1px;height:44px;background:linear-gradient(rgba(255,255,255,.7),transparent);animation:drip 1.8s ease-in-out infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}55%{transform:scaleY(1);transform-origin:top}56%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+.hero-fallback{display:none;position:absolute;inset:0;align-items:center;justify-content:center;z-index:4}
+.hero-fallback svg{height:clamp(80px,16vw,180px);color:var(--magenta)}
+.no3d .hero-fallback{display:flex}
+
+/* ============ MANIFIESTO (nace de la tinta) ============ */
+#manifiesto{background:var(--magenta);color:#fff;padding:130px 0 120px;position:relative;overflow:hidden}
+#manifiesto .big{font-size:clamp(44px,7vw,110px);font-weight:700;letter-spacing:-.04em;line-height:.96;max-width:11em}
+#manifiesto .big em{font-style:normal;color:var(--ink)}
+#manifiesto .sub{margin-top:36px;font-size:clamp(17px,1.6vw,21px);color:rgba(255,255,255,.92);max-width:36em}
+#manifiesto .meta{display:flex;gap:40px;flex-wrap:wrap;margin-top:56px;font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.75)}
+#manifiesto .meta b{display:block;font-family:var(--sans);font-size:clamp(28px,3.4vw,46px);font-weight:700;letter-spacing:-.02em;color:#fff;line-height:1.1}
+.wm{position:absolute;right:-6%;bottom:-14%;height:64%;opacity:.12;color:#fff;pointer-events:none}
+
+/* ============ MARQUEE ============ */
+.marquee{background:var(--ink);border-top:1px solid #241f23;border-bottom:1px solid #241f23;overflow:hidden;padding:18px 0}
+.marquee .track{display:flex;gap:54px;white-space:nowrap;font-family:var(--mono);font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.5);animation:mq 26s linear infinite;width:max-content}
+.marquee b{color:var(--magenta);font-weight:500}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* ============ SECTIONS LIGHT ============ */
+.light{background:var(--g50);color:var(--g900)}
+.pad{padding:120px 0}
+.sec-head{max-width:780px;margin-bottom:64px}
+.sec-head .eyebrow{color:var(--magenta);display:block;margin-bottom:18px}
+.lead{font-size:18px;color:var(--g700);max-width:62ch}
+.light .lead{color:var(--g700)}
+
+/* capacidades editoriales */
+.cap-row{display:grid;grid-template-columns:90px 1fr 1.1fr auto;gap:34px;align-items:center;padding:44px 0;border-top:1px solid var(--g150);transition:.3s}
+.cap-row:last-child{border-bottom:1px solid var(--g150)}
+.cap-row .num{font-family:var(--mono);font-size:13px;color:var(--g500)}
+.cap-row h3{font-size:clamp(24px,2.6vw,38px);font-weight:700;letter-spacing:-.02em}
+.cap-row p{font-size:15px;color:var(--g700);max-width:46ch}
+.cap-row .go{width:54px;height:54px;border:1.5px solid var(--g300);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--g700);transition:.3s}
+.cap-row:hover .go{background:var(--magenta);border-color:var(--magenta);color:#fff;transform:rotate(-45deg)}
+.cap-row.nat:hover .go{background:var(--verde-d);border-color:var(--verde-d)}
+.cap-row:hover h3{color:var(--magenta)}
+.cap-row.nat:hover h3{color:var(--verde-d)}
+
+/* ============ CATALOGO VIVO ============ */
+#catalogo .toolbar{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-bottom:34px}
+#buscador{flex:1;min-width:240px;background:#fff;border:1.5px solid var(--g150);border-radius:100px;padding:15px 24px;font-family:var(--mono);font-size:14px;color:var(--g900);outline:none;transition:.25s}
+#buscador:focus{border-color:var(--magenta);box-shadow:0 0 0 4px rgba(236,22,142,.12)}
+.chip{font-family:var(--mono);font-size:12px;letter-spacing:.05em;padding:11px 18px;border-radius:100px;border:1.5px solid var(--g300);color:var(--g700);cursor:pointer;background:none;transition:.2s;text-transform:uppercase}
+.chip:hover{border-color:var(--magenta);color:var(--magenta)}
+.chip.on{background:var(--magenta);border-color:var(--magenta);color:#fff}
+.cat-layout{display:grid;grid-template-columns:1.25fr .75fr;gap:40px;align-items:start}
+.prod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.prod{background:#fff;border:1px solid var(--g150);border-radius:18px;overflow:hidden;cursor:pointer;transition:.3s cubic-bezier(.2,.7,.2,1)}
+.prod:hover{transform:translateY(-5px);box-shadow:0 28px 50px -30px rgba(33,29,32,.35)}
+.prod .sw{height:96px;position:relative}
+.prod .sw::after{content:"";position:absolute;inset:0;background:linear-gradient(160deg,rgba(255,255,255,.32),transparent 45%)}
+.prod .nm{padding:14px 16px 4px;font-weight:700;font-size:14.5px;letter-spacing:-.01em}
+.prod .tg{padding:0 16px 14px;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--g500)}
+.prod.sel{outline:2.5px solid var(--magenta);outline-offset:2px}
+#noRes{display:none;font-family:var(--mono);font-size:13px;color:var(--g500);padding:30px 0}
+.ficha{background:#fff;border:1px solid var(--g150);border-radius:20px;overflow:hidden;box-shadow:0 40px 80px -50px rgba(33,29,32,.4);position:sticky;top:96px}
+.ficha .fh{color:#fff;padding:22px 26px;display:flex;align-items:center;justify-content:space-between;transition:background .4s}
+.ficha .fh .fn{font-weight:700;font-size:19px;letter-spacing:-.01em}
+.ficha .fh .fc{font-family:var(--mono);font-size:11.5px;background:rgba(255,255,255,.2);padding:5px 12px;border-radius:20px}
+.ficha .fb{padding:10px 26px 16px}
+.ficha .fr{display:flex;justify-content:space-between;gap:18px;padding:12px 0;border-bottom:1px solid var(--g150);font-size:13.5px}
+.ficha .fr:last-child{border-bottom:none}
+.ficha .fr .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--g500)}
+.ficha .fr .v{font-weight:600;color:var(--g900);text-align:right}
+.ficha .ff{padding:18px 26px;border-top:1px solid var(--g150);display:flex;gap:10px}
+.ficha .ff .dl{flex:1;text-align:center;font-family:var(--mono);font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;padding:12px;border-radius:12px;border:1.5px solid var(--g150);color:var(--g700);transition:.2s;cursor:pointer}
+.ficha .ff .dl:hover{border-color:var(--magenta);color:var(--magenta)}
+
+/* ============ LABORATORIO (dark) ============ */
+.dark{background:var(--ink);color:#fff}
+.dark .eyebrow{color:var(--verde)}
+.dark .lead{color:rgba(255,255,255,.65)}
+.lab-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid #241f23}
+.lab-c{padding:40px 28px 46px;border-left:1px solid #241f23;position:relative;transition:background .3s}
+.lab-c:first-child{border-left:none;padding-left:0}
+.lab-c:hover{background:#120f12}
+.lab-c .n{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;color:var(--magenta)}
+.lab-c h3{margin:16px 0 10px;color:#fff}
+.lab-c p{font-size:14px;color:rgba(255,255,255,.6)}
+.lab-c .dat{margin-top:22px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:rgba(255,255,255,.38);text-transform:uppercase}
+
+/* industrias */
+.inds{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:54px}
+.ind{border-radius:16px;padding:22px 18px;min-height:210px;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;position:relative;overflow:hidden;background:#161216;border:1px solid #241f23;transition:.35s cubic-bezier(.2,.7,.2,1);cursor:pointer}
+.ind .tint{position:absolute;inset:auto 0 0 0;height:0;transition:height .45s cubic-bezier(.2,.7,.2,1);opacity:.92}
+.ind:hover .tint{height:100%}
+.ind h3{font-size:16px;position:relative;z-index:1}
+.ind p{font-size:12px;color:rgba(255,255,255,.55);position:relative;z-index:1;transition:.3s}
+.ind:hover p{color:rgba(255,255,255,.9)}
+.ind .sw{width:30px;height:30px;border-radius:9px;position:relative;z-index:1;margin-bottom:auto}
+
+/* trayectoria */
+.tl{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--g150)}
+.tl-i{padding:38px 26px 0;border-left:1px solid var(--g150)}
+.tl-i:first-child{border-left:none;padding-left:0}
+.tl-i .yr{font-weight:800;font-size:clamp(36px,4.4vw,64px);color:var(--magenta);letter-spacing:-.04em;line-height:1}
+.tl-i h3{margin:14px 0 8px}
+.tl-i p{font-size:14px;color:var(--g700)}
+
+/* CTA */
+.cta{background:var(--magenta);border-radius:30px;padding:90px 56px;text-align:center;position:relative;overflow:hidden}
+.cta-tex{position:absolute;inset:0;background:radial-gradient(700px 360px at 18% 8%,rgba(188,215,89,.28),transparent 60%),radial-gradient(700px 360px at 88% 95%,rgba(255,255,255,.16),transparent 60%)}
+.cta>*{position:relative;z-index:1}
+.cta h2{color:#fff;margin-bottom:16px}
+.cta p{color:rgba(255,255,255,.92);max-width:34em;margin:0 auto 32px;font-size:17px}
+
+/* FOOTER — logo monumental */
+footer{background:var(--ink);color:#fff;padding:90px 0 0;overflow:hidden}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;margin-bottom:80px}
+.foot-brand p{color:rgba(255,255,255,.55);font-size:14px;max-width:30em;margin-top:18px}
+.foot-col h4{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.45);font-weight:500;margin-bottom:16px}
+.foot-col a{display:block;font-size:14.5px;color:rgba(255,255,255,.8);margin-bottom:11px;transition:.2s}
+.foot-col a:hover{color:var(--verde)}
+.foot-bot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;padding:24px 0;border-top:1px solid #241f23;font-family:var(--mono);font-size:11.5px;color:rgba(255,255,255,.45)}
+.foot-logo{display:block;width:100%;height:auto;color:var(--magenta);margin-top:54px;transform:translateY(12%)}
+
+/* reveals */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+@media(max-width:1080px){
+  .prod-grid{grid-template-columns:1fr 1fr}
+  .inds{grid-template-columns:repeat(3,1fr)}
+  .lab-grid{grid-template-columns:1fr 1fr}
+  .lab-c:nth-child(odd){border-left:none;padding-left:0}
+}
+@media(max-width:880px){
+  nav .links{display:none}
+  .cat-layout{grid-template-columns:1fr}
+  .ficha{position:static}
+  .cap-row{grid-template-columns:1fr;gap:12px}
+  .cap-row .go{display:none}
+  .tl,.foot-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+  .wrap{padding:0 22px}
+  nav .inner{padding:16px 22px}
+  .prod-grid,.tl,.foot-grid,.lab-grid{grid-template-columns:1fr}
+  .lab-c{border-left:none;padding-left:0}
+  .inds{grid-template-columns:1fr 1fr}
+  .hero-foot .spec{display:none}
+  .cta{padding:60px 28px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGO OFICIAL (vector original del manual, sin modificar) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="bloch" viewBox="155.33 62.67 284.00 151.33">
+    <g>
+      <path transform="matrix(1,0,0,-1,175.884,129.66661)" d="M0 0C12.899-7.188 5.597-30.049 5.597-30.049 5.597-30.049 17.406-34.028 16.852-49.212 16.214-67.117 0-65.725 0-65.725ZM-7.151 10.893-6.159-71.974C-6.159-71.974 17.192-80.203 22.65-49.727 22.65-49.727 23.842-33.878 12.083-26.387 12.083-26.387 13.19-20.942 13.19-12.096 13.19-3.237 3.753 9.701-7.151 10.893" fill="currentColor" fill-rule="evenodd"/>
+      <path transform="matrix(1,0,0,-1,205.8502,121.32211)" d="M0 0V-80.881L24.53-81.058V-73.229H6.686V0Z" fill="currentColor" fill-rule="evenodd"/>
+      <path transform="matrix(1,0,0,-1,276.6336,127.95921)" d="M0 0C-18.947 0-34.306-15.37-34.306-34.317-34.306-53.264-18.947-68.624 0-68.624 18.946-68.624 34.316-53.264 34.316-34.317 34.316-15.37 18.946 0 0 0M-.342 7.316C22.373 7.316 40.778-11.13 40.778-33.891 40.778-56.64 22.373-75.099-.342-75.099-23.053-75.099-41.462-56.64-41.462-33.891-41.462-11.13-23.053 7.316-.342 7.316" fill="currentColor" fill-rule="evenodd"/>
+      <path transform="matrix(1,0,0,-1,386.1114,199.6683)" d="M0 0C-5.332-2.524-9.21-2.535-15.484-2.535-38.196-2.535-57.468 15.07-57.468 37.817-57.468 61.722-36.852 79.239-13.577 77.769-9.159 77.495-5.52 77.369-1.33 75.409L-1.204 69.891C-5.52 71.848-10.94 71.709-15.997 71.709-34.945 71.709-50.994 56.339-50.994 37.39-50.994 18.443-34.945 3.084-15.997 3.084-10.225 3.084-4.778 3.701-.013 6.222Z" fill="currentColor" fill-rule="evenodd"/>
+      <path transform="matrix(1,0,0,-1,399.6762,120.12912)" d="M0 0V-80.37L8.232-80.406V-33.74L18.711-33.716V-80.37L26.866-80.42V-.036H18.812L18.835-28.508H8.218L8.194-.036Z" fill="currentColor" fill-rule="evenodd"/>
+      <path transform="matrix(1,0,0,-1,207.2338,73.718509)" d="M0 0H3.84V-11.504H10.613V-14.2H0Z" fill="currentColor"/>
+      <path transform="matrix(1,0,0,-1,228.5396,81.87152)" d="M0 0-1.061 3.012C-1.34 3.856-1.642 4.929-1.894 5.751H-1.971C-2.198 4.909-2.475 3.835-2.728 3.012L-3.766 0ZM-4.32-2.401-5.509-6.047H-9.501L-4.296 8.154H.734L6.041-6.047H1.896L.581-2.401Z" fill="currentColor"/>
+      <path transform="matrix(1,0,0,-1,240.676,79.34412)" d="M0 0H1.264C3.311 0 4.372 .694 4.372 1.749 4.372 2.823 3.385 3.393 1.642 3.393 .784 3.393 .302 3.35 0 3.287ZM0-6.299C.378-6.362 .833-6.362 1.491-6.362 3.235-6.362 4.775-5.794 4.775-4.296 4.775-2.864 3.235-2.295 1.313-2.295H0ZM-3.816 5.414C-2.804 5.583-.784 5.731 1.162 5.731 3.512 5.731 4.953 5.542 6.192 4.929 7.38 4.404 8.213 3.435 8.213 2.129 8.213 .886 7.329-.274 5.433-.885V-.927C7.38-1.348 8.819-2.591 8.819-4.424 8.819-5.73 8.111-6.741 7.051-7.437 5.811-8.257 3.739-8.722 .354-8.722-1.541-8.722-2.957-8.616-3.816-8.511Z" fill="currentColor"/>
+      <path transform="matrix(1,0,0,-1,259.5343,85.60141)" d="M0 0C2.601 0 4.093 2.045 4.093 4.824 4.093 7.374 2.654 9.566 0 9.566-2.654 9.566-4.145 7.417-4.145 4.761-4.145 2.086-2.604 0-.027 0ZM-.178-2.549C-5.206-2.549-8.188 .631-8.188 4.677-8.188 8.933-4.904 12.115 .101 12.115 5.332 12.115 8.188 8.849 8.188 4.931 8.188 .253 4.825-2.549-.153-2.549Z" fill="currentColor"/>
+      <path transform="matrix(1,0,0,-1,274.0708,80.01741)" d="M0 0H1.516C3.437 0 4.573 .8 4.573 2.044 4.573 3.328 3.512 4.002 1.743 4.002 .809 4.002 .279 3.961 0 3.898ZM-3.816 6.088C-2.579 6.277-.757 6.404 1.315 6.404 3.841 6.404 5.609 6.088 6.823 5.266 7.859 4.592 8.415 3.602 8.415 2.295 8.415 .505 6.874-.738 5.408-1.181V-1.244C6.595-1.644 7.251-2.571 7.683-3.878 8.213-5.499 8.719-7.354 9.048-7.902H5.106C4.852-7.502 4.424-6.341 3.942-4.594 3.462-2.802 2.728-2.338 1.137-2.319H0V-7.902H-3.816Z" fill="currentColor"/>
+      <path transform="matrix(1,0,0,-1,293.7361,81.87152)" d="M0 0-1.061 3.012C-1.34 3.856-1.642 4.929-1.894 5.751H-1.971C-2.198 4.909-2.475 3.835-2.728 3.012L-3.766 0ZM-4.32-2.401-5.509-6.047H-9.501L-4.296 8.154H.734L6.041-6.047H1.896L.581-2.401Z" fill="currentColor"/>
+      <path transform="matrix(1,0,0,-1,303.0914,76.41521)" d="M0 0H-4.599V2.697H8.492V0H3.841V-11.504H0Z" fill="currentColor"/>
+      <path transform="matrix(1,0,0,-1,320.306,85.60141)" d="M0 0C2.602 0 4.095 2.045 4.095 4.824 4.095 7.374 2.654 9.566 0 9.566-2.654 9.566-4.145 7.417-4.145 4.761-4.145 2.086-2.602 0-.025 0ZM-.176-2.549C-5.206-2.549-8.188 .631-8.188 4.677-8.188 8.933-4.902 12.115 .101 12.115 5.332 12.115 8.188 8.849 8.188 4.931 8.188 .253 4.827-2.549-.151-2.549Z" fill="currentColor"/>
+      <path transform="matrix(1,0,0,-1,334.844,80.01741)" d="M0 0H1.516C3.437 0 4.572 .8 4.572 2.044 4.572 3.328 3.511 4.002 1.743 4.002 .809 4.002 .277 3.961 0 3.898ZM-3.816 6.088C-2.579 6.277-.759 6.404 1.313 6.404 3.84 6.404 5.609 6.088 6.823 5.266 7.859 4.592 8.415 3.602 8.415 2.295 8.415 .505 6.872-.738 5.408-1.181V-1.244C6.595-1.644 7.251-2.571 7.681-3.878 8.213-5.499 8.717-7.354 9.046-7.902H5.104C4.852-7.502 4.422-6.341 3.942-4.594 3.462-2.802 2.727-2.338 1.137-2.319H0V-7.902H-3.816Z" fill="currentColor"/>
+      <path transform="matrix(1,0,0,-1,0,276.545)" d="M349.885 188.627H346.044V202.828H349.885Z" fill="currentColor"/>
+      <path transform="matrix(1,0,0,-1,360.6269,85.60141)" d="M0 0C2.602 0 4.095 2.045 4.095 4.824 4.095 7.374 2.654 9.566 0 9.566-2.654 9.566-4.145 7.417-4.145 4.761-4.145 2.086-2.602 0-.025 0ZM-.176-2.549C-5.206-2.549-8.188 .631-8.188 4.677-8.188 8.933-4.902 12.115 .101 12.115 5.332 12.115 8.188 8.849 8.188 4.931 8.188 .253 4.827-2.549-.151-2.549Z" fill="currentColor"/>
+      <path transform="matrix(1,0,0,-1,371.475,84.63132)" d="M0 0C1.011-.442 2.628-.886 4.271-.886 6.039-.886 6.974-.274 6.974 .674 6.974 1.538 6.165 2.066 4.118 2.654 1.288 3.497-.581 4.803-.581 6.888-.581 9.312 1.87 11.145 5.863 11.145 7.809 11.145 9.199 10.828 10.208 10.428L9.35 7.858C8.692 8.132 7.453 8.531 5.811 8.531 4.145 8.531 3.336 7.878 3.336 7.163 3.336 6.258 4.271 5.857 6.494 5.14 9.501 4.213 10.891 2.908 10.891 .885 10.891-1.496 8.717-3.519 4.043-3.519 2.097-3.519 .175-3.076-.784-2.634Z" fill="currentColor"/>
+    </g>
+  </symbol>
+</svg>
+
+<nav id="nav">
+  <div class="inner">
+    <a href="#hero" aria-label="Laboratorios Bloch"><svg class="logo" viewBox="0 0 284 151.33"><use href="#bloch"/></svg></a>
+    <div class="links">
+      <a href="#capacidades">Capacidades</a>
+      <a href="#catalogo">Catálogo</a>
+      <a href="#laboratorio">Laboratorio</a>
+      <a href="#industrias">Industrias</a>
+      <a href="#trayectoria">Trayectoria</a>
+    </div>
+    <a href="#contacto" class="cta-nav">Pedí una muestra</a>
+  </div>
+</nav>
+
+<!-- ============ HERO: THE POUR ============ -->
+<section id="hero" aria-label="Bloch — el color es nuestro">
+  <canvas id="jar3d"></canvas>
+  <canvas id="ink"></canvas>
+  <div class="hero-fallback" aria-hidden="true"><svg viewBox="0 0 284 151.33"><use href="#bloch"/></svg></div>
+  <div class="hero-ui">
+    <div class="hero-head" id="heroHead">
+      <span class="eyebrow">Laboratorio de color alimentario · Argentina · 1986</span>
+      <h1>El color<span class="l2">es nuestro.</span></h1>
+    </div>
+    <div class="hero-foot" id="heroFoot">
+      <div class="spec">Magenta Bloch · CL-204<br>λ 535 nm · pH 4.0 · pasta concentrada</div>
+      <div class="scroll-hint"><span>Inclinar</span><span class="line"></span></div>
+      <div class="spec" style="text-align:right">Vidrio · 40 g<br>lote BL-2026-0612 ✓</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MANIFIESTO ============ -->
+<section id="manifiesto">
+  <div class="wrap">
+    <div class="big reveal">Pioneros del color alimentario argentino. <em>Desde 1986.</em></div>
+    <p class="sub reveal">Colorantes, esencias y aditivos formulados con precisión de laboratorio para fábricas, heladerías, panificadoras y la repostería profesional. Cuando la industria argentina necesita un color exacto, lote tras lote, viene acá.</p>
+    <div class="meta reveal">
+      <span><b>40</b>años de laboratorio</span>
+      <span><b>120+</b>tonos en catálogo</span>
+      <span><b>6</b>industrias servidas</span>
+      <span><b>100%</b>control por lote</span>
+    </div>
+  </div>
+  <svg class="wm" viewBox="0 0 284 151.33" aria-hidden="true"><use href="#bloch"/></svg>
+</section>
+
+<div class="marquee" aria-hidden="true">
+  <div class="track" id="mqTrack"></div>
+</div>
+
+<!-- ============ CAPACIDADES ============ -->
+<section class="light" id="capacidades">
+  <div class="wrap pad">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Capacidades</span>
+      <h2>Tres líneas. Un mismo estándar de laboratorio.</h2>
+    </div>
+    <div class="cap-row reveal">
+      <span class="num">/ 01</span>
+      <h3>Colorantes</h3>
+      <p>Pasta, líquido y polvo —hidro y liposoluble. Alta concentración y tono estable lote a lote, validados para producción industrial y repostería profesional.</p>
+      <span class="go">→</span>
+    </div>
+    <div class="cap-row nat reveal">
+      <span class="num">/ 02</span>
+      <h3>Color natural</h3>
+      <p>Pigmentos de origen vegetal —remolacha, cúrcuma, espirulina, antocianinas— para la transición clean label, con el respaldo técnico que esa transición exige.</p>
+      <span class="go">→</span>
+    </div>
+    <div class="cap-row reveal">
+      <span class="num">/ 03</span>
+      <h3>Esencias y aditivos</h3>
+      <p>Esencias, emulsionantes y aditivos funcionales. Desarrollo a medida para fábricas que necesitan una solución, no un commodity.</p>
+      <span class="go">→</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CATALOGO VIVO ============ -->
+<section class="light" id="catalogo" style="background:#fff">
+  <div class="wrap pad">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Catálogo vivo</span>
+      <h2>Buscá el tono. Filtrá. Descargá la ficha.</h2>
+      <p class="lead" style="margin-top:18px">Esto no es un PDF: es un sistema. Búsqueda instantánea, filtros por aplicación y origen, ficha técnica y certificados en cada producto. Probálo.</p>
+    </div>
+    <div class="toolbar reveal">
+      <input id="buscador" type="search" placeholder="Buscar tono, código o aplicación… (ej: magenta, CL-204, heladería)" aria-label="Buscar en el catálogo">
+      <button class="chip on" data-f="todos">Todos</button>
+      <button class="chip" data-f="pasta">Pasta</button>
+      <button class="chip" data-f="líquido">Líquido</button>
+      <button class="chip" data-f="polvo">Polvo</button>
+      <button class="chip" data-f="natural">Natural</button>
+    </div>
+    <div class="cat-layout">
+      <div>
+        <div class="prod-grid reveal" id="prodGrid"></div>
+        <p id="noRes">Sin resultados para esa búsqueda. Probá con otro tono o pedinos el desarrollo a medida →</p>
+        <p class="mono" style="font-size:11px;color:var(--g500);margin-top:18px">Demo con 12 de 120+ tonos · catálogo completo en producción</p>
+      </div>
+      <aside class="ficha reveal" id="ficha" aria-live="polite">
+        <div class="fh" id="fhHead"><span class="fn" id="fNombre">Magenta Bloch</span><span class="fc" id="fCod">CL-204</span></div>
+        <div class="fb">
+          <div class="fr"><span class="k">Formato</span><span class="v" id="fFormato">Pasta concentrada</span></div>
+          <div class="fr"><span class="k">Origen</span><span class="v" id="fOrigen">Sintético</span></div>
+          <div class="fr"><span class="k">Dosificación</span><span class="v" id="fDosis">0.5–2 g/kg</span></div>
+          <div class="fr"><span class="k">Aplicación</span><span class="v" id="fApp">Repostería · glasé</span></div>
+          <div class="fr"><span class="k">Aptitud</span><span class="v">Apto celíacos</span></div>
+          <div class="fr"><span class="k">Estabilidad</span><span class="v">Horneado ✓ · Frío ✓</span></div>
+        </div>
+        <div class="ff"><span class="dl">↓ Ficha técnica</span><span class="dl">↓ Certificado</span></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LABORATORIO ============ -->
+<section class="dark" id="laboratorio">
+  <div class="wrap pad">
+    <div class="sec-head reveal">
+      <span class="eyebrow">El laboratorio</span>
+      <h2 style="color:#fff">"Laboratorios" no es decoración. Es el proceso.</h2>
+      <p class="lead" style="margin-top:18px">Cada color que sale de Bloch atraviesa un circuito que un revendedor no puede ofrecer. Esa es la diferencia entre comprar color y confiar en él.</p>
+    </div>
+    <div class="lab-grid reveal">
+      <div class="lab-c"><div class="n">01 / DESARROLLO</div><h3>Formulación</h3><p>Diseñamos el pigmento según aplicación, matriz y requisito del cliente.</p><div class="dat">λ objetivo · curva de matiz</div></div>
+      <div class="lab-c"><div class="n">02 / CONTROL</div><h3>Calidad por lote</h3><p>Cada lote se mide y valida para garantizar tono y rendimiento constantes.</p><div class="dat">ΔE &lt; tolerancia · trazabilidad</div></div>
+      <div class="lab-c"><div class="n">03 / APTITUD</div><h3>Seguridad</h3><p>Cumplimiento alimentario y aptitudes —celíacos, vegano— documentadas.</p><div class="dat">CAA · certificados emitidos</div></div>
+      <div class="lab-c"><div class="n">04 / SOPORTE</div><h3>Acompañamiento</h3><p>Asistencia técnica y ficha de dosificación para tu línea de producción.</p><div class="dat">respuesta &lt; 48 h</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INDUSTRIAS ============ -->
+<section class="dark" id="industrias" style="background:var(--ink-2)">
+  <div class="wrap pad">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Aplicaciones</span>
+      <h2 style="color:#fff">Un color distinto para cada industria.</h2>
+    </div>
+    <div class="inds reveal">
+      <div class="ind"><div class="sw" style="background:var(--magenta)"></div><h3>Repostería</h3><p>Fondant, glasé, buttercream.</p><div class="tint" style="background:var(--magenta)"></div></div>
+      <div class="ind"><div class="sw" style="background:#E7A229"></div><h3>Panificación</h3><p>Resiste horneado industrial.</p><div class="tint" style="background:#E7A229"></div></div>
+      <div class="ind"><div class="sw" style="background:#1E8FA8"></div><h3>Heladería</h3><p>Estabilidad total en frío.</p><div class="tint" style="background:#1E8FA8"></div></div>
+      <div class="ind"><div class="sw" style="background:#6E4AA6"></div><h3>Bebidas</h3><p>Hidrosoluble, estable al pH.</p><div class="tint" style="background:#6E4AA6"></div></div>
+      <div class="ind"><div class="sw" style="background:var(--verde)"></div><h3>Snacks</h3><p>Liposoluble para matrices grasas.</p><div class="tint" style="background:var(--verde-d)"></div></div>
+      <div class="ind"><div class="sw" style="background:#DD5128"></div><h3>A medida</h3><p>Tu color, formulado desde cero.</p><div class="tint" style="background:#DD5128"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TRAYECTORIA ============ -->
+<section class="light" id="trayectoria">
+  <div class="wrap pad">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Trayectoria</span>
+      <h2>Cuatro décadas tiñendo la industria argentina.</h2>
+    </div>
+    <div class="tl reveal">
+      <div class="tl-i"><div class="yr">1986</div><h3>El origen</h3><p>Bloch nace como laboratorio y formula color alimentario pionero en Argentina.</p></div>
+      <div class="tl-i"><div class="yr">2000s</div><h3>Industria</h3><p>Proveedor técnico de fábricas, heladerías y panificación en todo el país.</p></div>
+      <div class="tl-i"><div class="yr">2020s</div><h3>Repostería</h3><p>El boom emprendedor adopta el color de calidad de laboratorio.</p></div>
+      <div class="tl-i"><div class="yr">Hoy</div><h3>Natural</h3><p>Liderar la transición clean label y proyectarse a Latinoamérica.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="light" id="contacto" style="padding-bottom:120px">
+  <div class="wrap" style="padding-top:20px">
+    <div class="cta reveal">
+      <div class="cta-tex"></div>
+      <svg viewBox="0 0 284 151.33" style="height:38px;margin:0 auto 26px;color:#fff;display:block"><use href="#bloch"/></svg>
+      <h2>Hablemos de tu color.</h2>
+      <p>Contanos tu aplicación y te respondemos con una recomendación técnica y una muestra. Sin vueltas.</p>
+      <div style="display:flex;gap:13px;justify-content:center;flex-wrap:wrap">
+        <a href="#" class="btn btn-white">Pedir una muestra <span class="ar">→</span></a>
+        <a href="#" class="btn btn-ghost-w">Escribir por WhatsApp</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <span class="eyebrow" style="color:rgba(255,255,255,.5)">Laboratorios Bloch</span>
+        <p>El laboratorio del color alimentario argentino desde 1986. Buenos Aires, Argentina.</p>
+      </div>
+      <div class="foot-col"><h4>Productos</h4><a href="#">Colorantes</a><a href="#">Color natural</a><a href="#">Esencias</a><a href="#">Aditivos</a></div>
+      <div class="foot-col"><h4>Empresa</h4><a href="#">Quiénes somos</a><a href="#">El laboratorio</a><a href="#">I+D</a><a href="#">Trayectoria</a></div>
+      <div class="foot-col"><h4>Recursos</h4><a href="#">Catálogo</a><a href="#">Fichas técnicas</a><a href="#">Certificados</a><a href="#">Contacto</a></div>
+    </div>
+    <div class="foot-bot">
+      <span>© 2026 Laboratorios Bloch · Prototipo "The Pour" v2</span>
+      <span>Concepto y diseño: Küme Mkt</span>
+    </div>
+  </div>
+  <svg class="foot-logo" viewBox="0 0 284 151.33" aria-hidden="true"><use href="#bloch"/></svg>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script type="importmap">
+{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}
+</script>
+<script>
+/* ====== UI básica: nav, reveals, marquee, catálogo ====== */
+history.scrollRestoration='manual';
+const MAGENTA='#EC168E', MAGENTA_D='#C70E74';
+const nav=document.getElementById('nav');
+const hero=document.getElementById('hero');
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const onScroll=()=>{nav.classList.toggle('lite', hero.getBoundingClientRect().bottom < 90)};
+onScroll(); addEventListener('scroll',onScroll,{passive:true});
+
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(i%3*0.06)+'s';io.observe(el)});
+
+const mq=document.getElementById('mqTrack');
+mq.innerHTML=('<span>El color es nuestro</span><b>●</b><span>Laboratorio desde 1986</span><b>●</b><span>120+ tonos</span><b>●</b><span>Control por lote</span><b>●</b>').repeat(4);
+
+/* catálogo vivo (demo funcional) */
+const PRODUCTOS=[
+ {n:'Magenta Bloch',c:'CL-204',hex:'#EC168E',f:'pasta',o:'sintético',d:'0.5–2 g/kg',a:'Repostería · glasé'},
+ {n:'Rojo Fuego',c:'CL-101',hex:'#D7263D',f:'líquido',o:'sintético',d:'1–3 ml/kg',a:'Bebidas · heladería'},
+ {n:'Amarillo Huevo',c:'CL-118',hex:'#F0B429',f:'pasta',o:'sintético',d:'0.5–1.5 g/kg',a:'Panificación'},
+ {n:'Verde Bloch',c:'NT-310',hex:'#A3C238',f:'polvo',o:'natural',d:'2–6 g/kg',a:'Snacks · clean label'},
+ {n:'Azul Cielo',c:'CL-127',hex:'#2AA3BE',f:'líquido',o:'sintético',d:'1–2 ml/kg',a:'Heladería'},
+ {n:'Violeta Profundo',c:'CL-133',hex:'#6E4AA6',f:'pasta',o:'sintético',d:'0.5–2 g/kg',a:'Repostería'},
+ {n:'Remolacha',c:'NT-301',hex:'#9C1F4E',f:'polvo',o:'natural',d:'3–8 g/kg',a:'Bebidas · lácteos'},
+ {n:'Cúrcuma',c:'NT-305',hex:'#E8A11C',f:'polvo',o:'natural',d:'2–5 g/kg',a:'Panificación · snacks'},
+ {n:'Espirulina',c:'NT-312',hex:'#1F6F86',f:'polvo',o:'natural',d:'3–7 g/kg',a:'Heladería · clean label'},
+ {n:'Naranja Intenso',c:'CL-115',hex:'#E8703F',f:'líquido',o:'sintético',d:'1–3 ml/kg',a:'Bebidas'},
+ {n:'Rosa Pastel',c:'CL-209',hex:'#F08CC0',f:'pasta',o:'sintético',d:'0.3–1 g/kg',a:'Repostería · fondant'},
+ {n:'Negro Carbón',c:'CL-140',hex:'#2B2528',f:'pasta',o:'sintético',d:'1–4 g/kg',a:'Repostería · glasé'}
+];
+const grid=document.getElementById('prodGrid'), noRes=document.getElementById('noRes');
+let filtro='todos', q='';
+function pinta(p,el){
+  document.getElementById('fNombre').textContent=p.n;
+  document.getElementById('fCod').textContent=p.c;
+  document.getElementById('fFormato').textContent=p.f[0].toUpperCase()+p.f.slice(1)+(p.f==='pasta'?' concentrada':'');
+  document.getElementById('fOrigen').textContent=p.o[0].toUpperCase()+p.o.slice(1);
+  document.getElementById('fDosis').textContent=p.d;
+  document.getElementById('fApp').textContent=p.a;
+  document.getElementById('fhHead').style.background=p.hex;
+  document.querySelectorAll('.prod').forEach(x=>x.classList.remove('sel'));
+  if(el)el.classList.add('sel');
+}
+function render(){
+  grid.innerHTML='';
+  const res=PRODUCTOS.filter(p=>{
+    const okF= filtro==='todos' || p.f===filtro || (filtro==='natural'&&p.o==='natural');
+    const s=(p.n+p.c+p.a+p.f+p.o).toLowerCase();
+    return okF && s.includes(q);
+  });
+  noRes.style.display=res.length?'none':'block';
+  res.forEach((p,i)=>{
+    const d=document.createElement('div');d.className='prod'+(i===0?' sel':'');d.setAttribute('role','button');d.tabIndex=0;
+    d.innerHTML=`<div class="sw" style="background:${p.hex}"></div><div class="nm">${p.n}</div><div class="tg">${p.c} · ${p.f} · ${p.o}</div>`;
+    const sel=()=>pinta(p,d);
+    d.addEventListener('click',sel);
+    d.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();sel()}});
+    grid.appendChild(d);
+  });
+  if(res.length)pinta(res[0],grid.firstChild);
+}
+document.getElementById('buscador').addEventListener('input',e=>{q=e.target.value.toLowerCase().trim();render()});
+document.querySelectorAll('.chip').forEach(ch=>ch.addEventListener('click',()=>{
+  document.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));
+  ch.classList.add('on');filtro=ch.dataset.f;render();
+}));
+render();
+</script>
+
+<script type="module">
+/* ============================================================
+   HERO "THE POUR" — tarro 3D + derrame de tinta magenta
+   Three.js: vidrio físico real, etiqueta con el logo oficial,
+   seguimiento de cursor con inercia, inclinación por scroll,
+   marea de tinta orgánica en canvas 2D que revela el manifiesto.
+   ============================================================ */
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const heroEl = document.getElementById('hero');
+const canvas = document.getElementById('jar3d');
+const inkCv  = document.getElementById('ink');
+const isMobile = matchMedia('(max-width:880px)').matches;
+
+let renderer;
+try{
+  renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true, powerPreference:'high-performance'});
+}catch(e){ document.body.classList.add('no3d'); }
+
+if(renderer){
+  renderer.setPixelRatio(Math.min(devicePixelRatio, isMobile?1.5:2));
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.15;
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+  const scene = new THREE.Scene();
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture;
+
+  const cam = new THREE.PerspectiveCamera(34, 1, 0.1, 60);
+  cam.position.set(0, 1.45, 7.6);
+  cam.lookAt(0, 1.0, 0);
+
+  /* --- luces de estudio --- */
+  const key = new THREE.SpotLight(0xffffff, 220, 0, Math.PI/5, 0.45);
+  key.position.set(4.5, 7, 6); scene.add(key);
+  const rim = new THREE.SpotLight(0xEC168E, 320, 0, Math.PI/4, 0.6);
+  rim.position.set(-6, 3.5, -4.5); scene.add(rim);
+  const fill = new THREE.PointLight(0xffe9f5, 12); fill.position.set(-3, 1.5, 5); scene.add(fill);
+  scene.add(new THREE.AmbientLight(0x2a1320, 2.2));
+
+  /* --- el tarro --- */
+  const jar = new THREE.Group(); scene.add(jar);
+
+  // vidrio (perfil lathe)
+  const prof=[[0,0],[0.74,0],[0.84,0.06],[0.9,0.34],[0.9,1.52],[0.82,1.74],[0.6,1.86],[0.58,2.1],[0.62,2.12],[0.62,2.0],[0.78,1.84],[0.84,1.62],[0.84,0.4],[0.8,0.12],[0.6,0.08],[0,0.08]]
+    .map(p=>new THREE.Vector2(p[0],p[1]));
+  const glass = new THREE.Mesh(
+    new THREE.LatheGeometry(prof, 72),
+    new THREE.MeshPhysicalMaterial({
+      transmission:1, thickness:0.5, roughness:0.05, ior:1.5,
+      clearcoat:1, clearcoatRoughness:0.06, attenuationColor:new THREE.Color('#ffd6ec'),
+      attenuationDistance:2.5, specularIntensity:1, color:0xffffff
+    })
+  );
+  jar.add(glass);
+
+  // colorante interior
+  const liqProf=[[0,0.1],[0.7,0.1],[0.79,0.36],[0.79,1.34],[0.6,1.42],[0,1.42]].map(p=>new THREE.Vector2(p[0],p[1]));
+  const liquid = new THREE.Mesh(
+    new THREE.LatheGeometry(liqProf, 72),
+    new THREE.MeshPhysicalMaterial({color:new THREE.Color('#EC168E'), roughness:0.18, metalness:0,
+      clearcoat:0.8, clearcoatRoughness:0.2, emissive:new THREE.Color('#7a0a49'), emissiveIntensity:0.35})
+  );
+  jar.add(liquid);
+
+  // tapa metálica
+  const lid = new THREE.Group();
+  const lidMat = new THREE.MeshStandardMaterial({color:0xd9d4d9, metalness:0.95, roughness:0.32});
+  const lidBody = new THREE.Mesh(new THREE.CylinderGeometry(0.66,0.66,0.24,72), lidMat); lidBody.position.y=2.2;
+  const lidTop  = new THREE.Mesh(new THREE.CylinderGeometry(0.62,0.66,0.05,72), lidMat); lidTop.position.y=2.34;
+  const lidRing = new THREE.Mesh(new THREE.TorusGeometry(0.64,0.035,24,72), lidMat); lidRing.rotation.x=Math.PI/2; lidRing.position.y=2.31;
+  lid.add(lidBody,lidTop,lidRing); jar.add(lid);
+
+  // etiqueta con el logo OFICIAL (SVG blanco → textura)
+  const lcv=document.createElement('canvas'); lcv.width=2048; lcv.height=512;
+  const lctx=lcv.getContext('2d');
+  lctx.fillStyle='#EC168E'; lctx.fillRect(0,0,2048,512);
+  lctx.fillStyle='rgba(255,255,255,.0)';
+  const labelTex=new THREE.CanvasTexture(lcv); labelTex.colorSpace=THREE.SRGBColorSpace; labelTex.anisotropy=8;
+  const label=new THREE.Mesh(
+    new THREE.CylinderGeometry(0.905,0.905,0.82,72,1,true),
+    new THREE.MeshStandardMaterial({map:labelTex, roughness:0.55, metalness:0})
+  );
+  label.position.y=0.92; label.rotation.y=Math.PI; jar.add(label);
+  // dibuja el SVG oficial sobre la etiqueta
+  const svgEl=document.querySelector('#bloch').cloneNode(true);
+  const svgStr=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="155.33 62.67 284 151.33" width="568" height="302.66"><style>path{fill:#fff}</style>${svgEl.innerHTML}</svg>`;
+  const img=new Image();
+  img.onload=()=>{
+    const w=620,h=w*151.33/284;
+    lctx.drawImage(img,(2048-w)/2,(512-h)/2,w,h);
+    lctx.font='500 26px "Spline Sans Mono",monospace'; lctx.fillStyle='rgba(255,255,255,.85)'; lctx.textAlign='center';
+    lctx.fillText('COLORANTE ALIMENTARIO · CL-204 · 40 g',1024,(512+h)/2+44);
+    labelTex.needsUpdate=true;
+  };
+  img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svgStr);
+
+  // boca del tarro (referencia para el chorro)
+  const spout=new THREE.Object3D(); spout.position.set(0.5,2.05,0); jar.add(spout);
+
+  // gotas de colorante
+  const dropMat=new THREE.MeshPhysicalMaterial({color:new THREE.Color('#EC168E'),roughness:0.1,clearcoat:1,emissive:new THREE.Color('#8a0c52'),emissiveIntensity:0.4});
+  const drops=[];
+  for(let i=0;i<9;i++){
+    const s=0.045+Math.random()*0.075;
+    const m=new THREE.Mesh(new THREE.SphereGeometry(s,18,18),dropMat);
+    m.scale.y=1.7; m.visible=false; scene.add(m);
+    drops.push({m,t:Math.random(),sp:0.55+Math.random()*0.7,ox:(Math.random()-0.5)*0.22,oz:(Math.random()-0.5)*0.22});
+  }
+
+  jar.position.y=-0.1;
+
+  /* --- estado de interacción --- */
+  let mx=0,my=0,tmx=0,tmy=0,progress=0;
+  addEventListener('pointermove',e=>{tmx=(e.clientX/innerWidth)*2-1;tmy=(e.clientY/innerHeight)*2-1},{passive:true});
+
+  function resize(){
+    const w=heroEl.clientWidth,h=heroEl.clientHeight;
+    renderer.setSize(w,h,false);
+    cam.aspect=w/h;
+    // en pantallas angostas la cámara se aleja para que el tarro respire
+    cam.position.z = cam.aspect<0.9 ? 11.5 : cam.aspect<1.3 ? 9.6 : 7.6;
+    cam.updateProjectionMatrix();
+    inkCv.width=w*Math.min(devicePixelRatio,2); inkCv.height=h*Math.min(devicePixelRatio,2);
+  }
+  resize(); addEventListener('resize',resize);
+
+  /* --- tinta 2D (la marea magenta) --- */
+  const ictx=inkCv.getContext('2d');
+  let inkLogo=new Image(); inkLogo.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svgStr);
+  function easeInOut(t){return t<0.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2}
+  function drawInk(time){
+    const w=inkCv.width,h=inkCv.height;
+    ictx.clearRect(0,0,w,h);
+    const t0=Math.max(0,(progress-0.42)/0.58);
+    if(t0<=0)return;
+    const t=easeInOut(Math.min(1,t0));
+    const cx=w*0.5, cy=h*0.62;
+    const maxR=Math.hypot(w,h)*0.72;
+    // dos capas: magenta profundo detrás, magenta marca delante
+    for(const [col,mul,ph] of [[ '#C70E74',1.08,0],[ '#EC168E',1.0,2.1]]){
+      const R=t*maxR*mul;
+      if(R<2)continue;
+      ictx.beginPath();
+      const N=140;
+      for(let i=0;i<=N;i++){
+        const a=i/N*Math.PI*2;
+        const wob=1+0.085*(1-t*0.65)*(Math.sin(a*5+time*0.0011+ph)+0.6*Math.sin(a*9-time*0.0007+ph)+0.35*Math.sin(a*3+time*0.0016));
+        const r=R*wob;
+        const x=cx+Math.cos(a)*r, y=cy+Math.sin(a)*r*1.06;
+        i?ictx.lineTo(x,y):ictx.moveTo(x,y);
+      }
+      ictx.closePath(); ictx.fillStyle=col; ictx.fill();
+    }
+    // el logo nace del pigmento
+    if(t>0.55 && inkLogo.complete){
+      const a=Math.min(1,(t-0.55)/0.4);
+      ictx.globalAlpha=a;
+      const lw=Math.min(w*0.42,900), lh=lw*151.33/284;
+      ictx.drawImage(inkLogo,(w-lw)/2,(h-lh)/2-h*0.02,lw,lh);
+      ictx.globalAlpha=1;
+    }
+  }
+
+  /* --- scroll: pin del hero + timeline del derrame --- */
+  if(!reduced && window.gsap && window.ScrollTrigger){
+    gsap.registerPlugin(ScrollTrigger);
+    const buildPin=()=>{
+      ScrollTrigger.create({
+        trigger:heroEl, start:'top top', end:isMobile?'+=140%':'+=200%',
+        pin:true, scrub:0.55, invalidateOnRefresh:true,
+        onUpdate(self){
+          progress=self.progress;
+          const head=document.getElementById('heroHead'), foot=document.getElementById('heroFoot');
+          const fade=Math.max(0,1-progress*3.2);
+          head.style.opacity=fade; foot.style.opacity=fade;
+          head.style.transform=`translateY(${progress*-60}px)`;
+        }
+      });
+      ScrollTrigger.refresh();
+      // auto-corrección: si el navegador restauró scroll durante la carga, re-medimos
+      setTimeout(()=>ScrollTrigger.refresh(),700);
+    };
+    // el pin se mide con la página cargada y desde el top: sin sorpresas de layout
+    if(document.readyState==='complete'){ scrollTo(0,0); buildPin(); }
+    else addEventListener('load',()=>{ scrollTo(0,0); buildPin(); },{once:true});
+  }
+
+  /* --- loop --- */
+  const clock=new THREE.Clock();
+  renderer.setAnimationLoop(()=>{
+    const t=clock.getElapsedTime();
+    mx+=(tmx-mx)*0.06; my+=(tmy-my)*0.06;
+    const cursorW=Math.max(0,1-progress*2.2); // el cursor pierde control cuando empieza el vuelco
+
+    // flotación idle + seguimiento del cursor
+    jar.position.y=-0.1+Math.sin(t*1.1)*0.05*cursorW;
+    const tiltT=THREE.MathUtils.smoothstep(progress,0.06,0.62);
+    jar.rotation.y=mx*0.5*cursorW + tiltT*0.5 + (reduced?0:Math.sin(t*0.4)*0.04*cursorW);
+    jar.rotation.x=my*0.22*cursorW + tiltT*0.18;
+    jar.rotation.z=-tiltT*1.85; // el vuelco
+    jar.position.x=mx*0.25*cursorW - tiltT*0.4;
+    jar.position.y+=tiltT*0.9;
+
+    // la luz clave acompaña al cursor
+    key.position.x=4.5+mx*2.4; key.position.y=7-my*1.6;
+    rim.intensity=320+tiltT*500;
+
+    // gotas: visibles cuando el vuelco supera el umbral
+    const pouring=tiltT>0.55 && progress<0.96;
+    const sp=new THREE.Vector3(); spout.getWorldPosition(sp);
+    drops.forEach(d=>{
+      if(!pouring){d.m.visible=false;d.t=Math.random()*0.3;return}
+      d.m.visible=true;
+      d.t+=0.016*d.sp;
+      if(d.t>1)d.t=0;
+      d.m.position.set(sp.x+d.ox, sp.y-d.t*d.t*3.6, sp.z+d.oz);
+      d.m.scale.y=1.4+d.t*1.6;
+      d.m.material.opacity=1;
+    });
+
+    renderer.render(scene,cam);
+    drawInk(performance.now());
+  });
+
+  /* reduced motion: composición estática elegante */
+  if(reduced){ jar.rotation.y=0.4; jar.rotation.z=-0.12; }
+}
+</script>
+</body>
+</html>
