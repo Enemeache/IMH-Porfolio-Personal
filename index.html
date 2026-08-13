@@ -1,563 +1,458 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Ignacio Montero Horianski — Portfolio</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Fraunces:ital,wght@0,300;1,300&family=IBM+Plex+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  <style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    html{scroll-behavior:smooth;}
-    :root{
-      --bg:#070A12;
-      --surface:#0C1020;
-      --surface2:#131B2E;
-      --card:#101828;
-      --border:#1C2A40;
-      --accent:#06B6D4;
-      --accent-dim:rgba(6,182,212,0.12);
-      --accent-glow:rgba(6,182,212,0.35);
-      --purple:#7C3AED;
-      --green:#10B981;
-      --ink:#E2E8F0;
-      --muted:#64748B;
-      --white:#F8FAFC;
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ignacio Montero Horianski — Datos, Desarrollo, Marketing</title>
+<meta name="description" content="Analista de datos y desarrollador web en Buenos Aires. Dashboards, automatización de procesos y sitios en producción."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+
+  :root{
+    --paper:#F7F6F3;
+    --paper-2:#EFEEE9;
+    --ink:#16161A;
+    --ink-2:#5C5C63;
+    --ink-3:#95949B;
+    --rule:#DCDBD4;
+    --accent:#C8442A;
+    --shadow:0 18px 50px -12px rgba(20,20,25,.18);
+    --sans:'Geist',system-ui,-apple-system,sans-serif;
+    --mono:'Geist Mono',ui-monospace,'SFMono-Regular',monospace;
+    --serif:'Instrument Serif',Georgia,serif;
+    --pad:clamp(20px,5vw,88px);
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --paper:#0E0E10; --paper-2:#17171A;
+      --ink:#EDECE8; --ink-2:#9A9AA1; --ink-3:#63636A;
+      --rule:#26262A; --accent:#E9603F;
+      --shadow:0 18px 50px -12px rgba(0,0,0,.6);
     }
-    body{background:var(--bg);color:var(--ink);font-family:'Plus Jakarta Sans',sans-serif;font-weight:300;line-height:1.7;overflow-x:hidden;}
-    ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--surface);}::-webkit-scrollbar-thumb{background:var(--accent);}
+  }
+  :root[data-theme="dark"]{
+    --paper:#0E0E10; --paper-2:#17171A;
+    --ink:#EDECE8; --ink-2:#9A9AA1; --ink-3:#63636A;
+    --rule:#26262A; --accent:#E9603F;
+    --shadow:0 18px 50px -12px rgba(0,0,0,.6);
+  }
+  :root[data-theme="light"]{
+    --paper:#F7F6F3; --paper-2:#EFEEE9;
+    --ink:#16161A; --ink-2:#5C5C63; --ink-3:#95949B;
+    --rule:#DCDBD4; --accent:#C8442A;
+    --shadow:0 18px 50px -12px rgba(20,20,25,.18);
+  }
 
-    /* Subtle grid pattern on entire page */
-    body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(6,182,212,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(6,182,212,0.025) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:var(--sans); font-weight:400; font-size:16px;
+    line-height:1.6; -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--accent);color:#fff;}
+  a{color:inherit;text-decoration:none;}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px;}
+  .mono{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:400;}
+  .num{font-variant-numeric:tabular-nums;}
 
-    /* NAV */
-    nav{position:fixed;top:0;left:0;width:100%;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:20px 60px;transition:background .3s,border-color .3s;border-bottom:1px solid transparent;}
-    nav.scrolled{background:rgba(7,10,18,0.94);backdrop-filter:blur(20px);border-bottom-color:var(--border);}
-    .nav-logo{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:var(--ink);text-decoration:none;letter-spacing:.05em;}
-    .nav-logo span{color:var(--accent);}
-    .nav-links{display:flex;gap:36px;list-style:none;}
-    .nav-links a{font-family:'IBM Plex Mono',monospace;font-size:.68rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;}
-    .nav-links a:hover{color:var(--accent);}
-    .nav-cta{display:inline-flex;align-items:center;gap:8px;padding:9px 24px;border:1px solid var(--accent);color:var(--accent);font-family:'IBM Plex Mono',monospace;font-size:.68rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;transition:background .2s,color .2s;}
-    .nav-cta:hover{background:var(--accent);color:var(--bg);}
-    .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px;}
-    .hamburger span{display:block;width:22px;height:1px;background:var(--ink);transition:transform .3s,opacity .3s;transform-origin:center;}
-    .hamburger.open span:nth-child(1){transform:translateY(6px) rotate(45deg);}
-    .hamburger.open span:nth-child(2){opacity:0;}
-    .hamburger.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg);}
-    .mobile-menu{display:none;position:fixed;inset:0;background:var(--bg);z-index:150;flex-direction:column;align-items:center;justify-content:center;gap:40px;}
-    .mobile-menu.open{display:flex;}
-    .mobile-menu a{font-family:'Syne',sans-serif;font-size:2rem;font-weight:700;color:var(--ink);text-decoration:none;transition:color .2s;}
-    .mobile-menu a:hover{color:var(--accent);}
+  /* ── NAV ────────────────────────────────────── */
+  nav{
+    position:fixed;top:0;left:0;width:100%;z-index:90;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:18px var(--pad);
+    background:color-mix(in srgb,var(--paper) 86%,transparent);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid transparent;transition:border-color .35s;
+  }
+  nav.scrolled{border-bottom-color:var(--rule);}
+  .nav-name{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;font-weight:500;text-transform:uppercase;}
+  .nav-links{display:flex;gap:30px;align-items:center;}
+  .nav-links a{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);transition:color .2s;}
+  .nav-links a:hover{color:var(--ink);}
+  .theme-btn{background:none;border:1px solid var(--rule);color:var(--ink-2);width:30px;height:30px;
+    border-radius:50%;cursor:pointer;font-size:.75rem;display:grid;place-items:center;transition:border-color .2s,color .2s;}
+  .theme-btn:hover{border-color:var(--ink);color:var(--ink);}
+  .burger{display:none;background:none;border:none;color:var(--ink);cursor:pointer;font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;}
+  @media(max-width:820px){ .nav-links{display:none;} .burger{display:block;} }
 
-    /* HERO */
-    #hero{min-height:100vh;padding:0 60px;display:grid;grid-template-columns:1fr 320px;grid-template-rows:1fr auto;position:relative;overflow:hidden;}
-    .hero-glow{position:absolute;top:40%;left:30%;transform:translate(-50%,-50%);width:700px;height:700px;background:radial-gradient(ellipse,rgba(6,182,212,0.06) 0%,transparent 70%);pointer-events:none;}
-    .hero-main{grid-column:1;grid-row:1;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:80px;padding-top:140px;position:relative;z-index:1;}
-    .hero-tag{display:inline-flex;align-items:center;gap:12px;font-family:'IBM Plex Mono',monospace;font-size:.66rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:32px;animation:fadeUp .7s .2s both;}
-    .hero-tag::before{content:'◉';animation:pulse-dot 2s ease-in-out infinite;}
-    @keyframes pulse-dot{0%,100%{opacity:1;}50%{opacity:.4;}}
-    .hero-name{font-family:'Syne',sans-serif;font-size:clamp(3.5rem,8vw,7.5rem);font-weight:800;line-height:.92;letter-spacing:-.03em;color:var(--ink);margin-bottom:32px;animation:fadeUp .8s .35s both;}
-    .hero-name em{font-family:'Fraunces',Georgia,serif;font-style:italic;font-weight:300;color:var(--accent);}
-    .hero-desc{max-width:500px;font-size:.95rem;color:var(--muted);line-height:1.9;margin-bottom:48px;animation:fadeUp .8s .5s both;}
-    .hero-actions{display:flex;gap:14px;flex-wrap:wrap;animation:fadeUp .8s .65s both;}
-    .btn-fill{display:inline-flex;align-items:center;gap:10px;padding:14px 36px;background:var(--accent);color:var(--bg);font-family:'IBM Plex Mono',monospace;font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;transition:background .2s,box-shadow .2s;}
-    .btn-fill:hover{background:var(--ink);box-shadow:0 0 24px var(--accent-glow);}
-    .btn-outline{display:inline-flex;align-items:center;gap:10px;padding:14px 36px;border:1px solid var(--border);color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;transition:border-color .2s,color .2s;}
-    .btn-outline:hover{border-color:var(--accent);color:var(--accent);}
+  .mobile-menu{position:fixed;inset:0;z-index:95;background:var(--paper);
+    display:flex;flex-direction:column;justify-content:center;gap:4px;padding:0 var(--pad);
+    transform:translateY(-100%);transition:transform .5s cubic-bezier(.76,0,.24,1);}
+  .mobile-menu.open{transform:translateY(0);}
+  .mobile-menu a{font-family:var(--serif);font-size:clamp(2rem,9vw,3.4rem);line-height:1.25;}
+  .mm-close{position:absolute;top:18px;right:var(--pad);background:none;border:none;color:var(--ink);
+    font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;}
 
-    /* AVATAR COLUMN */
-    .hero-avatar-col{grid-column:2;grid-row:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding-top:100px;position:relative;z-index:1;}
-    .avatar-outer{position:relative;animation:pour-motion 3.5s ease-in-out infinite;}
+  /* ── HERO ───────────────────────────────────── */
+  header{
+    min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;
+    padding:150px var(--pad) 44px;position:relative;
+  }
+  .avail{display:inline-flex;align-items:center;gap:9px;margin-bottom:auto;
+    font-family:var(--mono);font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2);}
+  .avail i{width:6px;height:6px;border-radius:50%;background:var(--accent);
+    box-shadow:0 0 0 0 var(--accent);animation:pulse 2.6s infinite;}
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 55%,transparent);}
+    70%{box-shadow:0 0 0 9px transparent;} 100%{box-shadow:0 0 0 0 transparent;}
+  }
+  h1{
+    font-family:var(--sans);font-weight:500;
+    font-size:clamp(2.6rem,11.5vw,10.5rem);
+    line-height:.9;letter-spacing:-.045em;text-wrap:balance;
+    margin-bottom:.28em;
+  }
+  h1 em{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:-.01em;}
+  .hero-meta{
+    display:flex;flex-wrap:wrap;gap:22px 56px;align-items:baseline;
+    padding-top:26px;border-top:1px solid var(--rule);
+  }
+  .hero-meta p{max-width:38ch;color:var(--ink-2);font-size:.94rem;font-weight:300;line-height:1.65;}
+  .hero-stats{display:flex;gap:40px;margin-left:auto;}
+  .hstat b{display:block;font-family:var(--sans);font-weight:500;font-size:1.55rem;letter-spacing:-.02em;
+    font-variant-numeric:tabular-nums;line-height:1.1;}
+  .hstat span{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);}
+  @media(max-width:700px){ .hero-stats{margin-left:0;gap:30px;} .hstat b{font-size:1.3rem;} }
 
-    /* Speech bubble */
-    .speech-bubble{position:absolute;top:-88px;left:50%;transform:translateX(-55%);background:var(--card);border:1px solid var(--accent);padding:12px 18px;min-width:170px;z-index:2;animation:fadeUp .9s .9s both;}
-    .speech-bubble::before{content:'';position:absolute;bottom:-11px;left:32px;width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-top:11px solid var(--accent);}
-    .speech-bubble::after{content:'';position:absolute;bottom:-9px;left:33px;width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:9px solid var(--card);}
-    .bubble-line1{font-family:'IBM Plex Mono',monospace;font-size:.72rem;font-weight:600;color:var(--accent);letter-spacing:.06em;display:block;margin-bottom:2px;}
-    .bubble-line2{font-family:'Plus Jakarta Sans',sans-serif;font-size:.82rem;color:var(--ink);}
+  /* ── SECTIONS ───────────────────────────────── */
+  section{padding:clamp(72px,11vw,140px) var(--pad);}
+  .sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:26px;
+    padding-bottom:22px;border-bottom:1px solid var(--rule);margin-bottom:clamp(30px,5vw,56px);}
+  .sec-head h2{font-family:var(--serif);font-weight:400;font-size:clamp(1.7rem,4.4vw,3rem);
+    line-height:1.05;letter-spacing:-.015em;}
+  .sec-head h2 em{font-style:italic;color:var(--ink-2);}
 
-    /* Avatar foto */
-    .avatar-circle{width:260px;height:260px;border-radius:50%;overflow:hidden;box-shadow:0 0 0 3px rgba(6,182,212,0.25),0 0 32px rgba(6,182,212,0.1);}
-    .avatar-img{width:100%;height:100%;object-fit:cover;display:block;}
+  /* ── WORK INDEX ─────────────────────────────── */
+  .filters{display:flex;gap:6px;flex-wrap:wrap;}
+  .fbtn{background:none;border:1px solid var(--rule);color:var(--ink-2);cursor:pointer;
+    font-family:var(--mono);font-size:.62rem;letter-spacing:.09em;text-transform:uppercase;
+    padding:7px 13px;border-radius:100px;transition:all .22s;white-space:nowrap;}
+  .fbtn:hover{border-color:var(--ink-2);color:var(--ink);}
+  .fbtn.on{background:var(--ink);border-color:var(--ink);color:var(--paper);}
 
-    /* Avatar animations */
-    @keyframes pour-motion{0%,100%{transform:translateY(0) rotate(0deg);}20%{transform:translateY(-5px) rotate(-2deg);}50%{transform:translateY(-8px) rotate(-1.5deg);}75%{transform:translateY(-3px) rotate(-0.5deg);}}
+  .work{border-top:1px solid var(--rule);}
+  .row{
+    display:grid;
+    grid-template-columns:3.2rem minmax(0,1.15fr) minmax(0,1fr) auto 1.4rem;
+    gap:0 26px;align-items:center;
+    padding:23px 8px;border-bottom:1px solid var(--rule);
+    cursor:pointer;position:relative;width:100%;text-align:left;
+    background:none;border-left:0;border-right:0;border-top:0;color:inherit;font:inherit;
+    transition:padding-left .34s cubic-bezier(.22,1,.36,1),background-color .28s;
+  }
+  .row::after{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--accent);
+    transform:scaleY(0);transform-origin:top;transition:transform .34s cubic-bezier(.22,1,.36,1);}
+  .row:hover{padding-left:20px;background:color-mix(in srgb,var(--paper-2) 70%,transparent);}
+  .row:hover::after{transform:scaleY(1);}
+  .row.hidden{display:none;}
+  .r-num{font-family:var(--mono);font-size:.66rem;color:var(--ink-3);font-variant-numeric:tabular-nums;transition:color .24s;}
+  .row:hover .r-num{color:var(--accent);}
+  .r-title{font-size:clamp(1.02rem,2.3vw,1.42rem);font-weight:500;letter-spacing:-.018em;line-height:1.24;}
+  .r-sub{color:var(--ink-2);font-size:.86rem;font-weight:300;line-height:1.4;}
+  .r-stack{font-family:var(--mono);font-size:.63rem;letter-spacing:.05em;color:var(--ink-3);
+    white-space:nowrap;text-align:right;}
+  .r-go{font-size:.95rem;color:var(--ink-3);transition:transform .34s cubic-bezier(.22,1,.36,1),color .24s;}
+  .row:hover .r-go{transform:translate(4px,-4px);color:var(--accent);}
+  .r-live{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--accent);
+    vertical-align:middle;margin-left:9px;}
+  .r-thumb{display:none;}
 
-    /* Hero bottom bar */
-    .hero-bottom{grid-column:1/-1;grid-row:2;display:flex;justify-content:space-between;align-items:center;padding:22px 0 32px;border-top:1px solid var(--border);position:relative;z-index:1;}
-    .hero-skills{display:flex;gap:24px;flex-wrap:wrap;}
-    .hero-skill{font-family:'IBM Plex Mono',monospace;font-size:.6rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);}
-    .hero-stats{display:flex;gap:40px;}
-    .hero-stat-num{font-family:'Syne',sans-serif;font-size:1.9rem;font-weight:800;color:var(--ink);line-height:1;}
-    .hero-stat-label{font-family:'IBM Plex Mono',monospace;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:3px;}
+  @media(max-width:900px){
+    .row{grid-template-columns:2.4rem 1fr 1.2rem;gap:4px 16px;padding:18px 4px;align-items:start;}
+    .r-num{grid-row:1;padding-top:3px;}
+    .r-title{grid-column:2;}
+    .r-sub{grid-column:2;margin-top:3px;}
+    .r-stack{grid-column:2;text-align:left;margin-top:9px;white-space:normal;}
+    .r-go{grid-column:3;grid-row:1;padding-top:3px;}
+    .r-thumb{display:block;grid-column:2;margin-top:13px;border:1px solid var(--rule);
+      border-radius:3px;overflow:hidden;aspect-ratio:480/250;background:var(--paper-2);}
+    .r-thumb svg,.r-thumb img{width:100%;height:100%;display:block;object-fit:cover;}
+    .row:hover{padding-left:4px;}
+  }
 
-    /* SECTIONS */
-    section{padding:120px 60px;position:relative;}
-    .section-num{font-family:'IBM Plex Mono',monospace;font-size:.66rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;display:flex;align-items:center;gap:12px;}
-    .section-num::after{content:'';width:40px;height:1px;background:var(--accent);}
-    .section-title{font-family:'Syne',sans-serif;font-size:clamp(2rem,4vw,3.5rem);font-weight:800;line-height:1.05;letter-spacing:-.02em;color:var(--ink);margin-bottom:16px;}
-    .section-title em{font-family:'Fraunces',Georgia,serif;font-style:italic;font-weight:300;color:var(--accent);}
+  /* hover preview (desktop) */
+  #pv{position:fixed;top:0;left:0;z-index:80;width:min(31vw,420px);aspect-ratio:480/250;
+    border-radius:4px;overflow:hidden;pointer-events:none;opacity:0;
+    box-shadow:var(--shadow);border:1px solid var(--rule);background:var(--paper-2);
+    transition:opacity .3s ease;will-change:transform;}
+  #pv.on{opacity:1;}
+  #pv svg,#pv img{width:100%;height:100%;display:block;object-fit:cover;}
+  @media(hover:none),(max-width:900px){ #pv{display:none;} }
+  #pvStore{display:none;}
 
-    /* ABOUT */
-    #about{background:var(--surface);}
-    .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;margin-top:64px;align-items:start;}
-    .about-text p{font-size:.94rem;color:var(--muted);line-height:1.9;margin-bottom:20px;}
-    .about-text strong{color:var(--ink);font-weight:500;}
-    .about-stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);margin-bottom:40px;}
-    .about-stat{background:var(--card);padding:26px 22px;}
-    .about-stat-num{font-family:'Syne',sans-serif;font-size:2.6rem;font-weight:800;color:var(--accent);line-height:1;margin-bottom:5px;}
-    .about-stat-label{font-family:'IBM Plex Mono',monospace;font-size:.58rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
-    .skills-list{display:flex;flex-wrap:wrap;gap:8px;}
-    .skill-tag{display:inline-block;padding:6px 14px;border:1px solid var(--border);font-family:'IBM Plex Mono',monospace;font-size:.6rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);transition:border-color .2s,color .2s;}
-    .skill-tag:hover{border-color:var(--accent);color:var(--accent);}
+  /* ── CAPABILITIES ───────────────────────────── */
+  .caps{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:1px;background:var(--rule);
+    border:1px solid var(--rule);}
+  .cap{background:var(--paper);padding:clamp(22px,3vw,34px);}
+  .cap h3{font-size:1.02rem;font-weight:500;letter-spacing:-.012em;margin:14px 0 10px;}
+  .cap p{color:var(--ink-2);font-size:.87rem;font-weight:300;line-height:1.62;margin-bottom:18px;}
+  .cap ul{list-style:none;display:flex;flex-direction:column;gap:6px;}
+  .cap li{font-family:var(--mono);font-size:.64rem;letter-spacing:.045em;color:var(--ink-3);
+    padding-left:14px;position:relative;}
+  .cap li::before{content:'';position:absolute;left:0;top:.52em;width:5px;height:1px;background:var(--ink-3);}
 
-    /* SERVICES */
-    #services{background:var(--bg);}
-    .services-list{margin-top:64px;}
-    .service-item{display:grid;grid-template-columns:72px 1fr auto;align-items:center;gap:48px;padding:38px 0;border-bottom:1px solid var(--border);transition:padding-left .3s;}
-    .service-item:first-child{border-top:1px solid var(--border);}
-    .service-item:hover{padding-left:20px;}
-    .service-num{font-family:'IBM Plex Mono',monospace;font-size:.9rem;font-weight:600;color:var(--border);transition:color .25s;}
-    .service-item:hover .service-num{color:var(--accent);}
-    .service-name{font-family:'Syne',sans-serif;font-size:clamp(1.2rem,2.5vw,1.8rem);font-weight:700;color:var(--ink);margin-bottom:8px;transition:color .25s;}
-    .service-item:hover .service-name{color:var(--accent);}
-    .service-desc{font-size:.86rem;color:var(--muted);max-width:500px;line-height:1.7;}
-    .service-tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px;}
-    .stag{padding:4px 11px;background:var(--card);border:1px solid var(--border);font-family:'IBM Plex Mono',monospace;font-size:.58rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
-    .service-arrow{font-size:1.2rem;color:var(--border);transition:color .25s,transform .3s;}
-    .service-item:hover .service-arrow{color:var(--accent);transform:translateX(8px);}
+  /* ── PROCESS ────────────────────────────────── */
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:clamp(26px,4vw,48px);}
+  .step{border-top:1px solid var(--ink);padding-top:16px;}
+  .step b{display:block;font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;color:var(--accent);margin-bottom:11px;}
+  .step h3{font-size:1rem;font-weight:500;margin-bottom:8px;letter-spacing:-.012em;}
+  .step p{color:var(--ink-2);font-size:.86rem;font-weight:300;line-height:1.6;}
 
-    /* PROJECTS */
-    #projects{background:var(--surface);}
-    .projects-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:56px;flex-wrap:wrap;gap:24px;}
-    .filter-bar{display:flex;gap:5px;flex-wrap:wrap;}
-    .filter-btn{padding:7px 16px;border:1px solid var(--border);background:none;font-family:'IBM Plex Mono',monospace;font-size:.62rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);cursor:pointer;transition:border-color .2s,color .2s,background .2s;}
-    .filter-btn.active,.filter-btn:hover{border-color:var(--accent);background:var(--accent-dim);color:var(--accent);}
-    .projects-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--border);}
-    .project-card{background:var(--card);overflow:hidden;cursor:pointer;}
-    .project-card.hidden{display:none;}
-    .project-visual{height:250px;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:22px;}
-    .project-img-cover{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.25,.46,.45,.94);z-index:1;}
-    .project-card:hover .project-img-cover{transform:scale(1.07);}
-    .project-visual-bg{position:absolute;inset:0;transition:transform .6s cubic-bezier(.25,.46,.45,.94);z-index:0;}
-    .project-card:hover .project-visual-bg{transform:scale(1.05);}
-    .project-visual-svg{position:absolute;inset:0;width:100%;height:100%;z-index:1;transition:transform .6s cubic-bezier(.25,.46,.45,.94);}
-    .project-card:hover .project-visual-svg{transform:scale(1.04);}
-    .pv-1{background:linear-gradient(135deg,#061833 0%,#082040 100%);}
-    .pv-2{background:linear-gradient(135deg,#041A1A 0%,#062626 100%);}
-    .pv-3{background:linear-gradient(135deg,#120C2A 0%,#1A1038 100%);}
-    .pv-4{background:linear-gradient(135deg,#1A1006 0%,#261A06 100%);}
-    .pv-5{background:linear-gradient(135deg,#0A1A0D 0%,#0E2312 100%);}
-    .pv-6{background:linear-gradient(135deg,#0A0F1A 0%,#0E1528 100%);}
-    .pv-7{background:linear-gradient(135deg,#021A1A 0%,#062828 100%);}
-    .project-visual-icon{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:3.5rem;font-weight:600;color:rgba(255,255,255,.035);letter-spacing:.1em;z-index:0;}
-    .project-visual-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.65) 0%,rgba(0,0,0,.1) 55%,transparent 100%);z-index:2;}
-    .project-cat{position:relative;z-index:3;display:inline-flex;align-items:center;gap:8px;padding:5px 12px;background:rgba(6,182,212,0.14);border:1px solid rgba(6,182,212,0.3);font-family:'IBM Plex Mono',monospace;font-size:.56rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(6,182,212,.9);}
-    .project-cat.cat-auto{background:rgba(124,58,237,0.14);border-color:rgba(124,58,237,0.3);color:rgba(124,58,237,.9);}
-    .project-cat.cat-mkt{background:rgba(16,185,129,0.14);border-color:rgba(16,185,129,0.3);color:rgba(16,185,129,.9);}
-    .project-body{padding:26px 28px;}
-    .live-badge{display:inline-flex;align-items:center;gap:5px;font-family:'IBM Plex Mono',monospace;font-size:.56rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--green);padding:3px 9px;border:1px solid rgba(16,185,129,0.3);background:rgba(16,185,129,0.07);margin-bottom:10px;}
-    .live-badge::before{content:'◉';font-size:.5rem;animation:pulse-dot 1.5s ease-in-out infinite;}
-    .project-title{font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:700;color:var(--ink);margin-bottom:8px;line-height:1.2;}
-    .project-desc{font-size:.83rem;color:var(--muted);line-height:1.8;margin-bottom:16px;}
-    .project-tools{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:18px;}
-    .ptool{padding:3px 9px;border:1px solid var(--border);font-family:'IBM Plex Mono',monospace;font-size:.56rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);}
-    .project-link-btn{display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);transition:gap .2s,color .2s;cursor:pointer;}
-    .project-card:hover .project-link-btn{gap:16px;color:var(--accent);}
-    .view-btns{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;}
-    .view-btn{background:transparent;border:1px solid var(--border);color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:.57rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:5px 11px;cursor:pointer;transition:background .2s,border-color .2s,color .2s;}
-    .view-btn:hover{background:var(--accent-dim);border-color:var(--accent);color:var(--accent);}
-    .view-btn.accent{border-color:rgba(6,182,212,0.4);color:var(--accent);background:var(--accent-dim);}
+  /* ── CONTACT ────────────────────────────────── */
+  #contact{background:var(--paper-2);}
+  .contact-big{font-family:var(--serif);font-weight:400;font-size:clamp(2.2rem,8.5vw,6.2rem);
+    line-height:.98;letter-spacing:-.02em;margin-bottom:.36em;text-wrap:balance;}
+  .contact-big em{font-style:italic;color:var(--accent);}
+  .links{display:flex;flex-direction:column;border-top:1px solid var(--rule);max-width:640px;}
+  .clink{display:flex;justify-content:space-between;align-items:center;gap:20px;
+    padding:19px 4px;border-bottom:1px solid var(--rule);transition:padding-left .32s cubic-bezier(.22,1,.36,1);}
+  .clink:hover{padding-left:14px;}
+  .clink b{font-weight:500;font-size:1rem;letter-spacing:-.01em;}
+  .clink span{font-family:var(--mono);font-size:.66rem;letter-spacing:.05em;color:var(--ink-3);
+    transition:color .22s,transform .32s cubic-bezier(.22,1,.36,1);}
+  .clink:hover span{color:var(--accent);transform:translateX(4px);}
 
-    /* PROJECT MODAL */
-    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:200;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(6px);}
-    .modal-overlay.open{display:flex;}
-    .modal-box{background:var(--card);border:1px solid var(--border);max-width:820px;width:100%;max-height:90vh;overflow-y:auto;animation:scaleIn .3s both;}
-    .modal-topbar{position:sticky;top:0;background:var(--card);padding:14px 24px;display:flex;justify-content:flex-end;z-index:2;border-bottom:1px solid var(--border);}
-    .modal-topbar button{background:none;border:1px solid var(--border);color:var(--muted);width:36px;height:36px;font-size:.9rem;cursor:pointer;font-weight:700;transition:border-color .2s,color .2s;}
-    .modal-topbar button:hover{border-color:var(--accent);color:var(--accent);}
-    .modal-content{padding:36px 40px 48px;}
-    .modal-cat-label{font-family:'IBM Plex Mono',monospace;font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
-    .modal-title{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:var(--ink);margin-bottom:24px;line-height:1.1;}
-    .modal-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-bottom:36px;}
-    .modal-meta-item{background:var(--surface);padding:18px 20px;}
-    .modal-meta-label{font-family:'IBM Plex Mono',monospace;font-size:.56rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
-    .modal-meta-value{font-size:.88rem;font-weight:600;color:var(--ink);}
-    .modal-section{margin-bottom:28px;}
-    .modal-section-label{font-family:'IBM Plex Mono',monospace;font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
-    .modal-text{font-size:.92rem;color:var(--muted);line-height:1.9;}
-    .modal-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px;}
-    .modal-tag{padding:6px 14px;background:var(--surface);border:1px solid var(--border);font-family:'IBM Plex Mono',monospace;font-size:.58rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
+  footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;
+    padding:26px var(--pad);border-top:1px solid var(--rule);}
+  footer span{font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);}
 
-    /* IFRAME OVERLAY (live dashboard) */
-    .iframe-overlay{display:none;position:fixed;inset:0;z-index:300;background:var(--bg);flex-direction:column;}
-    .iframe-overlay.open{display:flex;}
-    .iframe-topbar{display:flex;justify-content:space-between;align-items:center;padding:12px 28px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;}
-    .iframe-title{font-family:'IBM Plex Mono',monospace;font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:10px;}
-    .iframe-title::before{content:'◉';animation:pulse-dot 1.5s ease-in-out infinite;}
-    .iframe-close{display:flex;align-items:center;gap:8px;background:none;border:1px solid var(--border);color:var(--muted);padding:8px 18px;font-family:'IBM Plex Mono',monospace;font-size:.62rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:border-color .2s,color .2s;}
-    .iframe-close:hover{border-color:var(--accent);color:var(--accent);}
-    .iframe-frame{flex:1;width:100%;border:none;}
+  /* ── OVERLAYS ───────────────────────────────── */
+  .ov{position:fixed;inset:0;z-index:120;background:var(--paper);
+    display:flex;flex-direction:column;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s;}
+  .ov.open{opacity:1;visibility:visible;}
+  .ov-bar{display:flex;justify-content:space-between;align-items:center;gap:16px;
+    padding:14px var(--pad);border-bottom:1px solid var(--rule);flex-shrink:0;}
+  .ov-bar b{font-family:var(--mono);font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;font-weight:500;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .ov-x{background:none;border:1px solid var(--rule);color:var(--ink-2);cursor:pointer;
+    font-family:var(--mono);font-size:.63rem;letter-spacing:.09em;text-transform:uppercase;
+    padding:7px 15px;border-radius:100px;transition:all .2s;white-space:nowrap;}
+  .ov-x:hover{border-color:var(--ink);color:var(--ink);}
+  .ov iframe{flex:1;width:100%;border:none;background:#fff;}
 
-    /* STACK SECTION */
-    #stack{background:var(--bg);}
-    .stack-intro{max-width:560px;margin-bottom:64px;}
-    .stack-intro p{font-size:.94rem;color:var(--muted);line-height:1.8;}
-    .stack-category{margin-bottom:52px;}
-    .stack-cat-label{font-family:'IBM Plex Mono',monospace;font-size:.62rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:18px;display:flex;align-items:center;gap:14px;}
-    .stack-cat-label::after{content:'';flex:1;height:1px;background:var(--border);}
-    .tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:2px;background:var(--border);}
-    .tool-card{background:var(--card);padding:24px 16px;display:flex;flex-direction:column;align-items:center;gap:12px;transition:background .2s;}
-    .tool-card:hover{background:var(--surface2);}
-    .tool-icon{width:38px;height:38px;display:flex;align-items:center;justify-content:center;}
-    .tool-icon img{width:38px;height:38px;object-fit:contain;}
-    .tool-name{font-family:'IBM Plex Mono',monospace;font-size:.58rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:center;}
-    .tool-mono-label{font-family:'IBM Plex Mono',monospace;font-size:.9rem;font-weight:700;color:var(--ink);}
+  /* project detail modal */
+  .modal{position:fixed;inset:0;z-index:130;display:grid;place-items:center;padding:20px;
+    background:color-mix(in srgb,var(--ink) 42%,transparent);backdrop-filter:blur(7px);
+    opacity:0;visibility:hidden;transition:opacity .32s,visibility .32s;}
+  .modal.open{opacity:1;visibility:visible;}
+  .modal-box{background:var(--paper);border:1px solid var(--rule);border-radius:5px;
+    width:min(760px,100%);max-height:88vh;overflow-y:auto;padding:clamp(26px,4.5vw,54px);
+    transform:translateY(18px) scale(.99);transition:transform .38s cubic-bezier(.22,1,.36,1);}
+  .modal.open .modal-box{transform:none;}
+  .modal-box h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.6rem,4vw,2.4rem);
+    line-height:1.1;letter-spacing:-.015em;margin:8px 0 22px;}
+  .m-meta{display:flex;flex-wrap:wrap;gap:20px 40px;padding:16px 0;border-block:1px solid var(--rule);margin-bottom:26px;}
+  .m-meta div b{display:block;font-size:.88rem;font-weight:500;margin-top:3px;}
+  .m-block{margin-bottom:22px;}
+  .m-block h4{font-family:var(--mono);font-size:.63rem;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:8px;}
+  .m-block p{color:var(--ink-2);font-size:.92rem;font-weight:300;line-height:1.72;}
+  .m-tags{display:flex;flex-wrap:wrap;gap:6px;padding-top:20px;border-top:1px solid var(--rule);}
+  .m-tags span{font-family:var(--mono);font-size:.62rem;letter-spacing:.05em;color:var(--ink-2);
+    border:1px solid var(--rule);padding:4px 10px;border-radius:100px;}
 
-    /* PROCESS */
-    #process{background:var(--surface);}
-    .process-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--border);margin-top:64px;}
-    .process-item{background:var(--card);padding:48px 40px;transition:background .3s;}
-    .process-item:hover{background:var(--surface);}
-    .process-step-num{font-family:'IBM Plex Mono',monospace;font-size:2.8rem;font-weight:600;color:var(--border);line-height:1;margin-bottom:20px;transition:color .3s;}
-    .process-item:hover .process-step-num{color:var(--accent);}
-    .process-step-name{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;color:var(--ink);margin-bottom:12px;}
-    .process-step-desc{font-size:.86rem;color:var(--muted);line-height:1.8;}
-
-    /* CONTACT */
-    #contact{background:var(--surface);display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;border-top:1px solid var(--border);}
-    .contact-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:.66rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:20px;}
-    .contact-big{font-family:'Syne',sans-serif;font-size:clamp(2.4rem,5vw,4.8rem);font-weight:800;line-height:1.0;letter-spacing:-.02em;color:var(--ink);margin-bottom:28px;}
-    .contact-sub{font-size:.94rem;color:var(--muted);line-height:1.8;}
-    .contact-right{display:flex;flex-direction:column;gap:2px;}
-    .contact-btn{display:flex;align-items:center;justify-content:space-between;padding:20px 28px;background:var(--card);border-bottom:1px solid var(--border);color:var(--ink);text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;transition:background .2s,color .2s;}
-    .contact-btn:hover{background:var(--accent-dim);color:var(--accent);}
-
-    footer{background:var(--bg);padding:22px 60px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-top:1px solid var(--border);}
-    .footer-copy,.footer-right{font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--muted);}
-
-    /* REVEALS */
-    .reveal{opacity:1;transform:none;transition:opacity .65s ease,transform .65s ease;}
-    .js-ready .reveal{opacity:0;transform:translateY(20px);}
-    .js-ready .reveal.visible{opacity:1;transform:none;}
-    .d1{transition-delay:.1s;}.d2{transition-delay:.2s;}.d3{transition-delay:.3s;}
-
-    @keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:none;}}
-    @keyframes scaleIn{from{opacity:0;transform:scale(.97);}to{opacity:1;transform:none;}}
-
-    /* RESPONSIVE 1024px */
-    @media(max-width:1024px){
-      nav{padding:18px 32px;}
-      #hero{padding:0 32px 64px;grid-template-columns:1fr 260px;}
-      section{padding:96px 32px;}
-      .about-grid{grid-template-columns:1fr;gap:48px;}
-      .service-item{gap:28px;}
-      #contact{grid-template-columns:1fr;gap:48px;padding:80px 32px;}
-      footer{padding:20px 32px;}
-    }
-    /* RESPONSIVE 768px */
-    @media(max-width:768px){
-      .nav-links,.nav-cta{display:none;}
-      .hamburger{display:flex;}
-      nav{padding:16px 24px;}
-      #hero{grid-template-columns:1fr;grid-template-rows:auto auto auto;padding:0 24px 48px;min-height:100svh;}
-      .hero-main{padding-top:110px;padding-bottom:24px;}
-      .hero-name{font-size:clamp(2.6rem,9vw,4rem);margin-bottom:20px;}
-      .hero-desc{font-size:.86rem;margin-bottom:28px;}
-      .hero-actions{flex-direction:column;align-items:flex-start;gap:10px;}
-      .btn-fill,.btn-outline{width:100%;justify-content:center;}
-      .hero-avatar-col{grid-column:1;grid-row:2;padding-top:0;padding-bottom:24px;flex-direction:row;justify-content:flex-start;align-items:flex-end;gap:24px;}
-      .avatar-outer{transform:scale(.8);transform-origin:left bottom;}
-      .speech-bubble{top:-78px;left:40%;}
-      .hero-bottom{grid-column:1;grid-row:3;flex-direction:column;align-items:flex-start;gap:16px;padding:20px 0 28px;}
-      .hero-stats{gap:24px;}
-      section{padding:64px 24px;}
-      .projects-grid{grid-template-columns:1fr;}
-      .tools-grid{grid-template-columns:repeat(auto-fill,minmax(90px,1fr));}
-      .process-grid{grid-template-columns:1fr;}
-      .process-item{padding:32px 24px;}
-      footer{padding:20px 24px;flex-direction:column;text-align:center;}
-      .modal-overlay{padding:0;align-items:flex-end;}
-      .modal-box{max-height:92svh;width:100%;}
-      .modal-meta{grid-template-columns:1fr 1fr;}
-      .modal-content{padding:20px 20px 40px;}
-      .modal-title{font-size:1.4rem;}
-    }
-    @media(max-width:480px){
-      nav{padding:14px 20px;}
-      #hero{padding:0 20px 32px;}
-      .hero-name{font-size:clamp(2.2rem,10vw,3rem);}
-      section{padding:52px 20px;}
-      .service-item{grid-template-columns:40px 1fr;gap:14px;}
-      .service-arrow{display:none;}
-      .modal-meta{grid-template-columns:1fr;}
-    }
-  </style>
+  /* ── REVEAL ─────────────────────────────────── */
+  .rv{opacity:0;transform:translateY(20px);transition:opacity .8s cubic-bezier(.22,1,.36,1),transform .8s cubic-bezier(.22,1,.36,1);}
+  .rv.in{opacity:1;transform:none;}
+  @media(prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}
+    .rv{opacity:1;transform:none;}
+    html{scroll-behavior:auto;}
+  }
+</style>
 </head>
 <body>
-  <div class="mobile-menu" id="mobileMenu">
-    <a href="#about" onclick="closeMM()">Sobre mi</a>
-    <a href="#services" onclick="closeMM()">Servicios</a>
-    <a href="#projects" onclick="closeMM()">Proyectos</a>
-    <a href="#stack" onclick="closeMM()">Stack</a>
-    <a href="#contact" onclick="closeMM()">Contacto</a>
+
+<nav id="nav">
+  <a href="#top" class="nav-name">Ignacio Montero Horianski</a>
+  <div class="nav-links">
+    <a href="#work">Trabajo</a>
+    <a href="#caps">Capacidades</a>
+    <a href="#process">Proceso</a>
+    <a href="#contact">Contacto</a>
+    <button class="theme-btn" onclick="toggleTheme()" aria-label="Cambiar tema" id="themeBtn">◐</button>
   </div>
+  <button class="burger" onclick="mm(1)">Menú</button>
+</nav>
 
-  <nav id="navbar">
-    <a href="#hero" class="nav-logo">IMH<span>.</span></a>
-    <ul class="nav-links">
-      <li><a href="#about">Sobre mi</a></li>
-      <li><a href="#services">Servicios</a></li>
-      <li><a href="#projects">Proyectos</a></li>
-      <li><a href="#stack">Stack</a></li>
-      <li><a href="#process">Proceso</a></li>
-    </ul>
-    <a href="#contact" class="nav-cta">Contacto</a>
-    <button class="hamburger" id="hamburger" onclick="toggleMM()"><span></span><span></span><span></span></button>
-  </nav>
+<div class="mobile-menu" id="mm">
+  <button class="mm-close" onclick="mm(0)">Cerrar</button>
+  <a href="#work" onclick="mm(0)">Trabajo</a>
+  <a href="#caps" onclick="mm(0)">Capacidades</a>
+  <a href="#process" onclick="mm(0)">Proceso</a>
+  <a href="#contact" onclick="mm(0)">Contacto</a>
+</div>
 
-  <section id="hero">
-    <div class="hero-glow"></div>
-
-    <div class="hero-main">
-      <p class="hero-tag">Disponible para proyectos</p>
-      <h1 class="hero-name">Datos.<br>Diseño.<br><em>Resultados.</em></h1>
-      <p class="hero-desc">Analista de datos y desarrollador web. Combino análisis de datos, diseño UX/UI y desarrollo para crear soluciones digitales que mejoran procesos y permiten tomar decisiones más inteligentes.</p>
-      <div class="hero-actions">
-        <a href="#projects" class="btn-fill">Ver proyectos &nbsp;→</a>
-        <a href="#contact" class="btn-outline">Hablemos</a>
-      </div>
+<header id="top">
+  <span class="avail"><i></i> Disponible para proyectos</span>
+  <h1>Ignacio Montero<br/>Horianski</h1>
+  <div class="hero-meta">
+    <p>Analista de datos y desarrollador web. Convierto procesos manuales en sistemas que funcionan solos, y datos dispersos en decisiones que se pueden tomar hoy.</p>
+    <div class="hero-stats">
+      <div class="hstat"><b class="num">15</b><span>Proyectos</span></div>
+      <div class="hstat"><b class="num">3+</b><span>Años</span></div>
+      <div class="hstat"><b>Bs As</b><span>Argentina</span></div>
     </div>
+  </div>
+</header>
 
-    <!-- AVATAR COLUMN -->
-    <div class="hero-avatar-col">
-      <div class="avatar-outer">
-        <!-- Speech bubble -->
-        <div class="speech-bubble">
-          <span class="bubble-line1">¡Como va!</span>
-          <span class="bubble-line2">Bienvenido/a ✦</span>
-        </div>
-
-        <!-- Foto caricatura -->
-        <div class="avatar-circle">
-          <img class="avatar-img" src="./img/avatar.png" alt="Ignacio Montero Horianski"/>
-        </div>
-      </div>
+<section id="work">
+  <div class="sec-head rv">
+    <div>
+      <p class="mono">01 &mdash; Índice</p>
+      <h2>Trabajo <em>seleccionado</em></h2>
     </div>
-
-    <div class="hero-bottom">
-      <div class="hero-skills">
-        <span class="hero-skill">Power BI</span>
-        <span class="hero-skill">SQL</span>
-        <span class="hero-skill">Python</span>
-        <span class="hero-skill">Figma</span>
-        <span class="hero-skill">Next.js</span>
-        <span class="hero-skill">Claude AI</span>
-      </div>
-      <div class="hero-stats">
-        <div><div class="hero-stat-num">4+</div><div class="hero-stat-label">Años exp.</div></div>
-        <div><div class="hero-stat-num">12+</div><div class="hero-stat-label">Herramientas</div></div>
-        <div><div class="hero-stat-num">2026</div><div class="hero-stat-label">Egresado</div></div>
-      </div>
+    <div class="filters">
+      <button class="fbtn on" data-f="all">Todos</button>
+      <button class="fbtn" data-f="ux">Desarrollo</button>
+      <button class="fbtn" data-f="datos">Datos &amp; BI</button>
+      <button class="fbtn" data-f="auto">Automatización</button>
+      <button class="fbtn" data-f="mkt">Marketing &amp; IA</button>
     </div>
-  </section>
+  </div>
+  <div class="work" id="workList"></div>
+</section>
 
-  <!-- ABOUT -->
-  <section id="about">
-    <p class="section-num">01 &mdash; Sobre mi</p>
-    <h2 class="section-title">Analista, diseñador<br><em>y builder</em></h2>
-    <div class="about-grid">
-      <div class="about-text reveal">
-        <p>Soy <strong>Ignacio Montero Horianski</strong>, técnico en Programación de Sistemas (UCES, 2026) con foco en análisis de datos, visualización y desarrollo web. Me especializo en transformar datos complejos en soluciones digitales claras y funcionales.</p>
-        <p>Me definen tres cosas: soy <strong>detallista</strong> — cada dato y cada línea de código importa. Soy <strong>proactivo y desafiante</strong> — siempre busco ir un paso más allá de lo que se pide. Y sobre todo, me apasiona la <strong>comunicación constante con el cliente</strong> para entender exactamente qué necesita y cumplir los objetivos.</p>
-      </div>
-      <div class="reveal d1">
-        <div class="about-stats">
-          <div class="about-stat"><div class="about-stat-num">4+</div><div class="about-stat-label">Años en datos</div></div>
-          <div class="about-stat"><div class="about-stat-num">2026</div><div class="about-stat-label">Egreso UCES</div></div>
-          <div class="about-stat"><div class="about-stat-num">Adv</div><div class="about-stat-label">Figma &amp; Excel</div></div>
-          <div class="about-stat"><div class="about-stat-num">BI</div><div class="about-stat-label">Power BI &amp; Looker</div></div>
-        </div>
-        <div class="skills-list">
-          <span class="skill-tag">Power BI</span><span class="skill-tag">Looker Studio</span><span class="skill-tag">SQL</span><span class="skill-tag">Python</span><span class="skill-tag">Excel Avanzado</span><span class="skill-tag">Figma</span><span class="skill-tag">HTML/CSS/JS</span><span class="skill-tag">Next.js</span><span class="skill-tag">UX/UI</span><span class="skill-tag">Claude AI</span><span class="skill-tag">Vercel</span>
-        </div>
-      </div>
+<section id="caps" style="background:var(--paper-2)">
+  <div class="sec-head rv">
+    <div><p class="mono">02 &mdash; Capacidades</p><h2>Lo que <em>hago</em></h2></div>
+  </div>
+  <div class="caps rv">
+    <div class="cap">
+      <span class="mono">01</span>
+      <h3>Datos &amp; Business Intelligence</h3>
+      <p>Dashboards que reemplazan reportes manuales. Modelo los datos, defino las métricas y diseño la vista para que la decisión se tome de un vistazo.</p>
+      <ul><li>Power BI · DAX</li><li>SQL Server</li><li>Looker Studio</li><li>Excel avanzado</li><li>Data Viz</li></ul>
     </div>
-  </section>
-
-  <!-- SERVICES -->
-  <section id="services">
-    <p class="section-num">02 &mdash; Servicios</p>
-    <h2 class="section-title">Lo que puedo<br><em>hacer por vos</em></h2>
-    <div class="services-list">
-      <div class="service-item reveal">
-        <div class="service-num">01</div>
-        <div>
-          <div class="service-name">Análisis de Datos &amp; BI</div>
-          <div class="service-desc">Transformo datos crudos en dashboards claros y decisiones concretas. Power BI, Looker Studio, SQL y Excel para visualizar lo que importa.</div>
-          <div class="service-tags"><span class="stag">Power BI</span><span class="stag">SQL</span><span class="stag">Looker Studio</span><span class="stag">Excel</span></div>
-        </div>
-        <div class="service-arrow">&#x2192;</div>
-      </div>
-      <div class="service-item reveal d1">
-        <div class="service-num">02</div>
-        <div>
-          <div class="service-name">Diseño UX/UI</div>
-          <div class="service-desc">Diseño interfaces que los usuarios entienden de inmediato. Wireframes, prototipos interactivos en Figma y pruebas de usuario reales.</div>
-          <div class="service-tags"><span class="stag">Figma</span><span class="stag">Prototipado</span><span class="stag">User Testing</span><span class="stag">Responsive</span></div>
-        </div>
-        <div class="service-arrow">&#x2192;</div>
-      </div>
-      <div class="service-item reveal d2">
-        <div class="service-num">03</div>
-        <div>
-          <div class="service-name">Desarrollo Web</div>
-          <div class="service-desc">Sitios y apps web funcionales con HTML, CSS, JavaScript y Next.js. Foco en performance, usabilidad y código limpio. Deploy en Vercel.</div>
-          <div class="service-tags"><span class="stag">HTML/CSS/JS</span><span class="stag">Next.js</span><span class="stag">Node.js</span><span class="stag">Vercel</span></div>
-        </div>
-        <div class="service-arrow">&#x2192;</div>
-      </div>
-      <div class="service-item reveal d3">
-        <div class="service-num">04</div>
-        <div>
-          <div class="service-name">Automatización &amp; Marketing con IA</div>
-          <div class="service-desc">Scripts en Python y SQL para automatizar procesos. Estrategias de contenido, branding completo y calendarios editoriales potenciados con Claude AI.</div>
-          <div class="service-tags"><span class="stag">Python</span><span class="stag">SQL</span><span class="stag">Claude AI</span><span class="stag">Estrategia</span></div>
-        </div>
-        <div class="service-arrow">&#x2192;</div>
-      </div>
+    <div class="cap">
+      <span class="mono">02</span>
+      <h3>Desarrollo Web</h3>
+      <p>Sitios y aplicaciones en producción, no maquetas. Foco en performance, accesibilidad y una experiencia que se sienta cuidada.</p>
+      <ul><li>Next.js · React</li><li>TypeScript</li><li>Tailwind CSS</li><li>Framer Motion · GSAP</li><li>Supabase · Prisma</li></ul>
     </div>
-  </section>
-
-  <!-- PROJECTS -->
-  <section id="projects">
-    <div class="projects-header">
-      <div><p class="section-num">03 &mdash; Proyectos</p><h2 class="section-title">Trabajo <em>real</em></h2></div>
-      <div class="filter-bar">
-        <button class="filter-btn active" data-filter="all">Todos</button>
-        <button class="filter-btn" data-filter="datos">Datos &amp; BI</button>
-        <button class="filter-btn" data-filter="ux">UX/UI &amp; Dev</button>
-        <button class="filter-btn" data-filter="auto">Automatización</button>
-        <button class="filter-btn" data-filter="mkt">Marketing &amp; IA</button>
-      </div>
+    <div class="cap">
+      <span class="mono">03</span>
+      <h3>Automatización</h3>
+      <p>Identifico el proceso repetitivo y lo elimino. Scripts que extraen, limpian y entregan — sin errores de carga y sin horas perdidas.</p>
+      <ul><li>Python · Pandas</li><li>SQL · ETL</li><li>APIs REST</li><li>Scripting</li></ul>
     </div>
-    <div class="projects-grid">
+    <div class="cap">
+      <span class="mono">04</span>
+      <h3>Marketing &amp; IA</h3>
+      <p>Estrategia y ejecución: contenido, identidad y agentes conversacionales que califican leads sin intervención humana.</p>
+      <ul><li>Estrategia de contenido</li><li>SEO · Copywriting</li><li>Branding</li><li>Agentes con IA</li><li>Prompt design</li></ul>
+    </div>
+  </div>
+</section>
 
-      <!-- 1. Dashboard KPIs (unificado) -->
-      <div class="project-card reveal" data-cat="datos" onclick="openDashboard()">
-        <div class="project-visual pv-1">
-          <img src="./img/dashboard-hero.png" alt="Dashboard KPIs" class="project-img-cover" onerror="this.style.display='none'"/>
-          <div class="project-visual-bg pv-1"></div>
-          <div class="project-visual-overlay"></div>
-          <div class="project-visual-icon">BI</div>
-          <span class="project-cat">Datos &amp; BI</span>
-        </div>
-        <div class="project-body">
-          <span class="live-badge">Dashboard interactivo en vivo</span>
-          <h3 class="project-title">Dashboard KPIs de Producción</h3>
-          <p class="project-desc">Dashboard mensual 100% interactivo: KPIs por producto, filtros dinámicos, gráficos comparativos y análisis de márgenes. Conectado a SQL Server, diseñado en Power BI y replicado en web con Chart.js.</p>
-          <div class="project-tools"><span class="ptool">Power BI</span><span class="ptool">SQL Server</span><span class="ptool">Chart.js</span><span class="ptool">DAX</span><span class="ptool">HTML/CSS/JS</span></div>
-          <div class="view-btns">
-            <button class="view-btn accent" onclick="event.stopPropagation();openDashboard()">Ver dashboard →</button>
-          </div>
-        </div>
-      </div>
+<section id="process">
+  <div class="sec-head rv">
+    <div><p class="mono">03 &mdash; Proceso</p><h2>Cómo <em>trabajo</em></h2></div>
+  </div>
+  <div class="steps rv">
+    <div class="step"><b>01</b><h3>Entender el problema</h3><p>Antes de proponer nada, entiendo qué decisión se está tomando mal o qué proceso está costando tiempo. El problema real casi nunca es el que se plantea primero.</p></div>
+    <div class="step"><b>02</b><h3>Definir el alcance</h3><p>Traduzco lo relevado en una especificación concreta: qué se construye, con qué stack, en cuánto tiempo y cómo se mide que funcionó.</p></div>
+    <div class="step"><b>03</b><h3>Construir y validar</h3><p>Desarrollo con el stack adecuado y pruebo con datos o usuarios reales. Lo que no se prueba en contexto no está terminado.</p></div>
+    <div class="step"><b>04</b><h3>Entregar y acompañar</h3><p>Entrego documentado y con capacitación si hace falta. No desaparezco cuando el proyecto sale: acompaño hasta que funciona de verdad.</p></div>
+  </div>
+</section>
 
-      <!-- 3. Automatización -->
-      <div class="project-card reveal" data-cat="auto" onclick="openProject('reportes')">
-        <div class="project-visual pv-3">
-          <img src="./img/excel-hero.png" alt="Python" class="project-img-cover" onerror="this.style.display='none'"/>
-          <div class="project-visual-bg pv-3"></div>
-          <div class="project-visual-overlay"></div>
-          <div class="project-visual-icon">PY</div>
-          <span class="project-cat cat-auto">Automatización</span>
-        </div>
-        <div class="project-body">
-          <h3 class="project-title">Automatización de Reportes Contables</h3>
-          <p class="project-desc">Scripts en Python para limpieza, procesamiento y carga masiva de datos contables, eliminando 6-8 horas de trabajo manual por mes.</p>
-          <div class="project-tools"><span class="ptool">Python</span><span class="ptool">SQL</span><span class="ptool">Excel</span><span class="ptool">Pandas</span></div>
-          <span class="project-link-btn">Ver proyecto &nbsp;→</span>
-        </div>
-      </div>
+<section id="contact">
+  <p class="mono rv" style="margin-bottom:20px">04 &mdash; Contacto</p>
+  <h2 class="contact-big rv">¿Arrancamos<br/><em>algo juntos?</em></h2>
+  <p class="rv" style="color:var(--ink-2);max-width:44ch;font-weight:300;margin-bottom:44px">Disponible para proyectos freelance, consultas de datos o desarrollo web. Respondo en menos de 24 horas.</p>
+  <div class="links rv">
+    <a class="clink" href="https://mail.google.com/mail/?view=cm&amp;to=ignaciomonterohorianski@gmail.com" target="_blank" rel="noopener"><b>Email</b><span>ignaciomonterohorianski@gmail.com &nbsp;↗</span></a>
+    <a class="clink" href="https://wa.me/5491157517796" target="_blank" rel="noopener"><b>WhatsApp</b><span>+54 9 11 5751 7796 &nbsp;↗</span></a>
+    <a class="clink" href="https://www.linkedin.com/in/ignaciomonterohorianski/" target="_blank" rel="noopener"><b>LinkedIn</b><span>/ignaciomonterohorianski &nbsp;↗</span></a>
+  </div>
+</section>
 
-      <!-- 4. Depofis -->
-      <div class="project-card reveal d1" data-cat="ux" onclick="openProject('depofis')">
-        <div class="project-visual pv-4">
-          <img src="./img/web-hero.webp" alt="Next.js" class="project-img-cover" onerror="this.style.display='none'"/>
-          <div class="project-visual-bg pv-4"></div>
-          <div class="project-visual-overlay"></div>
-          <div class="project-visual-icon">JS</div>
-          <span class="project-cat">UX/UI &amp; Dev</span>
-        </div>
-        <div class="project-body">
-          <h3 class="project-title">Módulo de Software — Depofis</h3>
-          <p class="project-desc">Desarrollo de módulo para automatización de carga de datos de deportistas. Front-end en Figma y JS, backend con Next.js y Node.js.</p>
-          <div class="project-tools"><span class="ptool">Next.js</span><span class="ptool">Node.js</span><span class="ptool">Figma</span><span class="ptool">Scrum</span></div>
-          <span class="project-link-btn">Ver proyecto &nbsp;→</span>
-        </div>
-      </div>
+<footer>
+  <span>&copy; 2026 Ignacio Montero Horianski</span>
+  <span>Buenos Aires, Argentina</span>
+</footer>
 
-      <!-- 5. Küme -->
-      <div class="project-card reveal" data-cat="mkt" onclick="openProject('kume')">
-        <div class="project-visual pv-5">
-          <div class="project-visual-bg pv-5"></div>
-          <svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-            <rect width="480" height="250" fill="#0A1A0D"/>
-            <rect width="480" height="38" fill="#1B3A2D"/>
-            <text x="20" y="24" fill="#C4973A" font-size="13" font-family="Georgia,serif" font-weight="600">Küme</text>
-            <text x="340" y="23" fill="rgba(196,151,58,0.6)" font-size="7" font-family="sans-serif">Servicios · Blog · Contacto</text>
-            <text x="20" y="78" fill="#F5EFE0" font-size="26" font-family="Georgia,serif" font-style="italic">Hacemos que tu</text>
-            <text x="20" y="108" fill="#C4973A" font-size="26" font-family="Georgia,serif" font-style="italic">marca tenga algo</text>
-            <text x="20" y="138" fill="#F5EFE0" font-size="26" font-family="Georgia,serif" font-style="italic">real para decir.</text>
-            <text x="20" y="162" fill="rgba(245,239,224,0.4)" font-size="8" font-family="sans-serif">Marketing digital para emprendedores y pymes en Argentina</text>
-            <rect x="20" y="174" width="130" height="28" fill="#C4973A"/>
-            <text x="32" y="192" fill="#0A1A0D" font-size="8" font-family="sans-serif" font-weight="700">CONSULTA GRATIS →</text>
-            <rect x="20" y="218" width="72" height="17" rx="2" fill="rgba(196,151,58,0.12)" stroke="rgba(196,151,58,0.35)" stroke-width="1"/>
-            <text x="28" y="230" fill="rgba(196,151,58,0.8)" font-size="6.5" font-family="sans-serif">Redes Sociales</text>
-            <rect x="98" y="218" width="60" height="17" rx="2" fill="rgba(196,151,58,0.12)" stroke="rgba(196,151,58,0.35)" stroke-width="1"/>
-            <text x="106" y="230" fill="rgba(196,151,58,0.8)" font-size="6.5" font-family="sans-serif">Diseño Web</text>
-            <rect x="164" y="218" width="50" height="17" rx="2" fill="rgba(196,151,58,0.12)" stroke="rgba(196,151,58,0.35)" stroke-width="1"/>
-            <text x="172" y="230" fill="rgba(196,151,58,0.8)" font-size="6.5" font-family="sans-serif">Branding</text>
-          </svg>
-          <div class="project-visual-overlay"></div>
-          <span class="project-cat cat-mkt">Marketing &amp; IA</span>
-        </div>
-        <div class="project-body">
-          <h3 class="project-title">Küme — Agencia de Marketing Digital</h3>
-          <p class="project-desc">Landing web, Brand Bible de 40+ páginas, templates Instagram, blog SEO y calendarios editoriales. Identidad visual completa verde+dorado.</p>
-          <div class="project-tools"><span class="ptool">Claude AI</span><span class="ptool">HTML/CSS</span><span class="ptool">Canva</span><span class="ptool">Vercel</span></div>
-          <div class="view-btns">
-            <button class="view-btn accent" onclick="event.stopPropagation();openViewer('./projects/kume-web/index.html','Küme — Landing Web')">Landing →</button>
-            <button class="view-btn" onclick="event.stopPropagation();openViewer('./projects/kume-web/instagram-templates.html','Küme — Templates Instagram')">Templates →</button>
-            <button class="view-btn" onclick="event.stopPropagation();openViewer('./projects/kume-web/blog/cuanto-cuesta-agencia-marketing-argentina.html','Küme — Blog SEO')">Blog →</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 7. Joaquín Verón — Personal Trainer -->
-      <div class="project-card reveal" data-cat="ux" onclick="openViewer('https://joaquin-vero.vercel.app/','Joaquín Verón — Personal Trainer IFBB')">
-        <div class="project-visual pv-3">
-          <img src="./img/trainer-hero.png" alt="Joaquín Verón Personal Trainer" class="project-img-cover" onerror="this.style.display='none'"/>
-          <div class="project-visual-bg pv-3"></div>
-          <div class="project-visual-overlay"></div>
-          <div class="project-visual-icon">JV</div>
-          <span class="project-cat">UX/UI &amp; Dev</span>
-        </div>
-        <div class="project-body">
-          <h3 class="project-title">Joaquín Verón — Personal Trainer IFBB</h3>
-          <p class="project-desc">Landing page completa: hero, 4 pilares de servicio, 3 planes de precios, testimonios verificados, sponsors y CTAs directos a WhatsApp. Responsive y en producción.</p>
-          <div class="project-tools"><span class="ptool">HTML5</span><span class="ptool">CSS3</span><span class="ptool">JavaScript</span><span class="ptool">Vercel</span></div>
-          <div class="view-btns">
-            <button class="view-btn accent" onclick="event.stopPropagation();openViewer('https://joaquin-vero.vercel.app/','Joaquín Verón — Personal Trainer IFBB')">Ver live →</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 8. CICLO — Consultora de IA -->
-      <div class="project-card reveal" data-cat="ux" onclick="openViewer('https://enemeache.github.io/ciclo-web/','CICLO — Consultora de IA')">
-        <div class="project-visual pv-7">
-          <div class="project-visual-bg pv-7" style="z-index:0"></div>
-          <svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+<!-- hover preview -->
+<div id="pv"></div>
+<div id="pvStore"><div><svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="bl-pour" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#E8175D"/><stop offset="45%" stop-color="#F5A623"/><stop offset="100%" stop-color="#00B8A9"/>
+              </linearGradient>
+              <linearGradient id="bl-fade" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="transparent"/><stop offset="100%" stop-color="#0B0B0C"/>
+              </linearGradient>
+            </defs>
+            <rect width="480" height="250" fill="#0B0B0C"/>
+            <!-- pour streams -->
+            <path d="M232 60 C232 110 218 130 218 175 L246 175 C246 130 240 110 240 60 Z" fill="url(#bl-pour)" opacity="0.95"/>
+            <ellipse cx="232" cy="182" rx="62" ry="13" fill="#E8175D" opacity="0.75"/>
+            <ellipse cx="232" cy="182" rx="40" ry="8" fill="#F5A623" opacity="0.8"/>
+            <ellipse cx="232" cy="181" rx="18" ry="4" fill="#00B8A9" opacity="0.85"/>
+            <!-- jar -->
+            <rect x="206" y="34" width="56" height="30" rx="4" fill="#16161A" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
+            <rect x="212" y="28" width="44" height="8" rx="3" fill="rgba(255,255,255,0.3)"/>
+            <!-- swatches -->
+            <rect x="24" y="196" width="34" height="34" rx="3" fill="#E8175D"/>
+            <rect x="64" y="196" width="34" height="34" rx="3" fill="#F5A623"/>
+            <rect x="104" y="196" width="34" height="34" rx="3" fill="#00B8A9"/>
+            <rect x="144" y="196" width="34" height="34" rx="3" fill="#7B2FF7"/>
+            <!-- nav -->
+            <rect width="480" height="26" fill="rgba(11,11,12,0.94)"/>
+            <text x="16" y="17" fill="white" font-size="10" font-family="serif" font-weight="700" letter-spacing="1.5">BLOCH</text>
+            <text x="330" y="17" fill="rgba(255,255,255,0.35)" font-size="6.5" font-family="sans-serif">Catálogo</text>
+            <text x="375" y="17" fill="rgba(255,255,255,0.35)" font-size="6.5" font-family="sans-serif">Fichas</text>
+            <text x="415" y="17" fill="rgba(255,255,255,0.35)" font-size="6.5" font-family="sans-serif">Contacto</text>
+            <!-- headline -->
+            <text x="24" y="70" fill="white" font-size="26" font-family="serif" font-weight="700">El color</text>
+            <text x="24" y="98" fill="#F5A623" font-size="26" font-family="serif" font-style="italic" font-weight="700">es nuestro</text>
+            <text x="24" y="120" fill="rgba(255,255,255,0.4)" font-size="7" font-family="sans-serif">Colorantes alimentarios · Argentina</text>
+            <rect x="24" y="132" width="86" height="18" rx="9" fill="rgba(232,23,93,0.18)" stroke="rgba(232,23,93,0.45)" stroke-width="0.7"/>
+            <text x="67" y="144" fill="#E8175D" font-size="6.5" font-family="sans-serif" font-weight="700" text-anchor="middle">Ver catálogo</text>
+            <!-- 3D badge -->
+            <rect x="358" y="196" width="102" height="34" rx="4" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" stroke-width="0.7"/>
+            <text x="368" y="210" fill="rgba(255,255,255,0.75)" font-size="7" font-family="monospace" font-weight="700">three.js · GSAP</text>
+            <text x="368" y="222" fill="rgba(255,255,255,0.3)" font-size="6" font-family="monospace">hero 3D "The Pour"</text>
+            <rect width="480" height="46" y="204" fill="url(#bl-fade)" opacity="0.55"/>
+          </svg></div><div><svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <rect width="480" height="250" fill="#08120E"/>
+            <!-- header -->
+            <rect width="480" height="26" fill="rgba(8,18,14,0.95)"/>
+            <circle cx="18" cy="13" r="6" fill="#25D366"/>
+            <text x="32" y="17" fill="white" font-size="8" font-family="sans-serif" font-weight="700">Método CICLO · Bot</text>
+            <text x="415" y="17" fill="rgba(37,211,102,0.75)" font-size="6" font-family="sans-serif">● en línea</text>
+            <!-- chat bubbles -->
+            <rect x="16" y="38" width="176" height="26" rx="8" fill="rgba(255,255,255,0.06)"/>
+            <text x="26" y="49" fill="rgba(255,255,255,0.75)" font-size="6.5" font-family="sans-serif">Hola 👋 Contame de tu negocio</text>
+            <text x="26" y="59" fill="rgba(255,255,255,0.75)" font-size="6.5" font-family="sans-serif">y armamos tu diagnóstico.</text>
+            <rect x="118" y="70" width="146" height="18" rx="8" fill="rgba(37,211,102,0.18)"/>
+            <text x="128" y="82" fill="#25D366" font-size="6.5" font-family="sans-serif">Tengo una distribuidora</text>
+            <rect x="16" y="94" width="188" height="26" rx="8" fill="rgba(255,255,255,0.06)"/>
+            <text x="26" y="105" fill="rgba(255,255,255,0.75)" font-size="6.5" font-family="sans-serif">¿Cuántas personas trabajan en</text>
+            <text x="26" y="115" fill="rgba(255,255,255,0.75)" font-size="6.5" font-family="sans-serif">el área de operaciones?</text>
+            <!-- lead score -->
+            <rect x="286" y="38" width="180" height="60" rx="5" fill="rgba(255,255,255,0.035)" stroke="rgba(37,211,102,0.2)" stroke-width="0.7"/>
+            <text x="296" y="52" fill="rgba(255,255,255,0.4)" font-size="6" font-family="sans-serif" font-weight="600">LEAD SCORING</text>
+            <text x="296" y="72" fill="#25D366" font-size="20" font-family="sans-serif" font-weight="900">87</text>
+            <text x="326" y="72" fill="rgba(255,255,255,0.3)" font-size="7" font-family="sans-serif">/100</text>
+            <rect x="296" y="80" width="160" height="5" rx="2.5" fill="rgba(255,255,255,0.08)"/>
+            <rect x="296" y="80" width="139" height="5" rx="2.5" fill="#25D366"/>
+            <text x="296" y="93" fill="rgba(255,255,255,0.35)" font-size="5.5" font-family="sans-serif">Calificado · derivar a founder</text>
+            <!-- funnel stages -->
+            <rect x="286" y="106" width="180" height="52" rx="5" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" stroke-width="0.7"/>
+            <text x="296" y="119" fill="rgba(255,255,255,0.4)" font-size="6" font-family="sans-serif" font-weight="600">FLUJO CONVERSACIONAL</text>
+            <circle cx="302" cy="133" r="4" fill="#25D366"/><text x="312" y="136" fill="rgba(255,255,255,0.6)" font-size="5.5" font-family="sans-serif">Discovery</text>
+            <circle cx="302" cy="147" r="4" fill="#25D366" opacity="0.6"/><text x="312" y="150" fill="rgba(255,255,255,0.6)" font-size="5.5" font-family="sans-serif">Objeciones</text>
+            <circle cx="384" cy="133" r="4" fill="#25D366" opacity="0.4"/><text x="394" y="136" fill="rgba(255,255,255,0.6)" font-size="5.5" font-family="sans-serif">Nurturing</text>
+            <circle cx="384" cy="147" r="4" fill="rgba(255,255,255,0.2)"/><text x="394" y="150" fill="rgba(255,255,255,0.6)" font-size="5.5" font-family="sans-serif">CRM sync</text>
+            <!-- footer modules -->
+            <text x="16" y="140" fill="rgba(37,211,102,0.3)" font-size="5.5" font-family="monospace">16 documentos · árbol conversacional · prompts · CRM · pagos · LATAM</text>
+          </svg></div><div><svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
             <!-- bg -->
             <rect width="480" height="250" fill="#090B10"/>
             <!-- dot pattern -->
@@ -650,398 +545,7 @@
                 <stop offset="100%" stop-color="#090B10"/>
               </linearGradient>
             </defs>
-          </svg>
-          <div class="project-visual-overlay"></div>
-          <span class="project-cat">UX/UI &amp; Dev</span>
-        </div>
-        <div class="project-body">
-          <h3 class="project-title">CICLO — Landing Web para Consultora de IA</h3>
-          <p class="project-desc">Landing page completa para consultora de implementación de IA. Partículas animadas, scroll effects, método C·I·C·L·O interactivo y estadísticas en tiempo real.</p>
-          <div class="project-tools"><span class="ptool">Next.js 16</span><span class="ptool">React 19</span><span class="ptool">Framer Motion</span><span class="ptool">Tailwind</span><span class="ptool">MagicUI</span></div>
-          <div class="view-btns">
-            <button class="view-btn accent" onclick="event.stopPropagation();openViewer('https://enemeache.github.io/ciclo-web/','CICLO — Consultora de IA')">Ver live →</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 6. Tecnorain + Tecnofix -->
-      <div class="project-card reveal d1" data-cat="mkt" onclick="openProject('tecno')">
-        <div class="project-visual pv-6">
-          <div class="project-visual-bg pv-6"></div>
-          <svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-            <rect width="480" height="250" fill="#0A0F1A"/>
-            <text x="20" y="36" fill="rgba(6,182,212,0.5)" font-size="7" font-family="sans-serif" letter-spacing="3">ESTRATEGIA DE CONTENIDO</text>
-            <text x="20" y="62" fill="white" font-size="20" font-family="sans-serif" font-weight="700">TECNORAIN</text>
-            <text x="20" y="82" fill="rgba(255,255,255,0.4)" font-size="12" font-family="sans-serif" font-weight="400">+ TECNOFIX</text>
-            <line x1="20" y1="94" x2="200" y2="94" stroke="rgba(6,182,212,0.3)" stroke-width="1"/>
-            <text x="20" y="116" fill="rgba(6,182,212,0.9)" font-size="7" font-family="sans-serif" font-weight="600">01 — EDUCACIÓN TÉCNICA</text>
-            <text x="20" y="132" fill="rgba(6,182,212,0.9)" font-size="7" font-family="sans-serif" font-weight="600">02 — CASOS DE ÉXITO</text>
-            <text x="20" y="148" fill="rgba(6,182,212,0.9)" font-size="7" font-family="sans-serif" font-weight="600">03 — DETRÁS DE ESCENA</text>
-            <text x="20" y="164" fill="rgba(6,182,212,0.9)" font-size="7" font-family="sans-serif" font-weight="600">04 — CONFIANZA Y GARANTÍA</text>
-            <text x="20" y="180" fill="rgba(6,182,212,0.9)" font-size="7" font-family="sans-serif" font-weight="600">05 — PROMOCIONES</text>
-            <rect x="250" y="50" width="200" height="170" rx="4" fill="rgba(6,182,212,0.05)" stroke="rgba(6,182,212,0.15)" stroke-width="1"/>
-            <text x="260" y="70" fill="rgba(6,182,212,0.7)" font-size="6" font-family="sans-serif" font-weight="600">CALENDARIO 30 DÍAS</text>
-            <rect x="260" y="78" width="24" height="20" rx="2" fill="rgba(6,182,212,0.15)"/><text x="266" y="92" fill="white" font-size="8" font-family="sans-serif">L</text>
-            <rect x="288" y="78" width="24" height="20" rx="2" fill="rgba(6,182,212,0.15)"/><text x="294" y="92" fill="white" font-size="8" font-family="sans-serif">M</text>
-            <rect x="316" y="78" width="24" height="20" rx="2" fill="rgba(6,182,212,0.25)"/><text x="322" y="92" fill="white" font-size="8" font-family="sans-serif">X</text>
-            <rect x="344" y="78" width="24" height="20" rx="2" fill="rgba(6,182,212,0.15)"/><text x="350" y="92" fill="white" font-size="8" font-family="sans-serif">J</text>
-            <rect x="372" y="78" width="24" height="20" rx="2" fill="rgba(6,182,212,0.25)"/><text x="378" y="92" fill="white" font-size="8" font-family="sans-serif">V</text>
-            <rect x="260" y="102" width="136" height="14" rx="2" fill="rgba(6,182,212,0.1)"/><text x="265" y="113" fill="rgba(6,182,212,0.8)" font-size="6" font-family="sans-serif">Caso real: instalación industrial</text>
-            <rect x="260" y="120" width="100" height="14" rx="2" fill="rgba(16,185,129,0.1)"/><text x="265" y="131" fill="rgba(16,185,129,0.8)" font-size="6" font-family="sans-serif">Tip técnico semanal</text>
-            <rect x="260" y="138" width="120" height="14" rx="2" fill="rgba(6,182,212,0.1)"/><text x="265" y="149" fill="rgba(6,182,212,0.8)" font-size="6" font-family="sans-serif">Promo: garantía extendida</text>
-          </svg>
-          <div class="project-visual-overlay"></div>
-          <span class="project-cat cat-mkt">Marketing &amp; IA</span>
-        </div>
-        <div class="project-body">
-          <h3 class="project-title">Tecnorain + Tecnofix — Estrategia Digital</h3>
-          <p class="project-desc">Estrategia de contenido para dos marcas técnicas. Calendarios de 30 días, pilares editoriales, voz de marca, guías de hashtags y CTAs para Instagram y Facebook.</p>
-          <div class="project-tools"><span class="ptool">Claude AI</span><span class="ptool">Content Strategy</span><span class="ptool">Social Media</span></div>
-          <span class="project-link-btn">Ver proyecto &nbsp;→</span>
-        </div>
-      </div>
-
-      <!-- 9. Nexus AI — Landing Concept -->
-      <div class="project-card reveal" data-cat="ux" onclick="openViewer('./projects/ai-landing/index.html','Nexus AI — Landing Concept')">
-        <div class="project-visual" style="background:#030712;height:250px;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:22px;">
-          <svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-            <rect width="480" height="250" fill="#030712"/>
-            <pattern id="dp" x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="7" cy="7" r="0.8" fill="rgba(255,255,255,0.13)"/></pattern>
-            <rect width="480" height="250" fill="url(#dp)"/>
-            <radialGradient id="ag2" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="rgba(124,58,237,0.28)"/><stop offset="100%" stop-color="transparent"/></radialGradient>
-            <rect width="480" height="250" fill="url(#ag2)"/>
-            <rect x="165" y="28" width="150" height="18" rx="9" fill="rgba(124,58,237,0.2)" stroke="rgba(124,58,237,0.45)" stroke-width="1"/>
-            <text x="240" y="41" fill="rgba(167,139,250,0.9)" font-size="7" font-family="sans-serif" text-anchor="middle">✦ AI-POWERED PLATFORM</text>
-            <text x="240" y="88" fill="#a78bfa" font-size="38" font-family="sans-serif" font-weight="900" text-anchor="middle">NEXUS</text>
-            <text x="240" y="126" fill="#60a5fa" font-size="38" font-family="sans-serif" font-weight="900" text-anchor="middle">AI</text>
-            <text x="240" y="150" fill="rgba(255,255,255,0.4)" font-size="8" font-family="sans-serif" text-anchor="middle">Intelligence at Scale — Built for the future</text>
-            <rect x="160" y="163" width="160" height="28" rx="14" fill="#7C3AED"/>
-            <text x="240" y="181" fill="white" font-size="9" font-family="sans-serif" font-weight="700" text-anchor="middle">Get Started Free →</text>
-            <text x="100" y="218" fill="rgba(255,255,255,0.55)" font-size="15" font-family="sans-serif" font-weight="700" text-anchor="middle">99.9%</text>
-            <text x="240" y="218" fill="rgba(255,255,255,0.55)" font-size="15" font-family="sans-serif" font-weight="700" text-anchor="middle">10x</text>
-            <text x="380" y="218" fill="rgba(255,255,255,0.55)" font-size="15" font-family="sans-serif" font-weight="700" text-anchor="middle">24/7</text>
-            <text x="100" y="232" fill="rgba(255,255,255,0.25)" font-size="6" font-family="sans-serif" text-anchor="middle">Uptime SLA</text>
-            <text x="240" y="232" fill="rgba(255,255,255,0.25)" font-size="6" font-family="sans-serif" text-anchor="middle">Faster than GPT-4</text>
-            <text x="380" y="232" fill="rgba(255,255,255,0.25)" font-size="6" font-family="sans-serif" text-anchor="middle">Support</text>
-          </svg>
-          <div class="project-visual-overlay"></div>
-          <span class="project-cat">UX/UI &amp; Dev</span>
-        </div>
-        <div class="project-body">
-          <span class="live-badge">Abre en vivo</span>
-          <h3 class="project-title">Nexus AI — Landing Concept</h3>
-          <p class="project-desc">Landing page futurista para plataforma de IA. Aurora gradient text, dot-pattern, secciones animadas y dark design con Tailwind CSS. Totalmente funcional.</p>
-          <div class="project-tools"><span class="ptool">HTML/CSS</span><span class="ptool">Tailwind</span><span class="ptool">JavaScript</span><span class="ptool">Dark UI</span></div>
-          <span class="project-link-btn">Abrir en vivo &nbsp;→</span>
-        </div>
-      </div>
-
-      <!-- 10. Küme — Posts & Stories Instagram -->
-      <div class="project-card reveal d1" data-cat="mkt" onclick="openViewer('./projects/posts/post-01-brand-statement.html','Küme — Brand Statement')">
-        <div class="project-visual" style="background:#060E08;height:250px;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:22px;">
-          <svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-            <rect width="480" height="250" fill="#050905"/>
-            <!-- Post 01 preview -->
-            <rect x="18" y="18" width="130" height="215" rx="3" fill="#1B3A2D"/>
-            <rect x="30" y="36" width="106" height="1" fill="rgba(196,151,58,0.5)"/>
-            <text x="36" y="68" fill="#C4973A" font-size="9" font-family="Georgia,serif" font-style="italic">Hacemos que</text>
-            <text x="36" y="82" fill="#C4973A" font-size="9" font-family="Georgia,serif" font-style="italic">tu marca tenga</text>
-            <text x="36" y="100" fill="#F5EFE0" font-size="9.5" font-family="Georgia,serif" font-weight="600">algo real</text>
-            <text x="36" y="114" fill="#F5EFE0" font-size="9.5" font-family="Georgia,serif" font-weight="600">para decir.</text>
-            <rect x="30" y="206" width="106" height="1" fill="rgba(196,151,58,0.5)"/>
-            <text x="36" y="220" fill="rgba(196,151,58,0.7)" font-size="6" font-family="sans-serif">@kume.agenciamkt</text>
-            <!-- Post 02 preview -->
-            <rect x="158" y="18" width="130" height="215" rx="3" fill="#F5EFE0"/>
-            <text x="168" y="42" fill="#1B3A2D" font-size="8" font-family="sans-serif" font-weight="700">5 ERRORES QUE</text>
-            <text x="168" y="54" fill="#C4973A" font-size="8" font-family="sans-serif" font-weight="700">COMETEN LAS</text>
-            <text x="168" y="66" fill="#1B3A2D" font-size="8" font-family="sans-serif" font-weight="700">MARCAS ONLINE</text>
-            <line x1="168" y1="75" x2="278" y2="75" stroke="#1B3A2D" stroke-width="0.5"/>
-            <text x="168" y="91" fill="#1B3A2D" font-size="6.5" font-family="sans-serif">01 — Sin estrategia</text>
-            <text x="168" y="105" fill="#1B3A2D" font-size="6.5" font-family="sans-serif">02 — Ignorar al cliente</text>
-            <text x="168" y="119" fill="#1B3A2D" font-size="6.5" font-family="sans-serif">03 — Copiar a la competencia</text>
-            <text x="168" y="133" fill="#1B3A2D" font-size="6.5" font-family="sans-serif">04 — No medir resultados</text>
-            <text x="168" y="147" fill="#1B3A2D" font-size="6.5" font-family="sans-serif">05 — Falta de consistencia</text>
-            <text x="168" y="220" fill="rgba(27,58,45,0.5)" font-size="6" font-family="sans-serif">@kume.agenciamkt</text>
-            <!-- Story mockup preview -->
-            <rect x="298" y="18" width="164" height="215" rx="3" fill="#0a0a0a"/>
-            <rect x="298" y="18" width="164" height="215" rx="3" fill="rgba(181,225,43,0.05)"/>
-            <text x="380" y="80" fill="white" font-size="22" font-family="sans-serif" font-weight="900" text-anchor="middle">MEJORÁ</text>
-            <text x="380" y="103" fill="#B5E12B" font-size="22" font-family="sans-serif" font-weight="900" text-anchor="middle">TU</text>
-            <text x="380" y="126" fill="white" font-size="15" font-family="sans-serif" font-weight="300" text-anchor="middle" letter-spacing="2">CUERPO</text>
-            <text x="380" y="152" fill="rgba(255,255,255,0.4)" font-size="6" font-family="sans-serif" text-anchor="middle">Joaco Verón · IFBB</text>
-            <rect x="316" y="165" width="128" height="22" rx="11" fill="rgba(181,225,43,0.2)" stroke="#B5E12B" stroke-width="1"/>
-            <text x="380" y="180" fill="#B5E12B" font-size="7" font-family="sans-serif" font-weight="700" text-anchor="middle">CONSULTA GRATIS →</text>
-            <text x="380" y="215" fill="rgba(255,255,255,0.3)" font-size="6" font-family="sans-serif" text-anchor="middle">@joaco.veron</text>
-          </svg>
-          <div class="project-visual-overlay"></div>
-          <span class="project-cat cat-mkt">Marketing &amp; IA</span>
-        </div>
-        <div class="project-body">
-          <span class="live-badge">Diseño interactivo en vivo</span>
-          <h3 class="project-title">Posts &amp; Stories — Küme + Joaco Verón</h3>
-          <p class="project-desc">Piezas de contenido para redes: brand statement Küme, carrusel de errores de marketing y story mockup para Joaquín Verón. Diseñadas en código HTML/CSS.</p>
-          <div class="project-tools"><span class="ptool">HTML/CSS</span><span class="ptool">Brand Design</span><span class="ptool">Social Media</span></div>
-          <div class="view-btns">
-            <button class="view-btn accent" onclick="event.stopPropagation();openViewer('./projects/posts/post-01-brand-statement.html','Küme — Brand Statement')">Post 01 →</button>
-            <button class="view-btn" onclick="event.stopPropagation();openViewer('./projects/posts/post-02-errores.html','Küme — 5 Errores')">Post 02 →</button>
-            <button class="view-btn" onclick="event.stopPropagation();openViewer('./projects/posts/joaquin-veron-story-mockup.html','Joaco Verón — Story')">Story JV →</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 11. Laboratorios Bloch -->
-      <div class="project-card reveal" data-cat="ux" onclick="openViewer('./projects/bloch/index.html','Laboratorios Bloch — The Pour')">
-        <div class="project-visual pv-1">
-          <div class="project-visual-bg pv-1" style="z-index:0"></div>
-          <svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-            <defs>
-              <linearGradient id="bl-pour" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#E8175D"/><stop offset="45%" stop-color="#F5A623"/><stop offset="100%" stop-color="#00B8A9"/>
-              </linearGradient>
-              <linearGradient id="bl-fade" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="transparent"/><stop offset="100%" stop-color="#0B0B0C"/>
-              </linearGradient>
-            </defs>
-            <rect width="480" height="250" fill="#0B0B0C"/>
-            <!-- pour streams -->
-            <path d="M232 60 C232 110 218 130 218 175 L246 175 C246 130 240 110 240 60 Z" fill="url(#bl-pour)" opacity="0.95"/>
-            <ellipse cx="232" cy="182" rx="62" ry="13" fill="#E8175D" opacity="0.75"/>
-            <ellipse cx="232" cy="182" rx="40" ry="8" fill="#F5A623" opacity="0.8"/>
-            <ellipse cx="232" cy="181" rx="18" ry="4" fill="#00B8A9" opacity="0.85"/>
-            <!-- jar -->
-            <rect x="206" y="34" width="56" height="30" rx="4" fill="#16161A" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
-            <rect x="212" y="28" width="44" height="8" rx="3" fill="rgba(255,255,255,0.3)"/>
-            <!-- swatches -->
-            <rect x="24" y="196" width="34" height="34" rx="3" fill="#E8175D"/>
-            <rect x="64" y="196" width="34" height="34" rx="3" fill="#F5A623"/>
-            <rect x="104" y="196" width="34" height="34" rx="3" fill="#00B8A9"/>
-            <rect x="144" y="196" width="34" height="34" rx="3" fill="#7B2FF7"/>
-            <!-- nav -->
-            <rect width="480" height="26" fill="rgba(11,11,12,0.94)"/>
-            <text x="16" y="17" fill="white" font-size="10" font-family="serif" font-weight="700" letter-spacing="1.5">BLOCH</text>
-            <text x="330" y="17" fill="rgba(255,255,255,0.35)" font-size="6.5" font-family="sans-serif">Catálogo</text>
-            <text x="375" y="17" fill="rgba(255,255,255,0.35)" font-size="6.5" font-family="sans-serif">Fichas</text>
-            <text x="415" y="17" fill="rgba(255,255,255,0.35)" font-size="6.5" font-family="sans-serif">Contacto</text>
-            <!-- headline -->
-            <text x="24" y="70" fill="white" font-size="26" font-family="serif" font-weight="700">El color</text>
-            <text x="24" y="98" fill="#F5A623" font-size="26" font-family="serif" font-style="italic" font-weight="700">es nuestro</text>
-            <text x="24" y="120" fill="rgba(255,255,255,0.4)" font-size="7" font-family="sans-serif">Colorantes alimentarios · Argentina</text>
-            <rect x="24" y="132" width="86" height="18" rx="9" fill="rgba(232,23,93,0.18)" stroke="rgba(232,23,93,0.45)" stroke-width="0.7"/>
-            <text x="67" y="144" fill="#E8175D" font-size="6.5" font-family="sans-serif" font-weight="700" text-anchor="middle">Ver catálogo</text>
-            <!-- 3D badge -->
-            <rect x="358" y="196" width="102" height="34" rx="4" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" stroke-width="0.7"/>
-            <text x="368" y="210" fill="rgba(255,255,255,0.75)" font-size="7" font-family="monospace" font-weight="700">three.js · GSAP</text>
-            <text x="368" y="222" fill="rgba(255,255,255,0.3)" font-size="6" font-family="monospace">hero 3D "The Pour"</text>
-            <rect width="480" height="46" y="204" fill="url(#bl-fade)" opacity="0.55"/>
-          </svg>
-          <div class="project-visual-overlay"></div>
-          <span class="project-cat">UX/UI &amp; Dev</span>
-        </div>
-        <div class="project-body">
-          <span class="live-badge">Concepto interactivo en vivo</span>
-          <h3 class="project-title">Laboratorios Bloch — Sitio + Catálogo 3D</h3>
-          <p class="project-desc">Sitio corporativo y catálogo administrable para fabricante de colorantes alimentarios. Hero 3D "The Pour" con three.js, scroll animado con GSAP, CMS headless con Payload y fichas técnicas generadas en PDF al vuelo.</p>
-          <div class="project-tools"><span class="ptool">Next.js 16</span><span class="ptool">three.js</span><span class="ptool">GSAP</span><span class="ptool">Payload CMS</span><span class="ptool">PostgreSQL</span><span class="ptool">pdf-lib</span></div>
-          <div class="view-btns">
-            <button class="view-btn accent" onclick="event.stopPropagation();openViewer('./projects/bloch/index.html','Laboratorios Bloch — The Pour')">Ver concepto →</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 12. Núcleo ERP -->
-      <div class="project-card reveal d1" data-cat="datos" onclick="openViewer('./projects/nucleo-erp/index.html','Núcleo ERP — Sistema de Gestión')">
-        <div class="project-visual pv-2">
-          <div class="project-visual-bg pv-2" style="z-index:0"></div>
-          <svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-            <rect width="480" height="250" fill="#0A0E16"/>
-            <!-- sidebar -->
-            <rect width="66" height="250" fill="rgba(255,255,255,0.025)"/>
-            <text x="12" y="20" fill="#4F8EF7" font-size="9" font-family="sans-serif" font-weight="800">NÚCLEO</text>
-            <rect x="8" y="32" width="50" height="12" rx="2" fill="rgba(79,142,247,0.2)"/>
-            <text x="13" y="41" fill="#4F8EF7" font-size="5.5" font-family="sans-serif" font-weight="600">Dashboard</text>
-            <text x="13" y="57" fill="rgba(255,255,255,0.3)" font-size="5.5" font-family="sans-serif">Ventas</text>
-            <text x="13" y="71" fill="rgba(255,255,255,0.3)" font-size="5.5" font-family="sans-serif">Stock</text>
-            <text x="13" y="85" fill="rgba(255,255,255,0.3)" font-size="5.5" font-family="sans-serif">Compras</text>
-            <text x="13" y="99" fill="rgba(255,255,255,0.3)" font-size="5.5" font-family="sans-serif">Finanzas</text>
-            <text x="13" y="113" fill="rgba(255,255,255,0.3)" font-size="5.5" font-family="sans-serif">RRHH</text>
-            <text x="13" y="127" fill="rgba(255,255,255,0.3)" font-size="5.5" font-family="sans-serif">Reportes</text>
-            <!-- KPI cards -->
-            <rect x="78" y="16" width="92" height="42" rx="4" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.07)" stroke-width="0.7"/>
-            <text x="86" y="30" fill="rgba(255,255,255,0.35)" font-size="5.5" font-family="sans-serif">FACTURACIÓN</text>
-            <text x="86" y="46" fill="white" font-size="15" font-family="sans-serif" font-weight="800">$4.2M</text>
-            <text x="140" y="46" fill="#34D399" font-size="6.5" font-family="sans-serif" font-weight="700">▲ 12%</text>
-            <rect x="178" y="16" width="92" height="42" rx="4" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.07)" stroke-width="0.7"/>
-            <text x="186" y="30" fill="rgba(255,255,255,0.35)" font-size="5.5" font-family="sans-serif">ÓRDENES</text>
-            <text x="186" y="46" fill="white" font-size="15" font-family="sans-serif" font-weight="800">1.847</text>
-            <text x="234" y="46" fill="#34D399" font-size="6.5" font-family="sans-serif" font-weight="700">▲ 8%</text>
-            <rect x="278" y="16" width="92" height="42" rx="4" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.07)" stroke-width="0.7"/>
-            <text x="286" y="30" fill="rgba(255,255,255,0.35)" font-size="5.5" font-family="sans-serif">STOCK CRÍTICO</text>
-            <text x="286" y="46" fill="white" font-size="15" font-family="sans-serif" font-weight="800">23</text>
-            <text x="310" y="46" fill="#F87171" font-size="6.5" font-family="sans-serif" font-weight="700">▼ alerta</text>
-            <rect x="378" y="16" width="88" height="42" rx="4" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.07)" stroke-width="0.7"/>
-            <text x="386" y="30" fill="rgba(255,255,255,0.35)" font-size="5.5" font-family="sans-serif">MARGEN</text>
-            <text x="386" y="46" fill="white" font-size="15" font-family="sans-serif" font-weight="800">34%</text>
-            <!-- chart -->
-            <rect x="78" y="68" width="192" height="80" rx="4" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" stroke-width="0.7"/>
-            <text x="86" y="82" fill="rgba(255,255,255,0.4)" font-size="6" font-family="sans-serif" font-weight="600">VENTAS POR MES</text>
-            <rect x="90" y="126" width="14" height="16" fill="#4F8EF7" opacity="0.55"/>
-            <rect x="110" y="118" width="14" height="24" fill="#4F8EF7" opacity="0.65"/>
-            <rect x="130" y="110" width="14" height="32" fill="#4F8EF7" opacity="0.72"/>
-            <rect x="150" y="100" width="14" height="42" fill="#4F8EF7" opacity="0.8"/>
-            <rect x="170" y="106" width="14" height="36" fill="#4F8EF7" opacity="0.75"/>
-            <rect x="190" y="92" width="14" height="50" fill="#4F8EF7"/>
-            <rect x="210" y="98" width="14" height="44" fill="#4F8EF7" opacity="0.85"/>
-            <rect x="230" y="88" width="14" height="54" fill="#60A5FA"/>
-            <!-- table -->
-            <rect x="278" y="68" width="188" height="80" rx="4" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" stroke-width="0.7"/>
-            <text x="286" y="82" fill="rgba(255,255,255,0.4)" font-size="6" font-family="sans-serif" font-weight="600">ÚLTIMOS MOVIMIENTOS</text>
-            <line x1="286" y1="88" x2="458" y2="88" stroke="rgba(255,255,255,0.08)" stroke-width="0.7"/>
-            <text x="286" y="101" fill="rgba(255,255,255,0.55)" font-size="5.5" font-family="sans-serif">FC-A 0001-0042831</text>
-            <text x="420" y="101" fill="#34D399" font-size="5.5" font-family="monospace">$128.400</text>
-            <text x="286" y="115" fill="rgba(255,255,255,0.55)" font-size="5.5" font-family="sans-serif">OC-2026-0891</text>
-            <text x="424" y="115" fill="rgba(255,255,255,0.5)" font-size="5.5" font-family="monospace">$46.200</text>
-            <text x="286" y="129" fill="rgba(255,255,255,0.55)" font-size="5.5" font-family="sans-serif">REM 0003-0011204</text>
-            <text x="428" y="129" fill="rgba(255,255,255,0.5)" font-size="5.5" font-family="monospace">$9.870</text>
-            <text x="286" y="143" fill="rgba(255,255,255,0.55)" font-size="5.5" font-family="sans-serif">NC-A 0001-0000317</text>
-            <text x="422" y="143" fill="#F87171" font-size="5.5" font-family="monospace">-$12.050</text>
-          </svg>
-          <div class="project-visual-overlay"></div>
-          <span class="project-cat cat-datos">Datos &amp; BI</span>
-        </div>
-        <div class="project-body">
-          <span class="live-badge">Demo interactiva en vivo</span>
-          <h3 class="project-title">Núcleo ERP — Sistema de Gestión</h3>
-          <p class="project-desc">Demo funcional de un ERP completo: módulos de ventas, stock, compras, finanzas y reportes. Dashboard con KPIs en tiempo real, tablas de movimientos, alertas de stock crítico y análisis de márgenes.</p>
-          <div class="project-tools"><span class="ptool">HTML/CSS/JS</span><span class="ptool">Data Viz</span><span class="ptool">UX/UI</span><span class="ptool">ERP Design</span></div>
-          <div class="view-btns">
-            <button class="view-btn accent" onclick="event.stopPropagation();openViewer('./projects/nucleo-erp/index.html','Núcleo ERP — Sistema de Gestión')">Abrir demo →</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 13. Método CICLO Bot -->
-      <div class="project-card reveal" data-cat="mkt" onclick="openViewer('./projects/ciclo-bot/index.html','Método CICLO — Bot Conversacional')">
-        <div class="project-visual pv-4">
-          <div class="project-visual-bg pv-4" style="z-index:0"></div>
-          <svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-            <rect width="480" height="250" fill="#08120E"/>
-            <!-- header -->
-            <rect width="480" height="26" fill="rgba(8,18,14,0.95)"/>
-            <circle cx="18" cy="13" r="6" fill="#25D366"/>
-            <text x="32" y="17" fill="white" font-size="8" font-family="sans-serif" font-weight="700">Método CICLO · Bot</text>
-            <text x="415" y="17" fill="rgba(37,211,102,0.75)" font-size="6" font-family="sans-serif">● en línea</text>
-            <!-- chat bubbles -->
-            <rect x="16" y="38" width="176" height="26" rx="8" fill="rgba(255,255,255,0.06)"/>
-            <text x="26" y="49" fill="rgba(255,255,255,0.75)" font-size="6.5" font-family="sans-serif">Hola 👋 Contame de tu negocio</text>
-            <text x="26" y="59" fill="rgba(255,255,255,0.75)" font-size="6.5" font-family="sans-serif">y armamos tu diagnóstico.</text>
-            <rect x="118" y="70" width="146" height="18" rx="8" fill="rgba(37,211,102,0.18)"/>
-            <text x="128" y="82" fill="#25D366" font-size="6.5" font-family="sans-serif">Tengo una distribuidora</text>
-            <rect x="16" y="94" width="188" height="26" rx="8" fill="rgba(255,255,255,0.06)"/>
-            <text x="26" y="105" fill="rgba(255,255,255,0.75)" font-size="6.5" font-family="sans-serif">¿Cuántas personas trabajan en</text>
-            <text x="26" y="115" fill="rgba(255,255,255,0.75)" font-size="6.5" font-family="sans-serif">el área de operaciones?</text>
-            <!-- lead score -->
-            <rect x="286" y="38" width="180" height="60" rx="5" fill="rgba(255,255,255,0.035)" stroke="rgba(37,211,102,0.2)" stroke-width="0.7"/>
-            <text x="296" y="52" fill="rgba(255,255,255,0.4)" font-size="6" font-family="sans-serif" font-weight="600">LEAD SCORING</text>
-            <text x="296" y="72" fill="#25D366" font-size="20" font-family="sans-serif" font-weight="900">87</text>
-            <text x="326" y="72" fill="rgba(255,255,255,0.3)" font-size="7" font-family="sans-serif">/100</text>
-            <rect x="296" y="80" width="160" height="5" rx="2.5" fill="rgba(255,255,255,0.08)"/>
-            <rect x="296" y="80" width="139" height="5" rx="2.5" fill="#25D366"/>
-            <text x="296" y="93" fill="rgba(255,255,255,0.35)" font-size="5.5" font-family="sans-serif">Calificado · derivar a founder</text>
-            <!-- funnel stages -->
-            <rect x="286" y="106" width="180" height="52" rx="5" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" stroke-width="0.7"/>
-            <text x="296" y="119" fill="rgba(255,255,255,0.4)" font-size="6" font-family="sans-serif" font-weight="600">FLUJO CONVERSACIONAL</text>
-            <circle cx="302" cy="133" r="4" fill="#25D366"/><text x="312" y="136" fill="rgba(255,255,255,0.6)" font-size="5.5" font-family="sans-serif">Discovery</text>
-            <circle cx="302" cy="147" r="4" fill="#25D366" opacity="0.6"/><text x="312" y="150" fill="rgba(255,255,255,0.6)" font-size="5.5" font-family="sans-serif">Objeciones</text>
-            <circle cx="384" cy="133" r="4" fill="#25D366" opacity="0.4"/><text x="394" y="136" fill="rgba(255,255,255,0.6)" font-size="5.5" font-family="sans-serif">Nurturing</text>
-            <circle cx="384" cy="147" r="4" fill="rgba(255,255,255,0.2)"/><text x="394" y="150" fill="rgba(255,255,255,0.6)" font-size="5.5" font-family="sans-serif">CRM sync</text>
-            <!-- footer modules -->
-            <text x="16" y="140" fill="rgba(37,211,102,0.3)" font-size="5.5" font-family="monospace">16 documentos · árbol conversacional · prompts · CRM · pagos · LATAM</text>
-          </svg>
-          <div class="project-visual-overlay"></div>
-          <span class="project-cat cat-mkt">Marketing &amp; IA</span>
-        </div>
-        <div class="project-body">
-          <span class="live-badge">Presentación interactiva</span>
-          <h3 class="project-title">Método CICLO — Bot Conversacional de Ventas</h3>
-          <p class="project-desc">Sistema completo de agente conversacional para captación y calificación de leads: árbol de conversación, prompts de discovery y manejo de objeciones, lead scoring automático, integración con CRM, pasarela de pagos y plan de escalabilidad LATAM.</p>
-          <div class="project-tools"><span class="ptool">IA Generativa</span><span class="ptool">Prompt Design</span><span class="ptool">Lead Scoring</span><span class="ptool">CRM</span><span class="ptool">WhatsApp</span></div>
-          <div class="view-btns">
-            <button class="view-btn accent" onclick="event.stopPropagation();openViewer('./projects/ciclo-bot/index.html','Método CICLO — Bot Conversacional')">Presentación →</button>
-            <button class="view-btn" onclick="event.stopPropagation();openViewer('./projects/ciclo-bot/blueprint.html','Método CICLO — Blueprint')">Blueprint →</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 14. MenuQR -->
-      <div class="project-card reveal d1" data-cat="ux" onclick="openViewer('./projects/menuqr/index.html','MenuQR — Menús Digitales')">
-        <div class="project-visual pv-5">
-          <div class="project-visual-bg pv-5" style="z-index:0"></div>
-          <svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-            <rect width="480" height="250" fill="#14100C"/>
-            <!-- warm glow -->
-            <ellipse cx="360" cy="90" rx="150" ry="110" fill="#E07A3F" opacity="0.1"/>
-            <!-- phone mockup -->
-            <rect x="300" y="30" width="118" height="200" rx="14" fill="#0C0906" stroke="rgba(224,122,63,0.35)" stroke-width="1.2"/>
-            <rect x="308" y="42" width="102" height="34" rx="5" fill="rgba(224,122,63,0.14)"/>
-            <text x="359" y="58" fill="#E8A87C" font-size="9" font-family="serif" font-weight="700" text-anchor="middle">La Trattoria</text>
-            <text x="359" y="69" fill="rgba(255,255,255,0.3)" font-size="5.5" font-family="sans-serif" text-anchor="middle">Menú digital</text>
-            <rect x="308" y="82" width="46" height="12" rx="6" fill="rgba(224,122,63,0.3)"/>
-            <text x="331" y="90" fill="#F5C99B" font-size="5.5" font-family="sans-serif" text-anchor="middle" font-weight="600">Entradas</text>
-            <rect x="358" y="82" width="52" height="12" rx="6" fill="rgba(255,255,255,0.06)"/>
-            <text x="384" y="90" fill="rgba(255,255,255,0.4)" font-size="5.5" font-family="sans-serif" text-anchor="middle">Principales</text>
-            <rect x="308" y="100" width="102" height="30" rx="4" fill="rgba(255,255,255,0.04)"/>
-            <rect x="312" y="104" width="22" height="22" rx="3" fill="rgba(224,122,63,0.3)"/>
-            <text x="340" y="113" fill="rgba(255,255,255,0.8)" font-size="6" font-family="sans-serif" font-weight="600">Burrata</text>
-            <text x="340" y="123" fill="#E07A3F" font-size="6" font-family="monospace">$8.900</text>
-            <rect x="308" y="134" width="102" height="30" rx="4" fill="rgba(255,255,255,0.04)"/>
-            <rect x="312" y="138" width="22" height="22" rx="3" fill="rgba(224,122,63,0.22)"/>
-            <text x="340" y="147" fill="rgba(255,255,255,0.8)" font-size="6" font-family="sans-serif" font-weight="600">Vitel Toné</text>
-            <text x="340" y="157" fill="#E07A3F" font-size="6" font-family="monospace">$11.400</text>
-            <rect x="308" y="168" width="102" height="30" rx="4" fill="rgba(255,255,255,0.04)"/>
-            <rect x="312" y="172" width="22" height="22" rx="3" fill="rgba(224,122,63,0.26)"/>
-            <text x="340" y="181" fill="rgba(255,255,255,0.8)" font-size="6" font-family="sans-serif" font-weight="600">Provoleta</text>
-            <text x="340" y="191" fill="#E07A3F" font-size="6" font-family="monospace">$7.600</text>
-            <!-- QR code -->
-            <rect x="40" y="120" width="86" height="86" rx="6" fill="white"/>
-            <rect x="50" y="130" width="20" height="20" fill="#14100C"/><rect x="56" y="136" width="8" height="8" fill="white"/>
-            <rect x="96" y="130" width="20" height="20" fill="#14100C"/><rect x="102" y="136" width="8" height="8" fill="white"/>
-            <rect x="50" y="176" width="20" height="20" fill="#14100C"/><rect x="56" y="182" width="8" height="8" fill="white"/>
-            <rect x="78" y="130" width="6" height="6" fill="#14100C"/><rect x="78" y="142" width="6" height="6" fill="#14100C"/>
-            <rect x="78" y="158" width="6" height="6" fill="#14100C"/><rect x="90" y="158" width="6" height="6" fill="#14100C"/>
-            <rect x="102" y="158" width="6" height="6" fill="#14100C"/><rect x="66" y="158" width="6" height="6" fill="#14100C"/>
-            <rect x="78" y="176" width="6" height="6" fill="#14100C"/><rect x="90" y="182" width="6" height="6" fill="#14100C"/>
-            <rect x="102" y="176" width="6" height="6" fill="#14100C"/><rect x="90" y="194" width="6" height="6" fill="#14100C"/>
-            <rect x="108" y="188" width="6" height="6" fill="#14100C"/>
-            <!-- headline -->
-            <text x="40" y="52" fill="white" font-size="22" font-family="serif" font-weight="700">MenuQR</text>
-            <text x="40" y="74" fill="rgba(255,255,255,0.45)" font-size="7.5" font-family="sans-serif">Sin apps. Sin descargas.</text>
-            <text x="40" y="88" fill="rgba(255,255,255,0.45)" font-size="7.5" font-family="sans-serif">Escaneás y comés.</text>
-            <text x="40" y="106" fill="#E07A3F" font-size="6" font-family="monospace" letter-spacing="1">ESCANEÁ PARA VER LA CARTA</text>
-            <text x="146" y="150" fill="rgba(255,255,255,0.3)" font-size="5.5" font-family="sans-serif">✓ Precios editables al instante</text>
-            <text x="146" y="166" fill="rgba(255,255,255,0.3)" font-size="5.5" font-family="sans-serif">✓ Fotos y alérgenos por plato</text>
-            <text x="146" y="182" fill="rgba(255,255,255,0.3)" font-size="5.5" font-family="sans-serif">✓ Multi-idioma</text>
-            <text x="146" y="198" fill="rgba(255,255,255,0.3)" font-size="5.5" font-family="sans-serif">✓ Analítica de platos más vistos</text>
-          </svg>
-          <div class="project-visual-overlay"></div>
-          <span class="project-cat">UX/UI &amp; Dev</span>
-        </div>
-        <div class="project-body">
-          <span class="live-badge">Producto interactivo en vivo</span>
-          <h3 class="project-title">MenuQR — Menús Digitales para Gastronomía</h3>
-          <p class="project-desc">Producto completo de cartas digitales por código QR: gestión de platos con fotos y alérgenos, precios editables al instante, multi-idioma y analítica de los platos más consultados. Incluye documento de discovery del producto.</p>
-          <div class="project-tools"><span class="ptool">Product Design</span><span class="ptool">HTML/CSS/JS</span><span class="ptool">UX Research</span><span class="ptool">SaaS</span></div>
-          <div class="view-btns">
-            <button class="view-btn accent" onclick="event.stopPropagation();openViewer('./projects/menuqr/index.html','MenuQR — Producto')">Ver producto →</button>
-            <button class="view-btn" onclick="event.stopPropagation();openViewer('./projects/menuqr/discovery.html','MenuQR — Discovery')">Discovery →</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 15. José Tapia Fitness -->
-      <div class="project-card reveal" data-cat="ux" onclick="openProject('tapia')">
-        <div class="project-visual pv-3">
-          <div class="project-visual-bg pv-3" style="z-index:0"></div>
-          <svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          </svg></div><div><svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
             <defs>
               <linearGradient id="tp-gold" x1="0" y1="0" x2="1" y2="0">
                 <stop offset="0%" stop-color="#D4A843"/><stop offset="100%" stop-color="#F0D68A"/>
@@ -1094,23 +598,59 @@
             <text x="412" y="106" fill="rgba(255,255,255,0.3)" font-size="5" font-family="sans-serif">Presencial</text>
             <text x="412" y="118" fill="rgba(255,255,255,0.3)" font-size="5" font-family="sans-serif">Nutricionista</text>
             <text x="412" y="130" fill="rgba(255,255,255,0.3)" font-size="5" font-family="sans-serif">24/7 directo</text>
-          </svg>
-          <div class="project-visual-overlay"></div>
-          <span class="project-cat">UX/UI &amp; Dev</span>
-        </div>
-        <div class="project-body">
-          <h3 class="project-title">José Tapia Fitness — Premium Web Experience</h3>
-          <p class="project-desc">Plataforma web full-stack para coach fitness: sistema de planes con checkout, área de alumnos autenticada, base de datos de rutinas y seguimiento. Animaciones con Framer Motion y GSAP sobre backend Supabase + Prisma.</p>
-          <div class="project-tools"><span class="ptool">Next.js 15</span><span class="ptool">Supabase</span><span class="ptool">Prisma</span><span class="ptool">Framer Motion</span><span class="ptool">GSAP</span><span class="ptool">TypeScript</span></div>
-          <span class="project-link-btn">Ver proyecto &nbsp;→</span>
-        </div>
-      </div>
-
-      <!-- 16. ReservaFlow -->
-      <div class="project-card reveal d1" data-cat="ux" onclick="openProject('reservaflow')">
-        <div class="project-visual pv-6">
-          <div class="project-visual-bg pv-6" style="z-index:0"></div>
-          <svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          </svg></div><div><svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <rect width="480" height="250" fill="#0A0E16"/>
+            <!-- sidebar -->
+            <rect width="66" height="250" fill="rgba(255,255,255,0.025)"/>
+            <text x="12" y="20" fill="#4F8EF7" font-size="9" font-family="sans-serif" font-weight="800">NÚCLEO</text>
+            <rect x="8" y="32" width="50" height="12" rx="2" fill="rgba(79,142,247,0.2)"/>
+            <text x="13" y="41" fill="#4F8EF7" font-size="5.5" font-family="sans-serif" font-weight="600">Dashboard</text>
+            <text x="13" y="57" fill="rgba(255,255,255,0.3)" font-size="5.5" font-family="sans-serif">Ventas</text>
+            <text x="13" y="71" fill="rgba(255,255,255,0.3)" font-size="5.5" font-family="sans-serif">Stock</text>
+            <text x="13" y="85" fill="rgba(255,255,255,0.3)" font-size="5.5" font-family="sans-serif">Compras</text>
+            <text x="13" y="99" fill="rgba(255,255,255,0.3)" font-size="5.5" font-family="sans-serif">Finanzas</text>
+            <text x="13" y="113" fill="rgba(255,255,255,0.3)" font-size="5.5" font-family="sans-serif">RRHH</text>
+            <text x="13" y="127" fill="rgba(255,255,255,0.3)" font-size="5.5" font-family="sans-serif">Reportes</text>
+            <!-- KPI cards -->
+            <rect x="78" y="16" width="92" height="42" rx="4" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.07)" stroke-width="0.7"/>
+            <text x="86" y="30" fill="rgba(255,255,255,0.35)" font-size="5.5" font-family="sans-serif">FACTURACIÓN</text>
+            <text x="86" y="46" fill="white" font-size="15" font-family="sans-serif" font-weight="800">$4.2M</text>
+            <text x="140" y="46" fill="#34D399" font-size="6.5" font-family="sans-serif" font-weight="700">▲ 12%</text>
+            <rect x="178" y="16" width="92" height="42" rx="4" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.07)" stroke-width="0.7"/>
+            <text x="186" y="30" fill="rgba(255,255,255,0.35)" font-size="5.5" font-family="sans-serif">ÓRDENES</text>
+            <text x="186" y="46" fill="white" font-size="15" font-family="sans-serif" font-weight="800">1.847</text>
+            <text x="234" y="46" fill="#34D399" font-size="6.5" font-family="sans-serif" font-weight="700">▲ 8%</text>
+            <rect x="278" y="16" width="92" height="42" rx="4" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.07)" stroke-width="0.7"/>
+            <text x="286" y="30" fill="rgba(255,255,255,0.35)" font-size="5.5" font-family="sans-serif">STOCK CRÍTICO</text>
+            <text x="286" y="46" fill="white" font-size="15" font-family="sans-serif" font-weight="800">23</text>
+            <text x="310" y="46" fill="#F87171" font-size="6.5" font-family="sans-serif" font-weight="700">▼ alerta</text>
+            <rect x="378" y="16" width="88" height="42" rx="4" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.07)" stroke-width="0.7"/>
+            <text x="386" y="30" fill="rgba(255,255,255,0.35)" font-size="5.5" font-family="sans-serif">MARGEN</text>
+            <text x="386" y="46" fill="white" font-size="15" font-family="sans-serif" font-weight="800">34%</text>
+            <!-- chart -->
+            <rect x="78" y="68" width="192" height="80" rx="4" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" stroke-width="0.7"/>
+            <text x="86" y="82" fill="rgba(255,255,255,0.4)" font-size="6" font-family="sans-serif" font-weight="600">VENTAS POR MES</text>
+            <rect x="90" y="126" width="14" height="16" fill="#4F8EF7" opacity="0.55"/>
+            <rect x="110" y="118" width="14" height="24" fill="#4F8EF7" opacity="0.65"/>
+            <rect x="130" y="110" width="14" height="32" fill="#4F8EF7" opacity="0.72"/>
+            <rect x="150" y="100" width="14" height="42" fill="#4F8EF7" opacity="0.8"/>
+            <rect x="170" y="106" width="14" height="36" fill="#4F8EF7" opacity="0.75"/>
+            <rect x="190" y="92" width="14" height="50" fill="#4F8EF7"/>
+            <rect x="210" y="98" width="14" height="44" fill="#4F8EF7" opacity="0.85"/>
+            <rect x="230" y="88" width="14" height="54" fill="#60A5FA"/>
+            <!-- table -->
+            <rect x="278" y="68" width="188" height="80" rx="4" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" stroke-width="0.7"/>
+            <text x="286" y="82" fill="rgba(255,255,255,0.4)" font-size="6" font-family="sans-serif" font-weight="600">ÚLTIMOS MOVIMIENTOS</text>
+            <line x1="286" y1="88" x2="458" y2="88" stroke="rgba(255,255,255,0.08)" stroke-width="0.7"/>
+            <text x="286" y="101" fill="rgba(255,255,255,0.55)" font-size="5.5" font-family="sans-serif">FC-A 0001-0042831</text>
+            <text x="420" y="101" fill="#34D399" font-size="5.5" font-family="monospace">$128.400</text>
+            <text x="286" y="115" fill="rgba(255,255,255,0.55)" font-size="5.5" font-family="sans-serif">OC-2026-0891</text>
+            <text x="424" y="115" fill="rgba(255,255,255,0.5)" font-size="5.5" font-family="monospace">$46.200</text>
+            <text x="286" y="129" fill="rgba(255,255,255,0.55)" font-size="5.5" font-family="sans-serif">REM 0003-0011204</text>
+            <text x="428" y="129" fill="rgba(255,255,255,0.5)" font-size="5.5" font-family="monospace">$9.870</text>
+            <text x="286" y="143" fill="rgba(255,255,255,0.55)" font-size="5.5" font-family="sans-serif">NC-A 0001-0000317</text>
+            <text x="422" y="143" fill="#F87171" font-size="5.5" font-family="monospace">-$12.050</text>
+          </svg></div><div><svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
             <rect width="480" height="250" fill="#0B0D16"/>
             <ellipse cx="240" cy="40" rx="220" ry="90" fill="#6366F1" opacity="0.09"/>
             <!-- nav -->
@@ -1161,235 +701,268 @@
             <rect x="352" y="132" width="96" height="24" rx="5" fill="#6366F1"/>
             <text x="400" y="147" fill="white" font-size="7" font-family="sans-serif" font-weight="800" text-anchor="middle">Confirmar reserva</text>
             <text x="20" y="206" fill="rgba(255,255,255,0.22)" font-size="5.5" font-family="monospace">Next.js 16 · React 19 · Zustand · Framer Motion · date-fns</text>
-          </svg>
-          <div class="project-visual-overlay"></div>
-          <span class="project-cat">UX/UI &amp; Dev</span>
-        </div>
-        <div class="project-body">
-          <h3 class="project-title">ReservaFlow — Sistema de Reservas Online</h3>
-          <p class="project-desc">Aplicación de reservas y turnos con selección de fecha y horario en tiempo real, gestión de servicios y duración, panel de administración y confirmación de reservas. Estado global con Zustand y transiciones con Framer Motion.</p>
-          <div class="project-tools"><span class="ptool">Next.js 16</span><span class="ptool">React 19</span><span class="ptool">Zustand</span><span class="ptool">Framer Motion</span><span class="ptool">date-fns</span><span class="ptool">TypeScript</span></div>
-          <span class="project-link-btn">Ver proyecto &nbsp;→</span>
-        </div>
-      </div>
+          </svg></div><div><svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <rect width="480" height="250" fill="#14100C"/>
+            <!-- warm glow -->
+            <ellipse cx="360" cy="90" rx="150" ry="110" fill="#E07A3F" opacity="0.1"/>
+            <!-- phone mockup -->
+            <rect x="300" y="30" width="118" height="200" rx="14" fill="#0C0906" stroke="rgba(224,122,63,0.35)" stroke-width="1.2"/>
+            <rect x="308" y="42" width="102" height="34" rx="5" fill="rgba(224,122,63,0.14)"/>
+            <text x="359" y="58" fill="#E8A87C" font-size="9" font-family="serif" font-weight="700" text-anchor="middle">La Trattoria</text>
+            <text x="359" y="69" fill="rgba(255,255,255,0.3)" font-size="5.5" font-family="sans-serif" text-anchor="middle">Menú digital</text>
+            <rect x="308" y="82" width="46" height="12" rx="6" fill="rgba(224,122,63,0.3)"/>
+            <text x="331" y="90" fill="#F5C99B" font-size="5.5" font-family="sans-serif" text-anchor="middle" font-weight="600">Entradas</text>
+            <rect x="358" y="82" width="52" height="12" rx="6" fill="rgba(255,255,255,0.06)"/>
+            <text x="384" y="90" fill="rgba(255,255,255,0.4)" font-size="5.5" font-family="sans-serif" text-anchor="middle">Principales</text>
+            <rect x="308" y="100" width="102" height="30" rx="4" fill="rgba(255,255,255,0.04)"/>
+            <rect x="312" y="104" width="22" height="22" rx="3" fill="rgba(224,122,63,0.3)"/>
+            <text x="340" y="113" fill="rgba(255,255,255,0.8)" font-size="6" font-family="sans-serif" font-weight="600">Burrata</text>
+            <text x="340" y="123" fill="#E07A3F" font-size="6" font-family="monospace">$8.900</text>
+            <rect x="308" y="134" width="102" height="30" rx="4" fill="rgba(255,255,255,0.04)"/>
+            <rect x="312" y="138" width="22" height="22" rx="3" fill="rgba(224,122,63,0.22)"/>
+            <text x="340" y="147" fill="rgba(255,255,255,0.8)" font-size="6" font-family="sans-serif" font-weight="600">Vitel Toné</text>
+            <text x="340" y="157" fill="#E07A3F" font-size="6" font-family="monospace">$11.400</text>
+            <rect x="308" y="168" width="102" height="30" rx="4" fill="rgba(255,255,255,0.04)"/>
+            <rect x="312" y="172" width="22" height="22" rx="3" fill="rgba(224,122,63,0.26)"/>
+            <text x="340" y="181" fill="rgba(255,255,255,0.8)" font-size="6" font-family="sans-serif" font-weight="600">Provoleta</text>
+            <text x="340" y="191" fill="#E07A3F" font-size="6" font-family="monospace">$7.600</text>
+            <!-- QR code -->
+            <rect x="40" y="120" width="86" height="86" rx="6" fill="white"/>
+            <rect x="50" y="130" width="20" height="20" fill="#14100C"/><rect x="56" y="136" width="8" height="8" fill="white"/>
+            <rect x="96" y="130" width="20" height="20" fill="#14100C"/><rect x="102" y="136" width="8" height="8" fill="white"/>
+            <rect x="50" y="176" width="20" height="20" fill="#14100C"/><rect x="56" y="182" width="8" height="8" fill="white"/>
+            <rect x="78" y="130" width="6" height="6" fill="#14100C"/><rect x="78" y="142" width="6" height="6" fill="#14100C"/>
+            <rect x="78" y="158" width="6" height="6" fill="#14100C"/><rect x="90" y="158" width="6" height="6" fill="#14100C"/>
+            <rect x="102" y="158" width="6" height="6" fill="#14100C"/><rect x="66" y="158" width="6" height="6" fill="#14100C"/>
+            <rect x="78" y="176" width="6" height="6" fill="#14100C"/><rect x="90" y="182" width="6" height="6" fill="#14100C"/>
+            <rect x="102" y="176" width="6" height="6" fill="#14100C"/><rect x="90" y="194" width="6" height="6" fill="#14100C"/>
+            <rect x="108" y="188" width="6" height="6" fill="#14100C"/>
+            <!-- headline -->
+            <text x="40" y="52" fill="white" font-size="22" font-family="serif" font-weight="700">MenuQR</text>
+            <text x="40" y="74" fill="rgba(255,255,255,0.45)" font-size="7.5" font-family="sans-serif">Sin apps. Sin descargas.</text>
+            <text x="40" y="88" fill="rgba(255,255,255,0.45)" font-size="7.5" font-family="sans-serif">Escaneás y comés.</text>
+            <text x="40" y="106" fill="#E07A3F" font-size="6" font-family="monospace" letter-spacing="1">ESCANEÁ PARA VER LA CARTA</text>
+            <text x="146" y="150" fill="rgba(255,255,255,0.3)" font-size="5.5" font-family="sans-serif">✓ Precios editables al instante</text>
+            <text x="146" y="166" fill="rgba(255,255,255,0.3)" font-size="5.5" font-family="sans-serif">✓ Fotos y alérgenos por plato</text>
+            <text x="146" y="182" fill="rgba(255,255,255,0.3)" font-size="5.5" font-family="sans-serif">✓ Multi-idioma</text>
+            <text x="146" y="198" fill="rgba(255,255,255,0.3)" font-size="5.5" font-family="sans-serif">✓ Analítica de platos más vistos</text>
+          </svg></div><div><img src="./img/dashboard-hero.png" alt="" loading="lazy"/></div><div><svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <rect width="480" height="250" fill="#0A1A0D"/>
+            <rect width="480" height="38" fill="#1B3A2D"/>
+            <text x="20" y="24" fill="#C4973A" font-size="13" font-family="Georgia,serif" font-weight="600">Küme</text>
+            <text x="340" y="23" fill="rgba(196,151,58,0.6)" font-size="7" font-family="sans-serif">Servicios · Blog · Contacto</text>
+            <text x="20" y="78" fill="#F5EFE0" font-size="26" font-family="Georgia,serif" font-style="italic">Hacemos que tu</text>
+            <text x="20" y="108" fill="#C4973A" font-size="26" font-family="Georgia,serif" font-style="italic">marca tenga algo</text>
+            <text x="20" y="138" fill="#F5EFE0" font-size="26" font-family="Georgia,serif" font-style="italic">real para decir.</text>
+            <text x="20" y="162" fill="rgba(245,239,224,0.4)" font-size="8" font-family="sans-serif">Marketing digital para emprendedores y pymes en Argentina</text>
+            <rect x="20" y="174" width="130" height="28" fill="#C4973A"/>
+            <text x="32" y="192" fill="#0A1A0D" font-size="8" font-family="sans-serif" font-weight="700">CONSULTA GRATIS →</text>
+            <rect x="20" y="218" width="72" height="17" rx="2" fill="rgba(196,151,58,0.12)" stroke="rgba(196,151,58,0.35)" stroke-width="1"/>
+            <text x="28" y="230" fill="rgba(196,151,58,0.8)" font-size="6.5" font-family="sans-serif">Redes Sociales</text>
+            <rect x="98" y="218" width="60" height="17" rx="2" fill="rgba(196,151,58,0.12)" stroke="rgba(196,151,58,0.35)" stroke-width="1"/>
+            <text x="106" y="230" fill="rgba(196,151,58,0.8)" font-size="6.5" font-family="sans-serif">Diseño Web</text>
+            <rect x="164" y="218" width="50" height="17" rx="2" fill="rgba(196,151,58,0.12)" stroke="rgba(196,151,58,0.35)" stroke-width="1"/>
+            <text x="172" y="230" fill="rgba(196,151,58,0.8)" font-size="6.5" font-family="sans-serif">Branding</text>
+          </svg></div><div><img src="./img/trainer-hero.png" alt="" loading="lazy"/></div><div><img src="./img/excel-hero.png" alt="" loading="lazy"/></div><div><svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <rect width="480" height="250" fill="#030712"/>
+            <pattern id="dp" x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="7" cy="7" r="0.8" fill="rgba(255,255,255,0.13)"/></pattern>
+            <rect width="480" height="250" fill="url(#dp)"/>
+            <radialGradient id="ag2" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="rgba(124,58,237,0.28)"/><stop offset="100%" stop-color="transparent"/></radialGradient>
+            <rect width="480" height="250" fill="url(#ag2)"/>
+            <rect x="165" y="28" width="150" height="18" rx="9" fill="rgba(124,58,237,0.2)" stroke="rgba(124,58,237,0.45)" stroke-width="1"/>
+            <text x="240" y="41" fill="rgba(167,139,250,0.9)" font-size="7" font-family="sans-serif" text-anchor="middle">✦ AI-POWERED PLATFORM</text>
+            <text x="240" y="88" fill="#a78bfa" font-size="38" font-family="sans-serif" font-weight="900" text-anchor="middle">NEXUS</text>
+            <text x="240" y="126" fill="#60a5fa" font-size="38" font-family="sans-serif" font-weight="900" text-anchor="middle">AI</text>
+            <text x="240" y="150" fill="rgba(255,255,255,0.4)" font-size="8" font-family="sans-serif" text-anchor="middle">Intelligence at Scale — Built for the future</text>
+            <rect x="160" y="163" width="160" height="28" rx="14" fill="#7C3AED"/>
+            <text x="240" y="181" fill="white" font-size="9" font-family="sans-serif" font-weight="700" text-anchor="middle">Get Started Free →</text>
+            <text x="100" y="218" fill="rgba(255,255,255,0.55)" font-size="15" font-family="sans-serif" font-weight="700" text-anchor="middle">99.9%</text>
+            <text x="240" y="218" fill="rgba(255,255,255,0.55)" font-size="15" font-family="sans-serif" font-weight="700" text-anchor="middle">10x</text>
+            <text x="380" y="218" fill="rgba(255,255,255,0.55)" font-size="15" font-family="sans-serif" font-weight="700" text-anchor="middle">24/7</text>
+            <text x="100" y="232" fill="rgba(255,255,255,0.25)" font-size="6" font-family="sans-serif" text-anchor="middle">Uptime SLA</text>
+            <text x="240" y="232" fill="rgba(255,255,255,0.25)" font-size="6" font-family="sans-serif" text-anchor="middle">Faster than GPT-4</text>
+            <text x="380" y="232" fill="rgba(255,255,255,0.25)" font-size="6" font-family="sans-serif" text-anchor="middle">Support</text>
+          </svg></div><div><svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <rect width="480" height="250" fill="#050905"/>
+            <!-- Post 01 preview -->
+            <rect x="18" y="18" width="130" height="215" rx="3" fill="#1B3A2D"/>
+            <rect x="30" y="36" width="106" height="1" fill="rgba(196,151,58,0.5)"/>
+            <text x="36" y="68" fill="#C4973A" font-size="9" font-family="Georgia,serif" font-style="italic">Hacemos que</text>
+            <text x="36" y="82" fill="#C4973A" font-size="9" font-family="Georgia,serif" font-style="italic">tu marca tenga</text>
+            <text x="36" y="100" fill="#F5EFE0" font-size="9.5" font-family="Georgia,serif" font-weight="600">algo real</text>
+            <text x="36" y="114" fill="#F5EFE0" font-size="9.5" font-family="Georgia,serif" font-weight="600">para decir.</text>
+            <rect x="30" y="206" width="106" height="1" fill="rgba(196,151,58,0.5)"/>
+            <text x="36" y="220" fill="rgba(196,151,58,0.7)" font-size="6" font-family="sans-serif">@kume.agenciamkt</text>
+            <!-- Post 02 preview -->
+            <rect x="158" y="18" width="130" height="215" rx="3" fill="#F5EFE0"/>
+            <text x="168" y="42" fill="#1B3A2D" font-size="8" font-family="sans-serif" font-weight="700">5 ERRORES QUE</text>
+            <text x="168" y="54" fill="#C4973A" font-size="8" font-family="sans-serif" font-weight="700">COMETEN LAS</text>
+            <text x="168" y="66" fill="#1B3A2D" font-size="8" font-family="sans-serif" font-weight="700">MARCAS ONLINE</text>
+            <line x1="168" y1="75" x2="278" y2="75" stroke="#1B3A2D" stroke-width="0.5"/>
+            <text x="168" y="91" fill="#1B3A2D" font-size="6.5" font-family="sans-serif">01 — Sin estrategia</text>
+            <text x="168" y="105" fill="#1B3A2D" font-size="6.5" font-family="sans-serif">02 — Ignorar al cliente</text>
+            <text x="168" y="119" fill="#1B3A2D" font-size="6.5" font-family="sans-serif">03 — Copiar a la competencia</text>
+            <text x="168" y="133" fill="#1B3A2D" font-size="6.5" font-family="sans-serif">04 — No medir resultados</text>
+            <text x="168" y="147" fill="#1B3A2D" font-size="6.5" font-family="sans-serif">05 — Falta de consistencia</text>
+            <text x="168" y="220" fill="rgba(27,58,45,0.5)" font-size="6" font-family="sans-serif">@kume.agenciamkt</text>
+            <!-- Story mockup preview -->
+            <rect x="298" y="18" width="164" height="215" rx="3" fill="#0a0a0a"/>
+            <rect x="298" y="18" width="164" height="215" rx="3" fill="rgba(181,225,43,0.05)"/>
+            <text x="380" y="80" fill="white" font-size="22" font-family="sans-serif" font-weight="900" text-anchor="middle">MEJORÁ</text>
+            <text x="380" y="103" fill="#B5E12B" font-size="22" font-family="sans-serif" font-weight="900" text-anchor="middle">TU</text>
+            <text x="380" y="126" fill="white" font-size="15" font-family="sans-serif" font-weight="300" text-anchor="middle" letter-spacing="2">CUERPO</text>
+            <text x="380" y="152" fill="rgba(255,255,255,0.4)" font-size="6" font-family="sans-serif" text-anchor="middle">Joaco Verón · IFBB</text>
+            <rect x="316" y="165" width="128" height="22" rx="11" fill="rgba(181,225,43,0.2)" stroke="#B5E12B" stroke-width="1"/>
+            <text x="380" y="180" fill="#B5E12B" font-size="7" font-family="sans-serif" font-weight="700" text-anchor="middle">CONSULTA GRATIS →</text>
+            <text x="380" y="215" fill="rgba(255,255,255,0.3)" font-size="6" font-family="sans-serif" text-anchor="middle">@joaco.veron</text>
+          </svg></div><div><svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <rect width="480" height="250" fill="#0A0F1A"/>
+            <text x="20" y="36" fill="rgba(6,182,212,0.5)" font-size="7" font-family="sans-serif" letter-spacing="3">ESTRATEGIA DE CONTENIDO</text>
+            <text x="20" y="62" fill="white" font-size="20" font-family="sans-serif" font-weight="700">TECNORAIN</text>
+            <text x="20" y="82" fill="rgba(255,255,255,0.4)" font-size="12" font-family="sans-serif" font-weight="400">+ TECNOFIX</text>
+            <line x1="20" y1="94" x2="200" y2="94" stroke="rgba(6,182,212,0.3)" stroke-width="1"/>
+            <text x="20" y="116" fill="rgba(6,182,212,0.9)" font-size="7" font-family="sans-serif" font-weight="600">01 — EDUCACIÓN TÉCNICA</text>
+            <text x="20" y="132" fill="rgba(6,182,212,0.9)" font-size="7" font-family="sans-serif" font-weight="600">02 — CASOS DE ÉXITO</text>
+            <text x="20" y="148" fill="rgba(6,182,212,0.9)" font-size="7" font-family="sans-serif" font-weight="600">03 — DETRÁS DE ESCENA</text>
+            <text x="20" y="164" fill="rgba(6,182,212,0.9)" font-size="7" font-family="sans-serif" font-weight="600">04 — CONFIANZA Y GARANTÍA</text>
+            <text x="20" y="180" fill="rgba(6,182,212,0.9)" font-size="7" font-family="sans-serif" font-weight="600">05 — PROMOCIONES</text>
+            <rect x="250" y="50" width="200" height="170" rx="4" fill="rgba(6,182,212,0.05)" stroke="rgba(6,182,212,0.15)" stroke-width="1"/>
+            <text x="260" y="70" fill="rgba(6,182,212,0.7)" font-size="6" font-family="sans-serif" font-weight="600">CALENDARIO 30 DÍAS</text>
+            <rect x="260" y="78" width="24" height="20" rx="2" fill="rgba(6,182,212,0.15)"/><text x="266" y="92" fill="white" font-size="8" font-family="sans-serif">L</text>
+            <rect x="288" y="78" width="24" height="20" rx="2" fill="rgba(6,182,212,0.15)"/><text x="294" y="92" fill="white" font-size="8" font-family="sans-serif">M</text>
+            <rect x="316" y="78" width="24" height="20" rx="2" fill="rgba(6,182,212,0.25)"/><text x="322" y="92" fill="white" font-size="8" font-family="sans-serif">X</text>
+            <rect x="344" y="78" width="24" height="20" rx="2" fill="rgba(6,182,212,0.15)"/><text x="350" y="92" fill="white" font-size="8" font-family="sans-serif">J</text>
+            <rect x="372" y="78" width="24" height="20" rx="2" fill="rgba(6,182,212,0.25)"/><text x="378" y="92" fill="white" font-size="8" font-family="sans-serif">V</text>
+            <rect x="260" y="102" width="136" height="14" rx="2" fill="rgba(6,182,212,0.1)"/><text x="265" y="113" fill="rgba(6,182,212,0.8)" font-size="6" font-family="sans-serif">Caso real: instalación industrial</text>
+            <rect x="260" y="120" width="100" height="14" rx="2" fill="rgba(16,185,129,0.1)"/><text x="265" y="131" fill="rgba(16,185,129,0.8)" font-size="6" font-family="sans-serif">Tip técnico semanal</text>
+            <rect x="260" y="138" width="120" height="14" rx="2" fill="rgba(6,182,212,0.1)"/><text x="265" y="149" fill="rgba(6,182,212,0.8)" font-size="6" font-family="sans-serif">Promo: garantía extendida</text>
+          </svg></div><div><img src="./img/web-hero.webp" alt="" loading="lazy"/></div></div>
 
-    </div>
-  </section>
+<!-- live viewer -->
+<div class="ov" id="viewerOverlay">
+  <div class="ov-bar"><b id="viewerTitle">Proyecto</b><button class="ov-x" onclick="closeViewer()">Cerrar ✕</button></div>
+  <iframe id="viewerFrame" src="" allowfullscreen title="Proyecto en vivo"></iframe>
+</div>
 
-  <!-- Generic live viewer overlay -->
-  <div class="iframe-overlay" id="viewerOverlay">
-    <div class="iframe-topbar">
-      <span class="iframe-title" id="viewerTitle">Proyecto en vivo</span>
-      <button class="iframe-close" onclick="closeViewer()">&#x2715;&nbsp; Cerrar</button>
-    </div>
-    <iframe class="iframe-frame" id="viewerFrame" src="" allowfullscreen></iframe>
+<!-- dashboard viewer -->
+<div class="ov" id="dashboardOverlay">
+  <div class="ov-bar"><b>Dashboard KPIs — Marzo 2026</b><button class="ov-x" onclick="closeDashboard()">Cerrar ✕</button></div>
+  <iframe id="dashboardFrame" src="" title="Dashboard"></iframe>
+</div>
+
+<!-- project detail -->
+<div class="modal" id="projectModal" onclick="if(event.target===this)closeProject()">
+  <div class="modal-box">
+    <p class="mono" id="mCat"></p>
+    <h3 id="mTitle"></h3>
+    <div class="m-meta" id="mMeta"></div>
+    <div class="m-block"><h4>El desafío</h4><p id="mChallenge"></p></div>
+    <div class="m-block"><h4>La solución</h4><p id="mSolution"></p></div>
+    <div class="m-block"><h4>El resultado</h4><p id="mResult"></p></div>
+    <div class="m-tags" id="mTags"></div>
+    <button class="ov-x" style="margin-top:28px" onclick="closeProject()">Cerrar ✕</button>
   </div>
+</div>
 
-  <!-- Dashboard overlay (alias) -->
-  <div class="iframe-overlay" id="dashboardOverlay">
-    <div class="iframe-topbar">
-      <span class="iframe-title">Informes Comparativos — Cuartos Congelados | Marzo 2026</span>
-      <button class="iframe-close" onclick="closeDashboard()">&#x2715;&nbsp; Cerrar</button>
-    </div>
-    <iframe class="iframe-frame" id="dashboardFrame" src="" title="Dashboard Cuartos Congelados" allowfullscreen></iframe>
-  </div>
+<script>
+/* ── theme ─────────────────────────────── */
+function toggleTheme(){
+  var r=document.documentElement;
+  var cur=r.getAttribute('data-theme');
+  if(!cur){cur=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
+  var next=cur==='dark'?'light':'dark';
+  r.setAttribute('data-theme',next);
+  try{localStorage.setItem('theme',next);}catch(e){}
+}
+(function(){try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
-  <!-- Project modal -->
-  <div class="modal-overlay" id="projectModal" onclick="handleOverlayClick(event)">
-    <div class="modal-box" id="modalBox">
-      <div class="modal-topbar"><button onclick="closeProject()">&#x2715;</button></div>
-      <div class="modal-content">
-        <p class="modal-cat-label" id="mCat"></p>
-        <h2 class="modal-title" id="mTitle"></h2>
-        <div class="modal-meta" id="mMeta"></div>
-        <div class="modal-section"><p class="modal-section-label">El desafío</p><p class="modal-text" id="mChallenge"></p></div>
-        <div class="modal-section"><p class="modal-section-label">La solución</p><p class="modal-text" id="mSolution"></p></div>
-        <div class="modal-section"><p class="modal-section-label">Resultado</p><p class="modal-text" id="mResult"></p></div>
-        <div class="modal-tags" id="mTags"></div>
-      </div>
-    </div>
-  </div>
+/* ── nav ───────────────────────────────── */
+var nav=document.getElementById('nav');
+addEventListener('scroll',function(){nav.classList.toggle('scrolled',scrollY>40);},{passive:true});
+function mm(open){
+  var m=document.getElementById('mm');
+  m.classList.toggle('open',!!open);
+  document.body.style.overflow=open?'hidden':'';
+}
 
-  <!-- STACK -->
-  <section id="stack">
-    <p class="section-num">04 &mdash; Stack</p>
-    <h2 class="section-title">Herramientas<br><em>que uso</em></h2>
-    <div class="stack-intro"><p>El conjunto de tecnologías, plataformas y herramientas con las que trabajo en el día a día — desde análisis de datos hasta contenido con IA.</p></div>
+/* ── work index ────────────────────────── */
+var WORK=[{"cat": "ux", "title": "Laboratorios Bloch", "sub": "Sitio corporativo y catálogo con hero 3D", "stack": "Next.js · three.js · Payload", "live": "Concepto interactivo en vivo", "action": "openViewer('./projects/bloch/index.html','Laboratorios Bloch — The Pour')"}, {"cat": "mkt", "title": "Método CICLO", "sub": "Agente conversacional de ventas con IA", "stack": "IA · Prompts · CRM", "live": "Presentación interactiva", "action": "openViewer('./projects/ciclo-bot/index.html','Método CICLO — Bot Conversacional')"}, {"cat": "ux", "title": "CICLO", "sub": "Landing para consultora de IA", "stack": "Next.js 16 · Framer Motion", "live": "", "action": "openViewer('https://enemeache.github.io/ciclo-web/','CICLO — Consultora de IA')"}, {"cat": "ux", "title": "José Tapia Fitness", "sub": "Plataforma full-stack para coach", "stack": "Next.js · Supabase · Prisma", "live": "", "action": "openProject('tapia')"}, {"cat": "datos", "title": "Núcleo ERP", "sub": "Sistema de gestión integral", "stack": "Data Viz · UX · JS", "live": "Demo interactiva en vivo", "action": "openViewer('./projects/nucleo-erp/index.html','Núcleo ERP — Sistema de Gestión')"}, {"cat": "ux", "title": "ReservaFlow", "sub": "Sistema de reservas y turnos online", "stack": "Next.js 16 · Zustand", "live": "", "action": "openProject('reservaflow')"}, {"cat": "ux", "title": "MenuQR", "sub": "Menús digitales para gastronomía", "stack": "Product · SaaS · UX", "live": "Producto interactivo en vivo", "action": "openViewer('./projects/menuqr/index.html','MenuQR — Menús Digitales')"}, {"cat": "datos", "title": "Dashboard KPIs", "sub": "Producción en tiempo real, de 3 h a segundos", "stack": "Power BI · SQL · DAX", "live": "Dashboard interactivo en vivo", "action": "openDashboard()"}, {"cat": "mkt", "title": "Küme", "sub": "Identidad, sitio y contenido de agencia", "stack": "Branding · HTML/CSS", "live": "", "action": "openProject('kume')"}, {"cat": "ux", "title": "Joaquín Verón", "sub": "Landing en producción para trainer IFBB", "stack": "HTML · CSS · JS", "live": "", "action": "openViewer('https://joaquin-vero.vercel.app/','Joaquín Verón — Personal Trainer IFBB')"}, {"cat": "auto", "title": "Reportes Contables", "sub": "Automatización: 8 horas a 3 minutos", "stack": "Python · SQL · Pandas", "live": "", "action": "openProject('reportes')"}, {"cat": "ux", "title": "Nexus AI", "sub": "Landing concept para producto de IA", "stack": "Tailwind · Dark UI", "live": "Abre en vivo", "action": "openViewer('./projects/ai-landing/index.html','Nexus AI — Landing Concept')"}, {"cat": "mkt", "title": "Posts &amp; Stories", "sub": "Piezas de contenido para redes", "stack": "HTML/CSS · Brand", "live": "Diseño interactivo en vivo", "action": "openViewer('./projects/posts/post-01-brand-statement.html','Küme — Brand Statement')"}, {"cat": "mkt", "title": "Tecnorain + Tecnofix", "sub": "Estrategia de contenido y calendario", "stack": "Contenido · SEO", "live": "", "action": "openProject('tecno')"}, {"cat": "ux", "title": "Depofis", "sub": "Módulo de carga de datos deportivos", "stack": "Next.js · Node · Figma", "live": "", "action": "openProject('depofis')"}];
+var list=document.getElementById('workList'), store=document.getElementById('pvStore');
 
-    <div class="stack-category">
-      <div class="stack-cat-label">Datos &amp; Analytics</div>
-      <div class="tools-grid">
-        <div class="tool-card">
-          <div class="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python"/></div>
-          <div class="tool-name">Python</div>
-        </div>
-        <div class="tool-card">
-          <div class="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" alt="SQL"/></div>
-          <div class="tool-name">SQL</div>
-        </div>
-        <div class="tool-card">
-          <div class="tool-icon" style="display:flex;align-items:center;justify-content:center;width:38px;height:38px;">
-            <span class="tool-mono-label" style="color:#F2C811;font-size:.85rem;">PBI</span>
-          </div>
-          <div class="tool-name">Power BI</div>
-        </div>
-        <div class="tool-card">
-          <div class="tool-icon" style="display:flex;align-items:center;justify-content:center;width:38px;height:38px;">
-            <svg width="34" height="34" viewBox="0 0 34 34" fill="none"><rect width="34" height="34" rx="4" fill="#4285F4"/><text x="17" y="23" text-anchor="middle" fill="white" font-size="11" font-weight="700" font-family="sans-serif">LS</text></svg>
-          </div>
-          <div class="tool-name">Looker Studio</div>
-        </div>
-        <div class="tool-card">
-          <div class="tool-icon" style="display:flex;align-items:center;justify-content:center;width:38px;height:38px;">
-            <span class="tool-mono-label" style="color:#217346;font-size:.85rem;">XLS</span>
-          </div>
-          <div class="tool-name">Excel</div>
-        </div>
-      </div>
-    </div>
+WORK.forEach(function(w,i){
+  var b=document.createElement('button');
+  b.className='row rv'; b.dataset.cat=w.cat; b.dataset.pv=i; b.type='button';
+  b.setAttribute('aria-label',w.title);
+  b.onclick=function(){ (new Function(w.action))(); };
+  b.innerHTML='<span class="r-num">'+String(i+1).padStart(2,'0')+'</span>'+
+    '<span class="r-title">'+w.title+(w.live?'<i class="r-live" title="'+w.live+'"></i>':'')+'</span>'+
+    '<span class="r-sub">'+w.sub+'</span>'+
+    '<span class="r-stack">'+w.stack+'</span>'+
+    '<span class="r-go">↗</span>'+
+    '<span class="r-thumb">'+(store.children[i]?store.children[i].innerHTML:'')+'</span>';
+  list.appendChild(b);
+});
 
-    <div class="stack-category">
-      <div class="stack-cat-label">Desarrollo</div>
-      <div class="tools-grid">
-        <div class="tool-card">
-          <div class="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML5"/></div>
-          <div class="tool-name">HTML5</div>
-        </div>
-        <div class="tool-card">
-          <div class="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="CSS3"/></div>
-          <div class="tool-name">CSS3</div>
-        </div>
-        <div class="tool-card">
-          <div class="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript"/></div>
-          <div class="tool-name">JavaScript</div>
-        </div>
-        <div class="tool-card">
-          <div class="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" alt="Next.js" style="filter:invert(1) brightness(0.85)"/></div>
-          <div class="tool-name">Next.js</div>
-        </div>
-        <div class="tool-card">
-          <div class="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" alt="Node.js"/></div>
-          <div class="tool-name">Node.js</div>
-        </div>
-        <div class="tool-card">
-          <div class="tool-icon" style="display:flex;align-items:center;justify-content:center;width:38px;height:38px;">
-            <svg width="34" height="34" viewBox="0 0 34 34" fill="none"><rect width="34" height="34" rx="4" fill="#000"/><circle cx="17" cy="17" r="8" fill="none" stroke="white" stroke-width="2"/><circle cx="17" cy="17" r="3" fill="white"/></svg>
-          </div>
-          <div class="tool-name">Vercel</div>
-        </div>
-        <div class="tool-card">
-          <div class="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" alt="Git"/></div>
-          <div class="tool-name">Git</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="stack-category">
-      <div class="stack-cat-label">Diseño &amp; Creativo</div>
-      <div class="tools-grid">
-        <div class="tool-card">
-          <div class="tool-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" alt="Figma"/></div>
-          <div class="tool-name">Figma</div>
-        </div>
-        <div class="tool-card">
-          <div class="tool-icon" style="display:flex;align-items:center;justify-content:center;width:38px;height:38px;">
-            <svg width="34" height="34" viewBox="0 0 34 34" fill="none"><defs><linearGradient id="cg" x1="0" y1="0" x2="34" y2="34" gradientUnits="userSpaceOnUse"><stop stop-color="#7B2FF7"/><stop offset="1" stop-color="#F107A3"/></linearGradient></defs><rect width="34" height="34" rx="8" fill="url(#cg)"/><text x="17" y="23" text-anchor="middle" fill="white" font-size="13" font-weight="700" font-family="serif">Ca</text></svg>
-          </div>
-          <div class="tool-name">Canva</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="stack-category">
-      <div class="stack-cat-label">IA &amp; Productividad</div>
-      <div class="tools-grid">
-        <div class="tool-card">
-          <div class="tool-icon" style="display:flex;align-items:center;justify-content:center;width:38px;height:38px;">
-            <svg width="34" height="34" viewBox="0 0 34 34" fill="none"><rect width="34" height="34" rx="6" fill="#D97757"/><text x="17" y="23" text-anchor="middle" fill="white" font-size="18" font-weight="400">✦</text></svg>
-          </div>
-          <div class="tool-name">Claude AI</div>
-        </div>
-        <div class="tool-card">
-          <div class="tool-icon" style="display:flex;align-items:center;justify-content:center;width:38px;height:38px;">
-            <svg width="34" height="34" viewBox="0 0 34 34" fill="none"><rect width="34" height="34" rx="6" fill="#191919"/><line x1="8" y1="10" x2="26" y2="10" stroke="white" stroke-width="2.2" stroke-linecap="round"/><line x1="8" y1="17" x2="20" y2="17" stroke="white" stroke-width="2.2" stroke-linecap="round"/><line x1="8" y1="24" x2="23" y2="24" stroke="white" stroke-width="2.2" stroke-linecap="round"/></svg>
-          </div>
-          <div class="tool-name">Notion</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- PROCESS -->
-  <section id="process">
-    <p class="section-num">05 &mdash; Como trabajo</p>
-    <h2 class="section-title">Proceso claro,<br><em>sin sorpresas</em></h2>
-    <div class="process-grid">
-      <div class="process-item reveal"><div class="process-step-num">01</div><h3 class="process-step-name">Relevamiento</h3><p class="process-step-desc">Entiendo el problema a fondo: qué datos existen, qué decisiones se toman con ellos y qué necesita realmente el usuario o el negocio.</p></div>
-      <div class="process-item reveal d1"><div class="process-step-num">02</div><h3 class="process-step-name">Estrategia y Diseño</h3><p class="process-step-desc">Defino la arquitectura de la solución, wireframes o modelo de datos. Todo iterado hasta que sea claro y funcional antes de construir.</p></div>
-      <div class="process-item reveal d1"><div class="process-step-num">03</div><h3 class="process-step-name">Desarrollo y Validación</h3><p class="process-step-desc">Construyo la solución con el stack adecuado. Pruebo con usuarios reales o datos reales para asegurar que funciona en contexto.</p></div>
-      <div class="process-item reveal d2"><div class="process-step-num">04</div><h3 class="process-step-name">Entrega y Soporte</h3><p class="process-step-desc">Entrego documentado y con capacitación si es necesario. Disponible para ajustes y mejoras post-entrega.</p></div>
-    </div>
-  </section>
-
-  <!-- CONTACT -->
-  <section id="contact">
-    <div class="contact-left reveal">
-      <p class="contact-eyebrow">06 &mdash; Contacto</p>
-      <h2 class="contact-big">Arrancamos<br>algo juntos?</h2>
-      <p class="contact-sub">Disponible para proyectos freelance, consultas de datos o desarrollo web. Respondo en menos de 24 horas.</p>
-    </div>
-    <div class="contact-right reveal d1">
-      <a href="https://mail.google.com/mail/?view=cm&amp;to=ignaciomonterohorianski@gmail.com" class="contact-btn" target="_blank">Email <span>&#x2197;</span></a>
-      <a href="https://wa.me/5491157517796" class="contact-btn" target="_blank">WhatsApp <span>&#x2197;</span></a>
-      <a href="https://www.linkedin.com/in/ignaciomonterohorianski/" class="contact-btn" target="_blank">LinkedIn <span>&#x2197;</span></a>
-    </div>
-  </section>
-
-  <footer>
-    <span class="footer-copy">&copy; 2026 Ignacio Montero Horianski</span>
-    <span class="footer-right">Buenos Aires, Argentina</span>
-  </footer>
-
-  <script>
-    document.body.classList.add('js-ready');
-    var nav = document.getElementById('navbar');
-    window.addEventListener('scroll', function(){ nav.classList.toggle('scrolled', window.scrollY > 50); });
-    function toggleMM(){ var m=document.getElementById('mobileMenu'),h=document.getElementById('hamburger'); m.classList.toggle('open'); h.classList.toggle('open'); document.body.style.overflow=m.classList.contains('open')?'hidden':''; }
-    function closeMM(){ document.getElementById('mobileMenu').classList.remove('open'); document.getElementById('hamburger').classList.remove('open'); document.body.style.overflow=''; }
-    var obs = new IntersectionObserver(function(e){ e.forEach(function(x){ if(x.isIntersecting){ x.target.classList.add('visible'); obs.unobserve(x.target); } }); }, {threshold:0.1});
-    document.querySelectorAll('.reveal').forEach(function(el){ obs.observe(el); });
-    document.querySelectorAll('.filter-btn').forEach(function(btn){
-      btn.addEventListener('click', function(){
-        document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
-        btn.classList.add('active');
-        var f = btn.dataset.filter;
-        document.querySelectorAll('.project-card').forEach(function(c){ c.classList.toggle('hidden', f!=='all' && c.dataset.cat!==f); });
-      });
+/* filters */
+document.querySelectorAll('.fbtn').forEach(function(btn){
+  btn.onclick=function(){
+    document.querySelectorAll('.fbtn').forEach(function(b){b.classList.remove('on');});
+    btn.classList.add('on');
+    var f=btn.dataset.f, n=0;
+    document.querySelectorAll('.row').forEach(function(r){
+      var show=(f==='all'||r.dataset.cat===f);
+      r.classList.toggle('hidden',!show);
+      if(show){ r.querySelector('.r-num').textContent=String(++n).padStart(2,'0'); }
     });
+    hidePv();
+  };
+});
 
-    function openViewer(src, title){
-      document.getElementById('viewerFrame').src = src;
-      document.getElementById('viewerTitle').textContent = title || 'Proyecto';
-      document.getElementById('viewerOverlay').classList.add('open');
-      document.body.style.overflow = 'hidden';
-    }
-    function closeViewer(){
-      document.getElementById('viewerOverlay').classList.remove('open');
-      document.getElementById('viewerFrame').src = '';
-      document.body.style.overflow = '';
-    }
-    function openDashboard(){
-      document.getElementById('dashboardFrame').src = './dashboards/DASHBOARD_MENSUAL_MARZO_2026.html';
-      document.getElementById('dashboardOverlay').classList.add('open');
-      document.body.style.overflow = 'hidden';
-    }
-    function closeDashboard(){
-      document.getElementById('dashboardOverlay').classList.remove('open');
-      document.getElementById('dashboardFrame').src = '';
-      document.body.style.overflow = '';
-    }
+/* ── hover preview ─────────────────────── */
+var pv=document.getElementById('pv'), tx=0,ty=0,cx=0,cy=0,raf=null,fine=matchMedia('(hover:hover) and (pointer:fine)').matches;
+function loop(){
+  cx+=(tx-cx)*.14; cy+=(ty-cy)*.14;
+  pv.style.transform='translate3d('+cx+'px,'+cy+'px,0)';
+  raf=(Math.abs(tx-cx)>.4||Math.abs(ty-cy)>.4)?requestAnimationFrame(loop):null;
+}
+function movePv(e){
+  var w=pv.offsetWidth,h=pv.offsetHeight;
+  tx=Math.min(Math.max(e.clientX+26,10),innerWidth-w-10);
+  ty=Math.min(Math.max(e.clientY-h/2,10),innerHeight-h-10);
+  if(!raf)raf=requestAnimationFrame(loop);
+}
+function hidePv(){pv.classList.remove('on');}
+if(fine){
+  list.addEventListener('mouseover',function(e){
+    var row=e.target.closest('.row'); if(!row)return;
+    var src=store.children[row.dataset.pv];
+    if(src){ pv.innerHTML=src.innerHTML; pv.classList.add('on'); }
+  });
+  list.addEventListener('mouseleave',hidePv);
+  list.addEventListener('mousemove',movePv,{passive:true});
+}
 
-    var projects = {
+/* ── overlays ──────────────────────────── */
+function lock(on){document.body.style.overflow=on?'hidden':'';}
+function openViewer(src,title){
+  document.getElementById('viewerFrame').src=src;
+  document.getElementById('viewerTitle').textContent=title||'Proyecto';
+  document.getElementById('viewerOverlay').classList.add('open'); lock(1); hidePv();
+}
+function closeViewer(){
+  document.getElementById('viewerOverlay').classList.remove('open');
+  document.getElementById('viewerFrame').src=''; lock(0);
+}
+function openDashboard(){
+  document.getElementById('dashboardFrame').src='./dashboards/DASHBOARD_MENSUAL_MARZO_2026.html';
+  document.getElementById('dashboardOverlay').classList.add('open'); lock(1); hidePv();
+}
+function closeDashboard(){
+  document.getElementById('dashboardOverlay').classList.remove('open');
+  document.getElementById('dashboardFrame').src=''; lock(0);
+}
+
+var projects = {
       tapia:{
         cat:'UX/UI & Desarrollo Full-Stack',
         title:'José Tapia Fitness — Premium Web Experience',
@@ -1473,23 +1046,34 @@
       }
     };
 
-    function openProject(id){
-      var p = projects[id];
-      document.getElementById('mCat').textContent = p.cat;
-      document.getElementById('mTitle').textContent = p.title;
-      document.getElementById('mChallenge').textContent = p.challenge;
-      document.getElementById('mSolution').textContent = p.solution;
-      document.getElementById('mResult').textContent = p.result;
-      document.getElementById('mMeta').innerHTML = p.meta.map(function(m){ return '<div class="modal-meta-item"><div class="modal-meta-label">'+m.l+'</div><div class="modal-meta-value">'+m.v+'</div></div>'; }).join('');
-      document.getElementById('mTags').innerHTML = p.tags.map(function(t){ return '<span class="modal-tag">'+t+'</span>'; }).join('');
-      document.getElementById('projectModal').classList.add('open');
-      document.body.style.overflow = 'hidden';
-    }
-    function closeProject(){ document.getElementById('projectModal').classList.remove('open'); document.body.style.overflow = ''; }
-    function handleOverlayClick(e){ if(e.target===document.getElementById('projectModal')) closeProject(); }
-    document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ closeProject(); closeMM(); closeDashboard(); closeViewer(); } });
+function openProject(id){
+  var p=projects[id]; if(!p)return;
+  document.getElementById('mCat').textContent=p.cat;
+  document.getElementById('mTitle').textContent=p.title;
+  document.getElementById('mMeta').innerHTML=p.meta.map(function(m){
+    return '<div><span class="mono">'+m.l+'</span><b>'+m.v+'</b></div>';}).join('');
+  document.getElementById('mChallenge').textContent=p.challenge;
+  document.getElementById('mSolution').textContent=p.solution;
+  document.getElementById('mResult').textContent=p.result;
+  document.getElementById('mTags').innerHTML=p.tags.map(function(t){return '<span>'+t+'</span>';}).join('');
+  document.getElementById('projectModal').classList.add('open'); lock(1); hidePv();
+}
+function closeProject(){
+  document.getElementById('projectModal').classList.remove('open'); lock(0);
+}
+addEventListener('keydown',function(e){
+  if(e.key!=='Escape')return;
+  closeViewer(); closeDashboard(); closeProject(); mm(0);
+});
 
-    /* Avatar is now a pure inline SVG — no canvas processing needed */
-  </script>
+/* ── reveal ────────────────────────────── */
+var io=new IntersectionObserver(function(es){
+  es.forEach(function(x){ if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target);} });
+},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.rv').forEach(function(el,i){
+  if(el.classList.contains('row'))el.style.transitionDelay=Math.min(i*18,220)+'ms';
+  io.observe(el);
+});
+</script>
 </body>
 </html>
