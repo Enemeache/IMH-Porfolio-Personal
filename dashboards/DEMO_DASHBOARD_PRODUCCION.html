@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Mensual — Marzo 2026 | Cuartos Congelados</title>
+<title>Dashboard de Producción — Demo interactiva</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600&display=swap');
@@ -100,14 +100,14 @@
 
 <header class="hdr">
   <div class="hdr-l">
-    <div class="eyebrow">Sector Cuartos Congelados — Resumen Mensual</div>
+    <div class="eyebrow">Sector Planta Demo — Resumen Mensual</div>
     <div class="big-title">MARZO 2026</div>
     <div class="sub">Todos los productos · Datos desde 13/03 (inicio del sistema de relevamiento) · Dashboard interactivo</div>
   </div>
   <div class="hdr-r">
     <div class="pill">Período <b>13/03 → 31/03</b></div>
     <div class="pill">5 productos</div>
-    <div class="pill warn">Baja operario desde 26/03</div>
+    <div class="pill warn">Dotación reducida (últimos días)</div>
     <div class="pill hl">CIERRE MARZO 2026</div>
   </div>
 </header>
@@ -122,11 +122,11 @@
     </div>
     <div class="prod-group">
       <button class="prod-btn all active" onclick="setProd('all',this)">Todos</button>
-      <button class="prod-btn pq" onclick="setProd('pq',this)">Pan de Queso</button>
-      <button class="prod-btn pe" onclick="setProd('pe',this)">Pepas</button>
-      <button class="prod-btn pi" onclick="setProd('pi',this)">Pepitos</button>
-      <button class="prod-btn sc" onclick="setProd('sc',this)">Scones</button>
-      <button class="prod-btn bz" onclick="setProd('bz',this)">Bizcochitos</button>
+      <button class="prod-btn pq" onclick="setProd('pq',this)">Producto A</button>
+      <button class="prod-btn pe" onclick="setProd('pe',this)">Producto B</button>
+      <button class="prod-btn pi" onclick="setProd('pi',this)">Producto C</button>
+      <button class="prod-btn sc" onclick="setProd('sc',this)">Producto D</button>
+      <button class="prod-btn bz" onclick="setProd('bz',this)">Producto E</button>
     </div>
   </div>
 
@@ -170,46 +170,46 @@
   </div>
 
   <div class="nota">
-    NOTA: Los datos corresponden al período 13/03–31/03/2026, fecha de inicio del sistema de relevamiento del Sector Cuartos Congelados. La producción del 1 al 12/03 no está incluida por no contar con datos relevados en planilla BATCH.
+    NOTA: Versión de demostración. Los valores son sintéticos y no corresponden a ninguna operación real; se conserva la estructura analítica del tablero original.
   </div>
 
 </div>
 
-<footer>Confidencial — Uso interno · Sector Producción — Cuartos Congelados · Cierre Marzo 2026</footer>
+<footer>DEMO — Datos sintéticos, sin información real de cliente · Demo pública · datos sintéticos · Cierre Marzo 2026</footer>
 
 <script>
 // ── DATOS COMPLETOS ────────────────────────────────────────────────────────
 const DATA = [
   // sem=1(13-15), sem=2(16-22), sem=3(23-29), sem=4(30-31)
-  {fecha:"13/03",prod:"pq",nombre:"Pan de Queso",am:11.8,kg:541.2,eff:2.71,op:5,desc:0,sem:1},
-  {fecha:"16/03",prod:"pq",nombre:"Pan de Queso",am:19,  kg:874,  eff:3.57,op:5,desc:0,sem:2},
-  {fecha:"17/03",prod:"pe",nombre:"Pepas",        am:4,   kg:232,  eff:4.38,op:5,desc:0,sem:2},
-  {fecha:"17/03",prod:"bz",nombre:"Bizcochitos",  am:3,   kg:300,  eff:1.38,op:5,desc:0,sem:2},
-  {fecha:"18/03",prod:"pq",nombre:"Pan de Queso",am:20,  kg:1100, eff:5.31,op:5,desc:40,sem:2},
-  {fecha:"19/03",prod:"sc",nombre:"Scones",       am:4,   kg:196,  eff:3.02,op:5,desc:0,sem:2},
-  {fecha:"19/03",prod:"pe",nombre:"Pepas",        am:6,   kg:348,  eff:4.64,op:5,desc:0,sem:2},
-  {fecha:"19/03",prod:"pi",nombre:"Pepitos",      am:6,   kg:372,  eff:4.13,op:5,desc:0,sem:2},
-  {fecha:"20/03",prod:"pq",nombre:"Pan de Queso",am:20,  kg:1100, eff:4.40,op:5,desc:15,sem:2},
-  {fecha:"21/03",prod:"bz",nombre:"Bizcochitos",  am:2,   kg:200,  eff:0.89,op:5,desc:0,sem:2},
-  {fecha:"23/03",prod:"sc",nombre:"Scones",       am:4,   kg:196,  eff:2.97,op:4,desc:0,sem:3},
-  {fecha:"23/03",prod:"pe",nombre:"Pepas",        am:8,   kg:464,  eff:3.74,op:4,desc:0,sem:3},
-  {fecha:"23/03",prod:"pi",nombre:"Pepitos",      am:6,   kg:372,  eff:4.77,op:4,desc:0,sem:3},
-  {fecha:"25/03",prod:"pq",nombre:"Pan de Queso",am:20,  kg:1100, eff:3.93,op:5,desc:20,sem:3},
-  {fecha:"26/03",prod:"bz",nombre:"Bizcochitos",  am:3,   kg:300,  eff:1.28,op:4,desc:90,sem:3},
-  {fecha:"27/03",prod:"pq",nombre:"Pan de Queso",am:20,  kg:1100, eff:4.23,op:4,desc:35,sem:3},
-  {fecha:"28/03",prod:"sc",nombre:"Scones",       am:4,   kg:196,  eff:2.51,op:4,desc:20,sem:3},
-  {fecha:"28/03",prod:"pe",nombre:"Pepas",        am:6,   kg:348,  eff:5.44,op:4,desc:20,sem:3},
-  {fecha:"28/03",prod:"pi",nombre:"Pepitos",      am:6,   kg:372,  eff:5.10,op:4,desc:20,sem:3},
-  {fecha:"30/03",prod:"bz",nombre:"Bizcochitos",  am:3,   kg:300,  eff:1.11,op:3,desc:0,sem:4},
-  {fecha:"31/03",prod:"pq",nombre:"Pan de Queso",am:14,  kg:644,  eff:4.95,op:5,desc:105,sem:4},
+  {fecha:"13/03",prod:"pq",nombre:"Producto A",am:11.8,kg:461.3,eff:0.65,op:5,desc:0,sem:1},
+  {fecha:"16/03",prod:"pq",nombre:"Producto A",am:19,  kg:892.4,  eff:0.78,op:5,desc:0,sem:2},
+  {fecha:"17/03",prod:"pe",nombre:"Producto B",        am:4,   kg:237.8,  eff:0.99,op:5,desc:0,sem:2},
+  {fecha:"17/03",prod:"bz",nombre:"Producto E",  am:3,   kg:353.5,  eff:1.96,op:5,desc:0,sem:2},
+  {fecha:"18/03",prod:"pq",nombre:"Producto A",am:20,  kg:929.7, eff:0.77,op:5,desc:40,sem:2},
+  {fecha:"19/03",prod:"sc",nombre:"Producto D",       am:4,   kg:176.1,  eff:0.73,op:5,desc:0,sem:2},
+  {fecha:"19/03",prod:"pe",nombre:"Producto B",        am:6,   kg:370.4,  eff:1.03,op:5,desc:0,sem:2},
+  {fecha:"19/03",prod:"pi",nombre:"Producto C",      am:6,   kg:388.7,  eff:1.08,op:5,desc:0,sem:2},
+  {fecha:"20/03",prod:"pq",nombre:"Producto A",am:20,  kg:1259.2, eff:1.05,op:5,desc:15,sem:2},
+  {fecha:"21/03",prod:"bz",nombre:"Producto E",  am:2,   kg:208.2,  eff:1.73,op:5,desc:0,sem:2},
+  {fecha:"23/03",prod:"sc",nombre:"Producto D",       am:4,   kg:219.8,  eff:0.92,op:4,desc:0,sem:3},
+  {fecha:"23/03",prod:"pe",nombre:"Producto B",        am:8,   kg:528.0,  eff:1.10,op:4,desc:0,sem:3},
+  {fecha:"23/03",prod:"pi",nombre:"Producto C",      am:6,   kg:420.5,  eff:1.17,op:4,desc:0,sem:3},
+  {fecha:"25/03",prod:"pq",nombre:"Producto A",am:20,  kg:1163.9, eff:0.97,op:5,desc:20,sem:3},
+  {fecha:"26/03",prod:"bz",nombre:"Producto E",  am:3,   kg:271.7,  eff:1.51,op:4,desc:90,sem:3},
+  {fecha:"27/03",prod:"pq",nombre:"Producto A",am:20,  kg:1177.3, eff:0.98,op:4,desc:35,sem:3},
+  {fecha:"28/03",prod:"sc",nombre:"Producto D",       am:4,   kg:166.3,  eff:0.69,op:4,desc:20,sem:3},
+  {fecha:"28/03",prod:"pe",nombre:"Producto B",        am:6,   kg:403.5,  eff:1.12,op:4,desc:20,sem:3},
+  {fecha:"28/03",prod:"pi",nombre:"Producto C",      am:6,   kg:371.2,  eff:1.03,op:4,desc:20,sem:3},
+  {fecha:"30/03",prod:"bz",nombre:"Producto E",  am:3,   kg:347.5,  eff:1.93,op:3,desc:0,sem:4},
+  {fecha:"31/03",prod:"pq",nombre:"Producto A",am:14,  kg:709.4,  eff:0.84,op:5,desc:105,sem:4},
 ];
 
 const PROD_CFG = {
-  pq:{label:"Pan de Queso", color:"#f5c842", bg:"rgba(245,200,66,0.7)"},
-  pe:{label:"Pepas",         color:"#4ecdc4", bg:"rgba(78,205,196,0.7)"},
-  pi:{label:"Pepitos",       color:"#a78bfa", bg:"rgba(167,139,250,0.7)"},
-  sc:{label:"Scones",        color:"#56d364", bg:"rgba(86,211,100,0.7)"},
-  bz:{label:"Bizcochitos",   color:"#f0883e", bg:"rgba(240,136,62,0.7)"},
+  pq:{label:"Producto A", color:"#f5c842", bg:"rgba(245,200,66,0.7)"},
+  pe:{label:"Producto B",         color:"#4ecdc4", bg:"rgba(78,205,196,0.7)"},
+  pi:{label:"Producto C",       color:"#a78bfa", bg:"rgba(167,139,250,0.7)"},
+  sc:{label:"Producto D",        color:"#56d364", bg:"rgba(86,211,100,0.7)"},
+  bz:{label:"Producto E",   color:"#f0883e", bg:"rgba(240,136,62,0.7)"},
 };
 
 const SEMS = {
@@ -426,7 +426,7 @@ function renderTabla() {
       <td>—</td><td>—</td>
     </tr>`;
   } else {
-    head.innerHTML=`<tr><th>Semana</th><th>Pan de Queso</th><th>Pepas</th><th>Pepitos</th><th>Scones</th><th>Bizcochitos</th><th>Total</th></tr>`;
+    head.innerHTML=`<tr><th>Semana</th><th>Producto A</th><th>Producto B</th><th>Producto C</th><th>Producto D</th><th>Producto E</th><th>Total</th></tr>`;
     body.innerHTML=[1,2,3,4].map(s=>{
       const prods=["pq","pe","pi","sc","bz"];
       const vals=prods.map(p=>sumaKg(filtrar(p,s)));
