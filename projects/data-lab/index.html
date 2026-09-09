@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Data Lab — SQL sobre el esquema de ReservaFlow</title>
+<meta name="description" content="Laboratorio SQL interactivo: SQLite corriendo en el navegador sobre el modelo relacional de ReservaFlow. Modelado, consultas analíticas e índices."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  :root{
+    --paper:#F7F6F3; --paper-2:#EFEEE9; --panel:#FFFFFF;
+    --ink:#16161A; --ink-2:#5C5C63; --ink-3:#95949B;
+    --rule:#DCDBD4; --accent:#C8442A; --ok:#3F7D58; --warn:#B07C1E;
+    --sans:'Geist',system-ui,-apple-system,sans-serif;
+    --mono:'Geist Mono',ui-monospace,'SFMono-Regular',monospace;
+    --serif:'Instrument Serif',Georgia,serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --paper:#0E0E10; --paper-2:#17171A; --panel:#131316;
+      --ink:#EDECE8; --ink-2:#9A9AA1; --ink-3:#63636A;
+      --rule:#26262A; --accent:#E9603F; --ok:#6BAA84; --warn:#D2A44B;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0E0E10; --paper-2:#17171A; --panel:#131316;
+    --ink:#EDECE8; --ink-2:#9A9AA1; --ink-3:#63636A;
+    --rule:#26262A; --accent:#E9603F; --ok:#6BAA84; --warn:#D2A44B;
+  }
+  html,body{height:100%;}
+  body{
+    background:var(--paper); color:var(--ink); font-family:var(--sans);
+    font-size:15px; line-height:1.55; -webkit-font-smoothing:antialiased;
+    display:flex; flex-direction:column; overflow:hidden;
+  }
+  .mono{font-family:var(--mono);}
+  .lbl{font-family:var(--mono);font-size:.62rem;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);}
+  button{font-family:inherit;color:inherit;cursor:pointer;}
+  ::selection{background:var(--accent);color:#fff;}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+
+  /* ── TOP BAR ─────────────────────────────── */
+  .top{
+    display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+    padding:14px 22px;border-bottom:1px solid var(--rule);background:var(--paper);
+  }
+  .top h1{font-size:.95rem;font-weight:500;letter-spacing:-.01em;}
+  .top h1 em{font-family:var(--serif);font-style:italic;font-weight:400;}
+  .top .desc{color:var(--ink-2);font-size:.8rem;font-weight:300;max-width:46ch;}
+  .top .spacer{margin-left:auto;}
+  .chip{
+    display:inline-flex;align-items:center;gap:7px;padding:5px 11px;border:1px solid var(--rule);
+    border-radius:100px;font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--ink-2);background:var(--panel);
+  }
+  .chip i{width:6px;height:6px;border-radius:50%;background:var(--ink-3);}
+  .chip.live i{background:var(--ok);}
+  .tbtn{
+    background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:6px 12px;
+    font-family:var(--mono);font-size:.66rem;letter-spacing:.07em;text-transform:uppercase;
+    color:var(--ink-2);transition:border-color .18s,color .18s;
+  }
+  .tbtn:hover{border-color:var(--ink);color:var(--ink);}
+
+  /* ── LAYOUT ──────────────────────────────── */
+  .shell{flex:1;display:grid;grid-template-columns:284px 1fr;min-height:0;}
+  aside{border-right:1px solid var(--rule);overflow-y:auto;background:var(--paper-2);}
+  main{display:flex;flex-direction:column;min-width:0;min-height:0;}
+
+  /* ── SIDEBAR ─────────────────────────────── */
+  .tabs{display:flex;border-bottom:1px solid var(--rule);position:sticky;top:0;background:var(--paper-2);z-index:5;}
+  .tab{
+    flex:1;background:none;border:none;padding:11px 6px;font-family:var(--mono);font-size:.62rem;
+    letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);border-bottom:1px solid transparent;
+    margin-bottom:-1px;transition:color .18s,border-color .18s;
+  }
+  .tab.on{color:var(--ink);border-bottom-color:var(--accent);}
+  .pane{padding:16px 14px 40px;display:none;}
+  .pane.on{display:block;}
+  .grp{margin-bottom:22px;}
+  .grp > .lbl{display:block;margin-bottom:9px;padding-left:2px;}
+
+  .qbtn{
+    display:block;width:100%;text-align:left;background:none;border:none;
+    padding:9px 10px;border-radius:7px;border:1px solid transparent;margin-bottom:3px;transition:background .16s,border-color .16s;
+  }
+  .qbtn:hover{background:var(--panel);border-color:var(--rule);}
+  .qbtn.on{background:var(--panel);border-color:var(--ink-3);}
+  .qbtn b{display:block;font-size:.83rem;font-weight:500;letter-spacing:-.01em;}
+  .qbtn span{display:block;font-family:var(--mono);font-size:.6rem;letter-spacing:.06em;color:var(--ink-3);margin-top:3px;text-transform:uppercase;}
+
+  /* schema tree */
+  .tbl{border:1px solid var(--rule);border-radius:8px;background:var(--panel);margin-bottom:9px;overflow:hidden;}
+  .tbl > summary{
+    list-style:none;cursor:pointer;padding:9px 11px;display:flex;align-items:center;gap:8px;
+    font-family:var(--mono);font-size:.72rem;letter-spacing:.02em;
+  }
+  .tbl > summary::-webkit-details-marker{display:none;}
+  .tbl > summary::before{content:'+';color:var(--ink-3);font-size:.8rem;width:9px;}
+  .tbl[open] > summary::before{content:'−';}
+  .tbl > summary b{font-weight:500;}
+  .tbl > summary em{margin-left:auto;font-style:normal;color:var(--ink-3);font-size:.65rem;font-variant-numeric:tabular-nums;}
+  .cols{padding:0 11px 10px 28px;}
+  .col{display:flex;gap:8px;align-items:baseline;font-family:var(--mono);font-size:.68rem;padding:2px 0;color:var(--ink-2);}
+  .col b{font-weight:400;color:var(--ink);}
+  .col u{text-decoration:none;margin-left:auto;font-size:.55rem;letter-spacing:.07em;color:var(--ink-3);
+    display:flex;gap:5px;flex-shrink:0;}
+  .col u span{border:1px solid currentColor;border-radius:3px;padding:0 3px;line-height:1.5;cursor:help;}
+  .col .pk{color:var(--accent);}
+  .col .fk{color:var(--warn);}
+  .col .nl{border:none !important;padding:0 !important;cursor:default;}
+
+  /* ── EDITOR ──────────────────────────────── */
+  .ed-head{
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    padding:12px 20px 10px;border-bottom:1px solid var(--rule);
+  }
+  .ed-head h2{font-size:.9rem;font-weight:500;letter-spacing:-.01em;}
+  .ed-head p{color:var(--ink-2);font-size:.78rem;font-weight:300;flex-basis:100%;max-width:78ch;}
+  .ed-head .spacer{margin-left:auto;}
+  .run{
+    background:var(--ink);color:var(--paper);border:none;border-radius:6px;padding:8px 16px;
+    font-family:var(--mono);font-size:.66rem;letter-spacing:.09em;text-transform:uppercase;
+    display:inline-flex;align-items:center;gap:8px;transition:opacity .18s;
+  }
+  .run:hover{opacity:.84;}
+  .run:disabled{opacity:.35;cursor:not-allowed;}
+  .run kbd{font-family:var(--mono);font-size:.58rem;opacity:.55;border:1px solid currentColor;border-radius:3px;padding:0 4px;}
+
+  .editor{position:relative;border-bottom:1px solid var(--rule);background:var(--panel);}
+  textarea{
+    width:100%;height:clamp(150px,25vh,260px);resize:vertical;display:block;
+    background:transparent;color:var(--ink);border:none;padding:16px 20px;
+    font-family:var(--mono);font-size:.79rem;line-height:1.72;tab-size:2;
+  }
+  textarea:focus{outline:none;}
+
+  /* ── RESULTS ─────────────────────────────── */
+  .res-head{
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    padding:9px 20px;border-bottom:1px solid var(--rule);background:var(--paper);
+  }
+  .res-head .spacer{margin-left:auto;}
+  .stat{font-family:var(--mono);font-size:.64rem;letter-spacing:.06em;color:var(--ink-2);font-variant-numeric:tabular-nums;}
+  .stat b{color:var(--ink);font-weight:500;}
+  .seg{display:flex;border:1px solid var(--rule);border-radius:6px;overflow:hidden;}
+  .seg button{
+    background:var(--panel);border:none;padding:5px 11px;font-family:var(--mono);font-size:.6rem;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);
+  }
+  .seg button.on{background:var(--ink);color:var(--paper);}
+  .seg button:disabled{opacity:.3;cursor:not-allowed;}
+
+  .res{flex:1;overflow:auto;min-height:0;}
+  table{border-collapse:collapse;width:100%;font-size:.79rem;}
+  thead th{
+    position:sticky;top:0;z-index:2;background:var(--paper-2);text-align:left;
+    font-family:var(--mono);font-size:.6rem;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2);
+    padding:9px 14px;border-bottom:1px solid var(--rule);white-space:nowrap;font-weight:500;
+  }
+  tbody td{
+    padding:7px 14px;border-bottom:1px solid var(--rule);white-space:nowrap;
+    font-variant-numeric:tabular-nums;
+  }
+  tbody tr:hover td{background:var(--paper-2);}
+  td.n{text-align:right;font-family:var(--mono);font-size:.76rem;}
+  td .null{color:var(--ink-3);font-style:italic;font-size:.72rem;}
+  .bar{display:block;height:4px;background:var(--accent);border-radius:2px;opacity:.75;margin-top:4px;}
+
+  .msg{padding:26px 20px;color:var(--ink-2);font-size:.85rem;max-width:70ch;}
+  .msg.err{color:var(--accent);font-family:var(--mono);font-size:.78rem;white-space:pre-wrap;line-height:1.7;}
+  .plan{padding:16px 20px;font-family:var(--mono);font-size:.75rem;line-height:1.9;color:var(--ink-2);white-space:pre-wrap;}
+  .plan b{color:var(--ink);font-weight:500;}
+
+  /* chart view */
+  .chart{padding:22px 20px 30px;}
+  .crow{display:grid;grid-template-columns:minmax(90px,190px) 1fr auto;gap:12px;align-items:center;margin-bottom:7px;}
+  .crow .k{font-size:.76rem;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .crow .t{height:16px;background:var(--paper-2);border-radius:3px;overflow:hidden;}
+  .crow .t i{display:block;height:100%;background:var(--accent);opacity:.8;border-radius:3px;}
+  .crow .v{font-family:var(--mono);font-size:.72rem;font-variant-numeric:tabular-nums;color:var(--ink);}
+
+  /* boot */
+  .boot{position:fixed;inset:0;background:var(--paper);display:grid;place-items:center;z-index:50;transition:opacity .4s;}
+  .boot.gone{opacity:0;pointer-events:none;}
+  .boot div{text-align:center;}
+  .boot p{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-top:14px;}
+  .boot .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);margin:0 auto;animation:bp 1.1s infinite ease-in-out;}
+  @keyframes bp{0%,100%{transform:scale(.6);opacity:.4;}50%{transform:scale(1.25);opacity:1;}}
+
+  /* mobile */
+  .mtoggle{display:none;}
+  @media(max-width:920px){
+    body{overflow:auto;}
+    .shell{grid-template-columns:1fr;}
+    aside{border-right:none;border-bottom:1px solid var(--rule);max-height:46vh;}
+    aside.collapsed{display:none;}
+    .mtoggle{display:inline-flex;}
+    .top .desc{display:none;}
+    .res{max-height:60vh;}
+  }
+</style>
+</head>
+<body>
+
+<div class="boot" id="boot"><div><span class="dot"></span><p id="bootMsg">Iniciando motor SQLite…</p></div></div>
+
+<div class="top">
+  <h1>Data <em>Lab</em></h1>
+  <span class="chip live" id="engineChip"><i></i><span id="engineTxt">cargando</span></span>
+  <p class="desc">SQLite compilado a WebAssembly, corriendo entero en tu navegador sobre el modelo relacional real de ReservaFlow. Escribí SQL y ejecutalo.</p>
+  <span class="spacer"></span>
+  <button class="tbtn mtoggle" id="mtoggle">Esquema / Consultas</button>
+  <button class="tbtn" id="resetBtn" title="Regenera la base desde cero">Reset DB</button>
+  <button class="tbtn" id="themeBtn" title="Cambiar tema">◑</button>
+</div>
+
+<div class="shell">
+  <aside id="aside">
+    <div class="tabs">
+      <button class="tab on" data-p="q">Consultas</button>
+      <button class="tab" data-p="s">Esquema</button>
+      <button class="tab" data-p="d">DDL</button>
+    </div>
+    <div class="pane on" id="paneQ"></div>
+    <div class="pane" id="paneS"></div>
+    <div class="pane" id="paneD"></div>
+  </aside>
+
+  <main>
+    <div class="ed-head">
+      <h2 id="qTitle">Consulta libre</h2>
+      <span class="spacer"></span>
+      <button class="run" id="runBtn" disabled>Ejecutar <kbd>Ctrl ↵</kbd></button>
+      <p id="qNote">Elegí una consulta del panel izquierdo o escribí la tuya. Se ejecuta la sentencia bajo el cursor si hay varias separadas por punto y coma.</p>
+    </div>
+
+    <div class="editor">
+      <textarea id="sql" spellcheck="false" aria-label="Editor SQL"></textarea>
+    </div>
+
+    <div class="res-head">
+      <span class="stat" id="stat">—</span>
+      <span class="spacer"></span>
+      <div class="seg">
+        <button id="viewTable" class="on">Tabla</button>
+        <button id="viewChart">Gráfico</button>
+        <button id="viewPlan">Plan</button>
+      </div>
+    </div>
+
+    <div class="res" id="res"><p class="msg">Los resultados aparecen acá.</p></div>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.13.0/sql-wasm.js"></script>
+<script>
+/* ══════════════════════════════════════════════════════════════════
+   DATA LAB — SQLite (wasm) sobre el modelo de ReservaFlow
+   Todo corre en el cliente: no hay backend ni llamadas de red salvo
+   la descarga del motor. La base se genera con semilla fija, así que
+   los números son idénticos para cualquiera que abra esta página.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── RNG determinista ───────────────────────────────────────────── */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+var rnd=mulberry32(20260909);
+function ri(a,b){return a+Math.floor(rnd()*(b-a+1));}
+function pick(arr){return arr[Math.floor(rnd()*arr.length)];}
+function weighted(pairs){
+  var t=0,i;for(i=0;i<pairs.length;i++)t+=pairs[i][1];
+  var r=rnd()*t;for(i=0;i<pairs.length;i++){r-=pairs[i][1];if(r<=0)return pairs[i][0];}
+  return pairs[pairs.length-1][0];
+}
+
+/* ── DDL ────────────────────────────────────────────────────────── */
+var DDL = [
+"CREATE TABLE restaurantes (\n\
+  id          INTEGER PRIMARY KEY,\n\
+  nombre      TEXT    NOT NULL,\n\
+  slug        TEXT    NOT NULL UNIQUE,\n\
+  ciudad      TEXT    NOT NULL,\n\
+  capacidad   INTEGER NOT NULL CHECK (capacidad > 0),\n\
+  ticket_obj  REAL    NOT NULL\n\
+)",
+"CREATE TABLE mesas (\n\
+  id              INTEGER PRIMARY KEY,\n\
+  restaurante_id  INTEGER NOT NULL REFERENCES restaurantes(id) ON DELETE CASCADE,\n\
+  numero          INTEGER NOT NULL,\n\
+  capacidad       INTEGER NOT NULL CHECK (capacidad BETWEEN 1 AND 20),\n\
+  zona            TEXT    NOT NULL CHECK (zona IN ('salon','terraza','barra','privado')),\n\
+  UNIQUE (restaurante_id, numero)\n\
+)",
+"CREATE TABLE clientes (\n\
+  id              INTEGER PRIMARY KEY,\n\
+  restaurante_id  INTEGER NOT NULL REFERENCES restaurantes(id) ON DELETE CASCADE,\n\
+  nombre          TEXT    NOT NULL,\n\
+  email           TEXT    NOT NULL,\n\
+  telefono        TEXT,\n\
+  canal_origen    TEXT    NOT NULL CHECK (canal_origen IN ('web','instagram','whatsapp','google','recomendacion','walk_in')),\n\
+  alta_el         TEXT    NOT NULL,\n\
+  UNIQUE (restaurante_id, email)\n\
+)",
+"CREATE TABLE reservas (\n\
+  id              INTEGER PRIMARY KEY,\n\
+  restaurante_id  INTEGER NOT NULL REFERENCES restaurantes(id) ON DELETE CASCADE,\n\
+  cliente_id      INTEGER NOT NULL REFERENCES clientes(id)     ON DELETE CASCADE,\n\
+  mesa_id         INTEGER          REFERENCES mesas(id)        ON DELETE SET NULL,\n\
+  fecha           TEXT    NOT NULL,\n\
+  hora            TEXT    NOT NULL,\n\
+  comensales      INTEGER NOT NULL CHECK (comensales BETWEEN 1 AND 20),\n\
+  estado          TEXT    NOT NULL CHECK (estado IN ('pendiente','confirmada','sentada','completada','cancelada','no_show')),\n\
+  ticket_total    REAL             CHECK (ticket_total IS NULL OR ticket_total > 0),\n\
+  creada_el       TEXT    NOT NULL,\n\
+  CHECK (ticket_total IS NULL OR estado = 'completada')\n\
+)",
+"CREATE TABLE notificaciones (\n\
+  id          INTEGER PRIMARY KEY,\n\
+  reserva_id  INTEGER NOT NULL REFERENCES reservas(id) ON DELETE CASCADE,\n\
+  canal       TEXT    NOT NULL CHECK (canal  IN ('whatsapp','email','sms')),\n\
+  tipo        TEXT    NOT NULL CHECK (tipo   IN ('confirmacion','recordatorio','cancelacion')),\n\
+  estado      TEXT    NOT NULL CHECK (estado IN ('enviada','entregada','leida','fallida')),\n\
+  enviada_el  TEXT    NOT NULL\n\
+)",
+"CREATE INDEX idx_mesas_rest       ON mesas (restaurante_id)",
+"CREATE INDEX idx_clientes_rest    ON clientes (restaurante_id)",
+"CREATE INDEX idx_reservas_cliente ON reservas (cliente_id)",
+"CREATE INDEX idx_reservas_mesa    ON reservas (mesa_id, fecha)",
+"CREATE INDEX idx_notif_reserva    ON notificaciones (reserva_id)"
+];
+/* idx_reservas_agenda queda fuera a propósito: es el índice que se crea
+   y se borra en el laboratorio para comparar planes de ejecución. */
+
+/* ── Generación del dataset ─────────────────────────────────────── */
+var RESTS=[
+  {nombre:'Bodegón Sur',   slug:'bodegon-sur',   ciudad:'Buenos Aires',  cap:90,  ticket:18500, mesas:14, cli:340, base:11},
+  {nombre:'Terraza Nogal', slug:'terraza-nogal', ciudad:'Córdoba',       cap:60,  ticket:14200, mesas:10, cli:230, base:8},
+  {nombre:'Mar Abierto',   slug:'mar-abierto',   ciudad:'Mar del Plata', cap:120, ticket:23800, mesas:16, cli:330, base:13}
+];
+var NOM=['Sofía','Mateo','Valentina','Joaquín','Camila','Benjamín','Martina','Thiago','Emilia','Lautaro','Julieta','Bautista','Catalina','Santino','Renata','Facundo','Delfina','Ignacio','Guadalupe','Tomás','Pilar','Franco','Malena','Nicolás','Isabella','Agustín','Antonia','Bruno','Victoria','Ramiro'];
+var APE=['Gómez','Fernández','Rodríguez','López','Martínez','Pérez','Sosa','Romero','Álvarez','Torres','Ruiz','Domínguez','Benítez','Acosta','Medina','Herrera','Aguirre','Molina','Silva','Ortiz','Rojas','Vega','Cabrera','Ledesma','Peralta'];
+var ZONAS=['salon','salon','salon','terraza','terraza','barra','privado'];
+var CANALES=[['web',34],['instagram',22],['whatsapp',18],['google',12],['recomendacion',9],['walk_in',5]];
+
+var D0=new Date(Date.UTC(2025,8,1)), D1=new Date(Date.UTC(2026,7,31));
+function iso(d){return d.toISOString().slice(0,10);}
+function addDays(d,n){return new Date(d.getTime()+n*86400000);}
+var TOTAL_DIAS=Math.round((D1-D0)/86400000);
+
+function buildDataset(){
+  rnd=mulberry32(20260909);
+  var rests=[],mesas=[],clientes=[],reservas=[],notifs=[];
+  var mid=1,cid=1,rid=1,nid=1;
+
+  RESTS.forEach(function(R,i){
+    var restId=i+1;
+    rests.push([restId,R.nombre,R.slug,R.ciudad,R.cap,R.ticket]);
+
+    var misMesas=[];
+    for(var m=1;m<=R.mesas;m++){
+      var cap=weighted([[2,34],[4,38],[6,18],[8,7],[10,3]]);
+      var z=(m<=2)?'barra':(m>R.mesas-2?'privado':pick(ZONAS));
+      mesas.push([mid,restId,m,cap,z]); misMesas.push({id:mid,cap:cap}); mid++;
+    }
+
+    var misClientes=[];
+    for(var c=0;c<R.cli;c++){
+      var nom=pick(NOM)+' '+pick(APE);
+      var alta=iso(addDays(D0,ri(-210,TOTAL_DIAS-14)));
+      var mail=nom.toLowerCase().normalize('NFD').replace(/[^a-z ]/g,'').replace(/ /g,'.')+cid+'@mail.com';
+      var tel=rnd()<0.88?('+549'+ri(1130000000,1199999999)):null;
+      clientes.push([cid,restId,nom,mail,tel,weighted(CANALES),alta]);
+      /* fidelidad tipo ley de potencia: pocos clientes concentran muchas reservas */
+      misClientes.push({id:cid,alta:alta,peso:Math.pow(rnd(),2.4)*9+0.25});
+      cid++;
+    }
+
+    for(var d=0;d<=TOTAL_DIAS;d++){
+      var day=addDays(D0,d), fecha=iso(day), dow=day.getUTCDay(), mes=day.getUTCMonth();
+      var f=[0.72,0.55,0.62,0.78,0.95,1.55,1.35][dow];
+      f*=(mes===0||mes===1||mes===11)?1.22:((mes===5||mes===6)?0.86:1);
+      f*=1+(d/TOTAL_DIAS)*0.28;
+      var n=Math.max(0,Math.round(R.base*f+ri(-2,2)));
+
+      for(var k=0;k<n;k++){
+        var cl=null,intentos=0;
+        while(intentos++<12){
+          var cand=misClientes[Math.floor(Math.pow(rnd(),1.6)*misClientes.length)];
+          if(cand&&cand.alta<=fecha&&rnd()<cand.peso/9.25+0.12){cl=cand;break;}
+        }
+        if(!cl){for(var z2=0;z2<misClientes.length;z2++){if(misClientes[z2].alta<=fecha){cl=misClientes[z2];break;}}}
+        if(!cl)continue;
+
+        var com=weighted([[2,40],[3,16],[4,22],[5,7],[6,9],[8,4],[10,2]]);
+        var apta=misMesas.filter(function(x){return x.cap>=com;});
+        var mesa=apta.length?pick(apta):null;
+        var hora=weighted([['12:30',6],['13:00',9],['13:30',8],['14:00',5],['20:00',13],['20:30',17],['21:00',19],['21:30',13],['22:00',7],['22:30',3]]);
+        var findeNoche=(dow===5||dow===6)&&hora>='20:00';
+
+        var estado=weighted([
+          ['completada', findeNoche?70:64],
+          ['cancelada',  12],
+          ['no_show',    findeNoche?7:5],
+          ['confirmada', 9],
+          ['pendiente',  6],
+          ['sentada',    2]
+        ]);
+        if(d<TOTAL_DIAS-6&&(estado==='pendiente'||estado==='confirmada'||estado==='sentada'))estado='completada';
+
+        var ticket=null;
+        if(estado==='completada'){
+          ticket=Math.round(com*R.ticket*(findeNoche?1.18:1)*(0.62+rnd()*0.95)/100)*100;
+          if(rnd()<0.035)ticket=Math.round(ticket*2.4/100)*100;
+        }
+        var lead=weighted([[0,18],[1,24],[2,17],[4,15],[7,14],[14,9],[25,3]]);
+        var creada=iso(addDays(day,-lead))+' '+String(ri(8,23)).padStart(2,'0')+':'+String(ri(0,59)).padStart(2,'0');
+
+        reservas.push([rid,restId,cl.id,mesa?mesa.id:null,fecha,hora,com,estado,ticket,creada]);
+
+        var canal=weighted([['whatsapp',62],['email',31],['sms',7]]);
+        notifs.push([nid++,rid,canal,'confirmacion',weighted([['entregada',54],['leida',33],['enviada',8],['fallida',5]]),creada]);
+        if(estado!=='pendiente'&&rnd()<0.83)
+          notifs.push([nid++,rid,canal,'recordatorio',weighted([['entregada',48],['leida',38],['enviada',8],['fallida',6]]),iso(addDays(day,-1))+' 11:00']);
+        if(estado==='cancelada')
+          notifs.push([nid++,rid,canal,'cancelacion',weighted([['entregada',60],['leida',30],['enviada',6],['fallida',4]]),fecha+' 09:30']);
+        rid++;
+      }
+    }
+  });
+  return {rests:rests,mesas:mesas,clientes:clientes,reservas:reservas,notifs:notifs};
+}
+
+/* ── Biblioteca de consultas ────────────────────────────────────── */
+var QUERIES=[
+{g:'Fundamentos',t:'Salud del servicio',tag:'GROUP BY · window sobre agregado',
+ note:'Distribución de estados con su porcentaje calculado en la misma pasada: SUM(COUNT(*)) OVER () evita la subconsulta que casi siempre se escribe de más.',
+ sql:"SELECT estado,\n       COUNT(*)                                           AS reservas,\n       ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 2) AS pct,\n       ROUND(AVG(comensales), 2)                          AS comensales_prom\nFROM   reservas\nGROUP  BY estado\nORDER  BY reservas DESC;"},
+
+{g:'Fundamentos',t:'Facturación por local',tag:'JOIN · agregación · derivadas',
+ note:'Sólo las reservas completadas facturan (lo garantiza un CHECK en la tabla). El ticket por persona se deriva dentro del AVG, no después.',
+ sql:"SELECT r.nombre                                  AS restaurante,\n       r.ciudad,\n       COUNT(*)                                  AS servicios,\n       SUM(v.comensales)                         AS cubiertos,\n       ROUND(SUM(v.ticket_total) / 1000000.0, 2) AS facturacion_mm,\n       ROUND(AVG(v.ticket_total))                AS ticket_prom,\n       ROUND(AVG(v.ticket_total / v.comensales)) AS ticket_por_persona\nFROM   reservas      v\nJOIN   restaurantes  r ON r.id = v.restaurante_id\nWHERE  v.estado = 'completada'\nGROUP  BY r.id\nORDER  BY facturacion_mm DESC;"},
+
+{g:'Fundamentos',t:'Demanda por franja horaria',tag:'GROUP BY · booleanos como métrica',
+ note:'SUM(estado = \'no_show\') aprovecha que en SQL un booleano es 1 o 0: una sola pasada devuelve volumen y tasa de ausencias por turno.',
+ sql:"SELECT hora,\n       COUNT(*)                                        AS reservas,\n       SUM(comensales)                                 AS cubiertos,\n       ROUND(AVG(comensales), 2)                       AS tamano_grupo,\n       ROUND(100.0 * SUM(estado = 'no_show') / COUNT(*), 2) AS pct_no_show\nFROM   reservas\nGROUP  BY hora\nORDER  BY hora;"},
+
+{g:'Fundamentos',t:'Clientes de mayor valor',tag:'JOIN · HAVING · LIMIT',
+ note:'El filtro por cantidad de visitas va en HAVING porque se aplica sobre el agregado, no sobre las filas. Clásico error de entrevista.',
+ sql:"SELECT c.nombre,\n       r.nombre                     AS local,\n       c.canal_origen,\n       COUNT(*)                     AS visitas,\n       ROUND(SUM(v.ticket_total))   AS gasto_total,\n       ROUND(AVG(v.ticket_total))   AS ticket_prom,\n       MAX(v.fecha)                 AS ultima_visita\nFROM   clientes      c\nJOIN   reservas      v ON v.cliente_id = c.id AND v.estado = 'completada'\nJOIN   restaurantes  r ON r.id = c.restaurante_id\nGROUP  BY c.id\nHAVING visitas >= 6\nORDER  BY gasto_total DESC\nLIMIT  30;"},
+
+{g:'Analítica avanzada',t:'Ranking de mesas por zona',tag:'CTE · RANK() · PARTITION BY',
+ note:'LEFT JOIN para no perder las mesas que nunca se usaron, y dos funciones de ventana particionadas por local: puesto y peso relativo sobre la facturación.',
+ sql:"WITH mesa_kpi AS (\n  SELECT m.id, m.numero, m.zona, m.capacidad,\n         r.nombre                          AS local,\n         COUNT(v.id)                       AS servicios,\n         COALESCE(SUM(v.ticket_total), 0)  AS facturacion\n  FROM   mesas         m\n  JOIN   restaurantes  r ON r.id = m.restaurante_id\n  LEFT   JOIN reservas v ON v.mesa_id = m.id AND v.estado = 'completada'\n  GROUP  BY m.id\n)\nSELECT local, zona, numero AS mesa, capacidad, servicios,\n       ROUND(facturacion)                                                        AS facturacion,\n       RANK() OVER (PARTITION BY local ORDER BY facturacion DESC)                AS puesto,\n       ROUND(100.0 * facturacion / SUM(facturacion) OVER (PARTITION BY local), 2) AS pct_del_local\nFROM   mesa_kpi\nORDER  BY local, puesto;"},
+
+{g:'Analítica avanzada',t:'Serie mensual y variación',tag:'LAG() · media móvil · frame',
+ note:'LAG() trae el mes anterior para la variación intermensual y un frame ROWS BETWEEN 2 PRECEDING calcula la media móvil de tres meses. Sin autojoins.',
+ sql:"WITH mensual AS (\n  SELECT substr(fecha, 1, 7)            AS mes,\n         COUNT(*)                       AS reservas,\n         SUM(comensales)                AS cubiertos,\n         SUM(COALESCE(ticket_total, 0)) AS facturacion\n  FROM   reservas\n  GROUP  BY 1\n)\nSELECT mes, reservas, cubiertos,\n       ROUND(facturacion / 1000000.0, 2) AS fact_mm,\n       ROUND(100.0 * (facturacion - LAG(facturacion) OVER (ORDER BY mes))\n                   /  LAG(facturacion) OVER (ORDER BY mes), 2) AS var_mom_pct,\n       ROUND(AVG(facturacion) OVER (ORDER BY mes\n             ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) / 1000000.0, 2) AS media_movil_3m\nFROM   mensual\nORDER  BY mes;"},
+
+{g:'Analítica avanzada',t:'Segmentación RFM',tag:'CTEs encadenadas · NTILE(5) · CASE',
+ note:'Recencia, frecuencia y monto llevados a quintiles con NTILE y traducidos a segmentos accionables. Es el mismo criterio que usa un CRM para decidir a quién contactar.',
+ sql:"WITH base AS (\n  SELECT c.id,\n         julianday('2026-08-31') - julianday(MAX(v.fecha)) AS recencia,\n         COUNT(*)                                          AS frecuencia,\n         SUM(v.ticket_total)                               AS monto\n  FROM   clientes c\n  JOIN   reservas v ON v.cliente_id = c.id AND v.estado = 'completada'\n  GROUP  BY c.id\n),\nscore AS (\n  SELECT *,\n         NTILE(5) OVER (ORDER BY recencia DESC) AS r,\n         NTILE(5) OVER (ORDER BY frecuencia)    AS f,\n         NTILE(5) OVER (ORDER BY monto)         AS m\n  FROM   base\n)\nSELECT CASE\n         WHEN r >= 4 AND f >= 4 THEN 'Campeones'\n         WHEN r >= 4 AND f <= 2 THEN 'Nuevos prometedores'\n         WHEN r <= 2 AND f >= 4 THEN 'En riesgo (eran fieles)'\n         WHEN r <= 2 AND f <= 2 THEN 'Dormidos'\n         ELSE 'Intermitentes'\n       END                          AS segmento,\n       COUNT(*)                     AS clientes,\n       ROUND(AVG(recencia))         AS dias_sin_venir,\n       ROUND(AVG(frecuencia), 1)    AS visitas_prom,\n       ROUND(AVG(monto))            AS gasto_prom,\n       ROUND(SUM(monto) / 1000000.0, 1) AS aporte_mm\nFROM   score\nGROUP  BY segmento\nORDER  BY aporte_mm DESC;"},
+
+{g:'Analítica avanzada',t:'Retención por cohorte',tag:'cohortes · COUNT(DISTINCT CASE)',
+ note:'Cada cliente se asigna al mes de su primera visita y se mide cuántos vuelven N meses después. La matriz se arma con COUNT(DISTINCT CASE WHEN…), sin pivot nativo.',
+ sql:"WITH primera AS (\n  SELECT cliente_id, MIN(fecha) AS alta\n  FROM   reservas WHERE estado = 'completada'\n  GROUP  BY cliente_id\n),\nactividad AS (\n  SELECT p.cliente_id,\n         substr(p.alta, 1, 7) AS cohorte,\n         (CAST(substr(v.fecha, 1, 4) AS INT) * 12 + CAST(substr(v.fecha, 6, 2) AS INT))\n       - (CAST(substr(p.alta,  1, 4) AS INT) * 12 + CAST(substr(p.alta,  6, 2) AS INT)) AS mes_n\n  FROM   primera  p\n  JOIN   reservas v ON v.cliente_id = p.cliente_id AND v.estado = 'completada'\n)\nSELECT cohorte,\n       COUNT(DISTINCT CASE WHEN mes_n = 0 THEN cliente_id END) AS clientes,\n       ROUND(100.0 * COUNT(DISTINCT CASE WHEN mes_n = 1 THEN cliente_id END)\n                   / COUNT(DISTINCT CASE WHEN mes_n = 0 THEN cliente_id END)) AS mes_1,\n       ROUND(100.0 * COUNT(DISTINCT CASE WHEN mes_n = 2 THEN cliente_id END)\n                   / COUNT(DISTINCT CASE WHEN mes_n = 0 THEN cliente_id END)) AS mes_2,\n       ROUND(100.0 * COUNT(DISTINCT CASE WHEN mes_n = 3 THEN cliente_id END)\n                   / COUNT(DISTINCT CASE WHEN mes_n = 0 THEN cliente_id END)) AS mes_3,\n       ROUND(100.0 * COUNT(DISTINCT CASE WHEN mes_n = 6 THEN cliente_id END)\n                   / COUNT(DISTINCT CASE WHEN mes_n = 0 THEN cliente_id END)) AS mes_6\nFROM   actividad\nGROUP  BY cohorte\nORDER  BY cohorte;"},
+
+{g:'Analítica avanzada',t:'Anticipación vs. ausencias',tag:'buckets con CASE · julianday',
+ note:'Hipótesis del negocio: cuanto antes se reserva, más chances de que el cliente no aparezca. La consulta la pone a prueba en tramos — y en estos datos no se sostiene: lo que crece con la anticipación son las cancelaciones, no las ausencias.',
+ sql:"SELECT CASE\n         WHEN dias = 0        THEN '0 · mismo dia'\n         WHEN dias <= 2       THEN '1 · 1 a 2 dias'\n         WHEN dias <= 7       THEN '2 · 3 a 7 dias'\n         WHEN dias <= 14      THEN '3 · 8 a 14 dias'\n         ELSE                      '4 · 15 dias o mas'\n       END                                              AS anticipacion,\n       COUNT(*)                                         AS reservas,\n       ROUND(100.0 * SUM(estado = 'no_show')   / COUNT(*), 2) AS pct_no_show,\n       ROUND(100.0 * SUM(estado = 'cancelada') / COUNT(*), 2) AS pct_cancelada,\n       ROUND(AVG(comensales), 2)                        AS tamano_grupo\nFROM (\n  SELECT estado, comensales,\n         CAST(julianday(fecha) - julianday(substr(creada_el, 1, 10)) AS INT) AS dias\n  FROM   reservas\n)\nGROUP  BY anticipacion\nORDER  BY anticipacion;"},
+
+{g:'Integridad y calidad',t:'Doble reserva sobre la misma mesa',tag:'self-join · detección de conflictos',
+ note:'Un LEFT JOIN de la tabla contra sí misma (b.id > a.id evita duplicar el par) encuentra reservas activas solapadas a menos de 90 minutos en la misma mesa. Es el chequeo que justifica un índice compuesto por (mesa_id, fecha).',
+ sql:"SELECT a.fecha,\n       r.nombre  AS local,\n       m.numero  AS mesa,\n       a.hora    AS hora_a,\n       b.hora    AS hora_b,\n       ABS((CAST(substr(b.hora,1,2) AS INT) * 60 + CAST(substr(b.hora,4,2) AS INT))\n         - (CAST(substr(a.hora,1,2) AS INT) * 60 + CAST(substr(a.hora,4,2) AS INT))) AS minutos,\n       a.id AS reserva_a, b.id AS reserva_b\nFROM   reservas a\nJOIN   reservas b ON b.mesa_id = a.mesa_id AND b.fecha = a.fecha AND b.id > a.id\nJOIN   mesas        m ON m.id = a.mesa_id\nJOIN   restaurantes r ON r.id = a.restaurante_id\nWHERE  a.estado IN ('confirmada','sentada','completada')\n  AND  b.estado IN ('confirmada','sentada','completada')\n  AND  ABS((CAST(substr(b.hora,1,2) AS INT) * 60 + CAST(substr(b.hora,4,2) AS INT))\n         - (CAST(substr(a.hora,1,2) AS INT) * 60 + CAST(substr(a.hora,4,2) AS INT))) < 90\nORDER  BY a.fecha DESC, local, mesa\nLIMIT  40;"},
+
+{g:'Integridad y calidad',t:'Auditoría del modelo',tag:'UNION ALL · reglas de negocio',
+ note:'Un solo resultado con todas las invariantes del modelo. Cada fila es una regla: si alguna devuelve un conteo distinto de cero, hay datos que contradicen el diseño.',
+ sql:"SELECT 'reservas huerfanas (sin cliente)'          AS regla,\n       COUNT(*)                                     AS filas_en_falta\nFROM   reservas v LEFT JOIN clientes c ON c.id = v.cliente_id\nWHERE  c.id IS NULL\nUNION ALL\nSELECT 'facturacion en reservas no completadas',\n       COUNT(*) FROM reservas WHERE ticket_total IS NOT NULL AND estado <> 'completada'\nUNION ALL\nSELECT 'completadas sin ticket',\n       COUNT(*) FROM reservas WHERE estado = 'completada' AND ticket_total IS NULL\nUNION ALL\nSELECT 'reservas sin mesa asignada',\n       COUNT(*) FROM reservas WHERE mesa_id IS NULL\nUNION ALL\nSELECT 'grupo mas grande que la mesa asignada',\n       COUNT(*) FROM reservas v JOIN mesas m ON m.id = v.mesa_id WHERE v.comensales > m.capacidad\nUNION ALL\nSELECT 'clientes sin telefono (no contactables)',\n       COUNT(*) FROM clientes WHERE telefono IS NULL\nUNION ALL\nSELECT 'notificaciones fallidas',\n       COUNT(*) FROM notificaciones WHERE estado = 'fallida';"},
+
+{g:'Integridad y calidad',t:'Embudo de notificaciones',tag:'pivot con SUM(CASE) · tasas',
+ note:'Entrega y lectura por canal y tipo de mensaje. La tasa de falla del SMS es la que justifica mover los recordatorios a WhatsApp.',
+ sql:"SELECT canal, tipo,\n       COUNT(*)                                                       AS enviadas,\n       SUM(estado IN ('entregada','leida'))                           AS entregadas,\n       SUM(estado = 'leida')                                          AS leidas,\n       SUM(estado = 'fallida')                                        AS fallidas,\n       ROUND(100.0 * SUM(estado = 'leida')   / COUNT(*), 2)           AS pct_lectura,\n       ROUND(100.0 * SUM(estado = 'fallida') / COUNT(*), 2)           AS pct_falla\nFROM   notificaciones\nGROUP  BY canal, tipo\nORDER  BY canal, enviadas DESC;"},
+
+{g:'Performance',t:'Laboratorio de índices',tag:'EXPLAIN QUERY PLAN · benchmark',bench:true,
+ note:'Mide la misma consulta en tres escenarios —sin índice utilizable, con un índice que no corresponde (skip-scan) y con el compuesto correcto— y muestra el plan y el tiempo de cada uno. El botón cambia a «Medir»; el esquema queda como estaba.',
+ sql:"SELECT COUNT(*)         AS reservas,\n       SUM(comensales)   AS cubiertos,\n       ROUND(SUM(COALESCE(ticket_total, 0))) AS facturacion\nFROM   reservas\nWHERE  restaurante_id = 3\n  AND  fecha BETWEEN '2026-01-01' AND '2026-01-31';"},
+
+{g:'Performance',t:'Índices del esquema',tag:'sqlite_master · introspección',
+ note:'La base se describe a sí misma. Misma idea que consultar pg_indexes en PostgreSQL o information_schema en MySQL.',
+ sql:"SELECT m.tbl_name AS tabla,\n       m.name      AS indice,\n       CASE WHEN m.sql IS NULL THEN 'implicito (UNIQUE / PK)' ELSE m.sql END AS definicion\nFROM   sqlite_master m\nWHERE  m.type = 'index'\nORDER  BY tabla, indice;"},
+
+{g:'Performance',t:'Peso de cada tabla',tag:'agregados de catálogo',
+ note:'Conteo real de filas por tabla, para dimensionar el dataset antes de decidir estrategias de indexado o particionado.',
+ sql:"SELECT 'restaurantes'   AS tabla, COUNT(*) AS filas FROM restaurantes\nUNION ALL SELECT 'mesas',           COUNT(*) FROM mesas\nUNION ALL SELECT 'clientes',        COUNT(*) FROM clientes\nUNION ALL SELECT 'reservas',        COUNT(*) FROM reservas\nUNION ALL SELECT 'notificaciones',  COUNT(*) FROM notificaciones\nORDER BY filas DESC;"}
+];
+
+/* ── Motor ──────────────────────────────────────────────────────── */
+var SQL=null, db=null, current=QUERIES[0], lastRes=null, lastPlan='', view='table';
+var $=function(s){return document.querySelector(s);};
+var el={sql:$('#sql'),res:$('#res'),stat:$('#stat'),run:$('#runBtn'),title:$('#qTitle'),note:$('#qNote'),
+        boot:$('#boot'),bootMsg:$('#bootMsg'),engine:$('#engineTxt'),paneQ:$('#paneQ'),paneS:$('#paneS'),paneD:$('#paneD')};
+
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];});}
+function nf(n){return typeof n==='number'?n.toLocaleString('es-AR',{maximumFractionDigits:2}):n;}
+
+function seedDb(){
+  var t0=performance.now();
+  db=new SQL.Database();
+  db.run('PRAGMA foreign_keys = ON;');
+  DDL.forEach(function(s){db.run(s);});
+
+  var data=buildDataset();
+  db.run('BEGIN;');
+  function bulk(sql,rows){
+    var st=db.prepare(sql);
+    for(var i=0;i<rows.length;i++){st.run(rows[i]);}
+    st.free();
+  }
+  bulk('INSERT INTO restaurantes VALUES (?,?,?,?,?,?)',data.rests);
+  bulk('INSERT INTO mesas VALUES (?,?,?,?,?)',data.mesas);
+  bulk('INSERT INTO clientes VALUES (?,?,?,?,?,?,?)',data.clientes);
+  bulk('INSERT INTO reservas VALUES (?,?,?,?,?,?,?,?,?,?)',data.reservas);
+  bulk('INSERT INTO notificaciones VALUES (?,?,?,?,?,?)',data.notifs);
+  db.run('COMMIT;');
+  db.run('ANALYZE;');
+  return {ms:Math.round(performance.now()-t0),filas:data.rests.length+data.mesas.length+data.clientes.length+data.reservas.length+data.notifs.length};
+}
+
+/* separa sentencias respetando comillas simples */
+function statements(text){
+  var out=[],buf='',q=false,i;
+  for(i=0;i<text.length;i++){
+    var ch=text[i];
+    if(ch==="'"){q=!q;}
+    if(ch===';'&&!q){out.push({sql:buf,end:i});buf='';continue;}
+    buf+=ch;
+  }
+  if(buf.trim())out.push({sql:buf,end:text.length});
+  return out.filter(function(s){return s.sql.trim().length;});
+}
+function stmtAtCursor(){
+  var text=el.sql.value, pos=el.sql.selectionStart, sts=statements(text);
+  if(!sts.length)return '';
+  for(var i=0;i<sts.length;i++){if(pos<=sts[i].end)return sts[i].sql;}
+  return sts[sts.length-1].sql;
+}
+
+function planOf(sql){
+  try{
+    var r=db.exec('EXPLAIN QUERY PLAN '+sql);
+    if(!r.length)return 'Sin plan disponible.';
+    return r[0].values.map(function(v){return v[v.length-1];}).join('\n');
+  }catch(e){return 'No se pudo obtener el plan: '+e.message;}
+}
+
+/* ── Render de resultados ───────────────────────────────────────── */
+function renderTable(r){
+  if(!r){el.res.innerHTML='<p class="msg">La sentencia se ejecutó pero no devuelve filas.</p>';return;}
+  var numCol=r.columns.map(function(_,i){
+    return r.values.every(function(row){return row[i]===null||typeof row[i]==='number';});
+  });
+  var h='<table><thead><tr>'+r.columns.map(function(c){return '<th>'+esc(c)+'</th>';}).join('')+'</tr></thead><tbody>';
+  var max=r.values.length>400?400:r.values.length;
+  for(var i=0;i<max;i++){
+    h+='<tr>';
+    for(var j=0;j<r.columns.length;j++){
+      var v=r.values[i][j];
+      h+='<td'+(numCol[j]?' class="n"':'')+'>'+(v===null?'<span class="null">null</span>':esc(nf(v)))+'</td>';
+    }
+    h+='</tr>';
+  }
+  h+='</tbody></table>';
+  if(r.values.length>max)h+='<p class="msg">Mostrando las primeras '+max+' filas de '+nf(r.values.length)+'. Agregá un LIMIT o afiná el WHERE.</p>';
+  el.res.innerHTML=h;
+}
+
+function chartCols(r){
+  if(!r||!r.values.length)return null;
+  var lab=-1,val=-1,j;
+  for(j=0;j<r.columns.length;j++){
+    var isNum=r.values.every(function(row){return row[j]===null||typeof row[j]==='number';});
+    if(!isNum&&lab<0)lab=j;
+    if(isNum&&val<0&&j!==0)val=j;
+  }
+  if(lab<0||val<0)return null;
+  return {lab:lab,val:val};
+}
+function renderChart(r){
+  var c=chartCols(r);
+  if(!c){el.res.innerHTML='<p class="msg">Este resultado no se puede graficar: hace falta una columna de texto y una numérica.</p>';return;}
+  var rows=r.values.slice(0,40);
+  var max=Math.max.apply(null,rows.map(function(x){return Math.abs(x[c.val]||0);}))||1;
+  var h='<div class="chart"><p class="lbl" style="margin-bottom:14px">'+esc(r.columns[c.lab])+' × '+esc(r.columns[c.val])+'</p>';
+  rows.forEach(function(x){
+    var w=Math.abs(x[c.val]||0)/max*100;
+    h+='<div class="crow"><span class="k" title="'+esc(x[c.lab])+'">'+esc(x[c.lab])+'</span>'+
+       '<span class="t"><i style="width:'+w.toFixed(1)+'%"></i></span>'+
+       '<span class="v">'+esc(nf(x[c.val]))+'</span></div>';
+  });
+  el.res.innerHTML=h+'</div>';
+}
+function renderPlan(){
+  el.res.innerHTML='<div class="plan"><b>EXPLAIN QUERY PLAN</b>\n\n'+esc(lastPlan||'—')+'</div>';
+}
+function paint(){
+  if(view==='table')renderTable(lastRes);
+  else if(view==='chart')renderChart(lastRes);
+  else renderPlan();
+  document.getElementById('viewChart').disabled=!chartCols(lastRes);
+}
+
+/* ── Ejecutar ───────────────────────────────────────────────────── */
+function run(){
+  var sql=stmtAtCursor().trim();
+  if(!sql)return;
+  if(current&&current.bench){return runBench(sql);}
+  try{
+    lastPlan=/^\s*(select|with)/i.test(sql)?planOf(sql):'El plan sólo aplica a consultas SELECT.';
+    var t0=performance.now();
+    var out=db.exec(sql);
+    var ms=performance.now()-t0;
+    lastRes=out.length?out[out.length-1]:null;
+    el.stat.innerHTML='<b>'+(lastRes?nf(lastRes.values.length):0)+'</b> filas · <b>'+ms.toFixed(1)+' ms</b> · '+
+                      (lastRes?lastRes.columns.length:0)+' columnas';
+    if(view==='plan'&&!lastRes)view='table';
+    paint();
+    setSeg();
+  }catch(e){
+    lastRes=null;lastPlan='';
+    el.stat.innerHTML='<b style="color:var(--accent)">error</b>';
+    el.res.innerHTML='<p class="msg err">'+esc(e.message)+'</p>';
+  }
+}
+
+function timeIt(sql,n){
+  var t0=performance.now();
+  for(var i=0;i<n;i++)db.exec(sql);
+  return performance.now()-t0;
+}
+function runBench(sql){
+  try{
+    var N=60, filas=[], planes=[];
+    /* Tres escenarios sobre la misma consulta:
+       1) sin ningún índice utilizable → recorrido completo de la tabla
+       2) sólo idx_reservas_mesa       → SQLite se cuelga de un índice que no es
+                                         para esta consulta (skip-scan)
+       3) idx_reservas_agenda          → índice compuesto en el orden correcto  */
+    var escenarios=[
+      {n:'1 · sin indice utilizable',pre:['DROP INDEX IF EXISTS idx_reservas_agenda','DROP INDEX IF EXISTS idx_reservas_mesa']},
+      {n:'2 · solo idx_reservas_mesa (mesa_id, fecha)',pre:['DROP INDEX IF EXISTS idx_reservas_agenda','CREATE INDEX IF NOT EXISTS idx_reservas_mesa ON reservas (mesa_id, fecha)']},
+      {n:'3 · idx_reservas_agenda (restaurante_id, fecha)',pre:['CREATE INDEX IF NOT EXISTS idx_reservas_agenda ON reservas (restaurante_id, fecha)']}
+    ];
+    escenarios.forEach(function(e){
+      e.pre.forEach(function(s){db.run(s+';');});
+      db.run('ANALYZE;');
+      timeIt(sql,4);                                   // calentar cachés
+      e.plan=planOf(sql);
+      e.t=timeIt(sql,N);
+    });
+    /* dejar el esquema como estaba */
+    db.run('DROP INDEX IF EXISTS idx_reservas_agenda;');
+    db.run('CREATE INDEX IF NOT EXISTS idx_reservas_mesa ON reservas (mesa_id, fecha);');
+    db.run('ANALYZE;');
+
+    var base=escenarios[0].t;
+    escenarios.forEach(function(e){
+      filas.push([e.n,e.plan.replace(/\n/g,' | '),Math.round(e.t*10)/10,
+                  Math.round(e.t/N*1000)/1000,Math.round((base/e.t)*100)/100]);
+      planes.push(e.n.toUpperCase()+'\n'+e.plan);
+    });
+    lastRes={columns:['escenario','plan de ejecución','total '+N+' ejecuciones (ms)','por consulta (ms)','vs. escenario 1'],values:filas};
+    lastPlan=planes.join('\n\n');
+    el.stat.innerHTML='<b>'+(base/escenarios[2].t).toFixed(1)+'×</b> más rápido con el índice correcto · '+N+' ejecuciones por escenario';
+    view='table';paint();setSeg();
+  }catch(e){
+    el.stat.innerHTML='<b style="color:var(--accent)">error</b>';
+    el.res.innerHTML='<p class="msg err">'+esc(e.message)+'</p>';
+  }
+}
+
+/* ── Panel de consultas ─────────────────────────────────────────── */
+function buildQueryPane(){
+  var groups=[],map={};
+  QUERIES.forEach(function(q,i){
+    if(!map[q.g]){map[q.g]=[];groups.push(q.g);}
+    map[q.g].push([q,i]);
+  });
+  var h='';
+  groups.forEach(function(g){
+    h+='<div class="grp"><span class="lbl">'+esc(g)+'</span>';
+    map[g].forEach(function(pair){
+      h+='<button class="qbtn" data-i="'+pair[1]+'"><b>'+esc(pair[0].t)+'</b><span>'+esc(pair[0].tag)+'</span></button>';
+    });
+    h+='</div>';
+  });
+  el.paneQ.innerHTML=h;
+  el.paneQ.querySelectorAll('.qbtn').forEach(function(b){
+    b.onclick=function(){loadQuery(+b.dataset.i);};
+  });
+}
+function loadQuery(i){
+  current=QUERIES[i];
+  el.sql.value=current.sql;
+  el.title.textContent=current.t;
+  el.note.textContent=current.note;
+  el.run.innerHTML=(current.bench?'Medir':'Ejecutar')+' <kbd>Ctrl ↵</kbd>';
+  el.paneQ.querySelectorAll('.qbtn').forEach(function(b){b.classList.toggle('on',+b.dataset.i===i);});
+  if(window.innerWidth<=920)document.getElementById('aside').classList.add('collapsed');
+  run();
+}
+
+/* ── Paneles de esquema y DDL (introspección real) ──────────────── */
+function buildSchemaPane(){
+  var tablas=db.exec("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY rowid")[0].values.map(function(r){return r[0];});
+  var h='';
+  tablas.forEach(function(t,idx){
+    var cols=db.exec('PRAGMA table_info('+t+')')[0];
+    var fks=db.exec('PRAGMA foreign_key_list('+t+')');
+    var fkMap={};
+    if(fks.length)fks[0].values.forEach(function(f){fkMap[f[3]]=f[2]+'.'+f[4];});
+    var n=db.exec('SELECT COUNT(*) FROM '+t)[0].values[0][0];
+    h+='<details class="tbl"'+(idx<2?' open':'')+'><summary><b>'+t+'</b><em>'+nf(n)+'</em></summary><div class="cols">';
+    cols.values.forEach(function(c){
+      var name=c[1],type=c[2],notnull=c[3],pk=c[5];
+      var tags=[];
+      if(pk)tags.push('<span class="pk" title="clave primaria">PK</span>');
+      if(fkMap[name])tags.push('<span class="fk" title="referencia a '+esc(fkMap[name])+'">FK</span>');
+      if(!pk&&!notnull)tags.push('<span class="nl" title="admite NULL">null</span>');
+      h+='<div class="col"><b>'+esc(name)+'</b> '+esc(type.toLowerCase())+'<u>'+tags.join('')+'</u></div>';
+    });
+    h+='</div></details>';
+  });
+  h+='<p class="lbl" style="margin-top:18px;line-height:1.7">Generado en vivo con PRAGMA table_info y foreign_key_list sobre la base que estás consultando.</p>';
+  el.paneS.innerHTML=h;
+}
+function buildDdlPane(){
+  var r=db.exec("SELECT type, name, sql FROM sqlite_master WHERE sql IS NOT NULL ORDER BY CASE type WHEN 'table' THEN 0 ELSE 1 END, rootpage")[0];
+  var h='<p class="lbl" style="margin-bottom:12px;line-height:1.7">Esquema tal como quedó creado: claves foráneas, CHECK y restricciones UNIQUE. Portado del schema Prisma/PostgreSQL de ReservaFlow.</p>';
+  r.values.forEach(function(v){
+    h+='<details class="tbl"><summary><b>'+esc(v[1])+'</b><em>'+v[0]+'</em></summary>'+
+       '<div class="cols" style="padding-left:11px"><pre style="font-family:var(--mono);font-size:.66rem;line-height:1.6;white-space:pre-wrap;color:var(--ink-2)">'+esc(v[2])+'</pre></div></details>';
+  });
+  el.paneD.innerHTML=h;
+}
+
+/* ── UI ─────────────────────────────────────────────────────────── */
+function setSeg(){
+  document.getElementById('viewTable').classList.toggle('on',view==='table');
+  document.getElementById('viewChart').classList.toggle('on',view==='chart');
+  document.getElementById('viewPlan').classList.toggle('on',view==='plan');
+}
+document.getElementById('viewTable').onclick=function(){view='table';paint();setSeg();};
+document.getElementById('viewChart').onclick=function(){view='chart';paint();setSeg();};
+document.getElementById('viewPlan').onclick=function(){view='plan';paint();setSeg();};
+document.querySelectorAll('.tab').forEach(function(t){
+  t.onclick=function(){
+    document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('on');});
+    document.querySelectorAll('.pane').forEach(function(p){p.classList.remove('on');});
+    t.classList.add('on');
+    document.getElementById({q:'paneQ',s:'paneS',d:'paneD'}[t.dataset.p]).classList.add('on');
+  };
+});
+el.run.onclick=run;
+el.sql.addEventListener('keydown',function(e){
+  if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();run();}
+  if(e.key==='Tab'){
+    e.preventDefault();
+    var s=this.selectionStart;
+    this.value=this.value.slice(0,s)+'  '+this.value.slice(this.selectionEnd);
+    this.selectionStart=this.selectionEnd=s+2;
+  }
+});
+document.getElementById('mtoggle').onclick=function(){document.getElementById('aside').classList.toggle('collapsed');};
+document.getElementById('themeBtn').onclick=function(){
+  var cur=document.documentElement.getAttribute('data-theme');
+  var dark=cur?cur==='dark':matchMedia('(prefers-color-scheme:dark)').matches;
+  document.documentElement.setAttribute('data-theme',dark?'light':'dark');
+};
+document.getElementById('resetBtn').onclick=function(){
+  el.boot.classList.remove('gone');el.bootMsg.textContent='Regenerando la base…';
+  setTimeout(function(){
+    if(db)db.close();
+    var info=seedDb();
+    buildSchemaPane();buildDdlPane();
+    el.engine.textContent='sqlite '+SQL_VERSION+' · '+nf(info.filas)+' filas';
+    el.boot.classList.add('gone');
+    run();
+  },60);
+};
+
+/* ── Arranque ───────────────────────────────────────────────────── */
+var SQL_VERSION='';
+initSqlJs({locateFile:function(f){return 'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.13.0/'+f;}})
+.then(function(mod){
+  SQL=mod;
+  el.bootMsg.textContent='Creando el esquema y sembrando datos…';
+  return new Promise(function(res){setTimeout(res,40);});
+})
+.then(function(){
+  var info=seedDb();
+  SQL_VERSION=db.exec('SELECT sqlite_version()')[0].values[0][0];
+  el.engine.textContent='sqlite '+SQL_VERSION+' · '+nf(info.filas)+' filas · '+info.ms+' ms';
+  buildQueryPane();buildSchemaPane();buildDdlPane();
+  el.run.disabled=false;
+  el.boot.classList.add('gone');
+  loadQuery(0);
+})
+.catch(function(e){
+  el.bootMsg.textContent='No se pudo cargar el motor SQLite: '+e.message;
+  el.boot.querySelector('.dot').style.animation='none';
+});
+</script>
+</body>
+</html>
