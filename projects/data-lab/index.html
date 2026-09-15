@@ -772,6 +772,17 @@ el.sql.addEventListener('keydown',function(e){
     this.selectionStart=this.selectionEnd=s+2;
   }
 });
+/* al editar el SQL se sale de la consulta guardada: deja de ser «Medir» y
+   pasa a ser una consulta libre, para no correr el benchmark sobre otro SQL */
+el.sql.addEventListener('input',function(){
+  if(current&&this.value!==current.sql){
+    current=null;
+    el.title.textContent='Consulta libre';
+    el.note.textContent='Tu propia consulta. Ctrl+Enter la ejecuta; si escribís varias separadas por punto y coma, corre la que esté bajo el cursor.';
+    el.run.innerHTML='Ejecutar <kbd>Ctrl ↵</kbd>';
+    el.paneQ.querySelectorAll('.qbtn').forEach(function(b){b.classList.remove('on');});
+  }
+});
 document.getElementById('mtoggle').onclick=function(){document.getElementById('aside').classList.toggle('collapsed');};
 document.getElementById('themeBtn').onclick=function(){
   var cur=document.documentElement.getAttribute('data-theme');

@@ -1,0 +1,96 @@
+fecha,tipo_movimiento,referencia,descripcion,importe,proveedor_cliente,medio_pago,estado
+28/08/2026,pago,OP-5004,PAGO COMERCIAL VICENTE LOPEZ REF OP-5004,"419023,56",Comercial Vicente Lopez,efectivo,acreditado
+01/08/2026,pago,OP-1038,PAGO ESTUDIO JURIDICO PAZ REF OP-1038,"157622,44",Estudio Juridico Paz,transferencia,acreditado
+26/08/2026,pago,OP-1028,PAGO TRANSPORTES QUILMES SA REF OP-1028,"302291,76",Transportes Quilmes SA,efectivo,acreditado
+09/08/2026,pago,OP-1051,PAGO PAPELERA DEL SUR SRL REF OP-1051,"248252,47",Papelera del Sur SRL,efectivo,acreditado
+25/08/2026,pago,OP-1036,PAGO SERVICIOS TECNICOS MR REF OP-1036,"75904,33",Servicios Tecnicos MR,cheque,acreditado
+11/08/2026,pago,OP-1047,PAGO SERVICIOS TECNICOS MR REF OP-1047,"110180,63",Servicios Tecnicos MR,transferencia,acreditado
+27/08/2026,pago,OP-1041,PAGO PAPELERA DEL SUR SRL REF OP-1041,"352119,92",Papelera del Sur SRL,transferencia,acreditado
+19/08/2026,pago,OP-2002,PAGO COMERCIAL VICENTE LOPEZ REF OP-2002,"318907,03",Comercial Vicente Lopez,debito automatico,acreditado
+02/08/2026,pago,OP-1002,PAGO PAPELERA DEL SUR SRL REF OP-1002,"284664,93",Papelera del Sur SRL,transferencia,acreditado
+07/08/2026,pago,OP-1016,PAGO TRANSPORTES QUILMES SA REF OP-1016,"179576,32",Transportes Quilmes SA,mercado pago,acreditado
+21/08/2026,pago,,TRANSF CLIENTE NEXO S.A. REF OP-3000,"100115,92",Cliente Nexo SA,mercado pago,acreditado
+13/08/2026,pago,OP-1010,PAGO FERRETERIA INDUSTRIAL SA REF OP-1010,"258780,80",Ferreteria Industrial SA,transferencia,acreditado
+28/08/2026,pago,,TRANSF LOGISTICA NORTE S.R.L. REF OP-3,"236029,69",Logistica Norte SRL,transferencia,acreditado
+08/08/2026,pago,OP-5000,PAGO ESTUDIO JURIDICO PAZ REF OP-5000,"360500,82",Estudio Juridico Paz,cheque,acreditado
+17/08/2026,pago,OP-1069,PAGO LOGISTICA NORTE SRL REF OP-1069,"441547,66",Logistica Norte SRL,cheque,acreditado
+05/08/2026,pago,OP-1042,PAGO LOGISTICA NORTE SRL REF OP-1042,"368303,02",Logistica Norte SRL,efectivo,acreditado
+13/08/2026,pago,OP-1025,PAGO COMERCIAL VICENTE LOPEZ REF OP-1025,"431261,52",Comercial Vicente Lopez,mercado pago,acreditado
+26/08/2026,pago,OP-1053,PAGO ESTUDIO JURIDICO PAZ REF OP-1053,"228464,08",Estudio Juridico Paz,efectivo,acreditado
+06/08/2026,pago,OP-1063,PAGO COMERCIAL VICENTE LOPEZ REF OP-1063,"433465,25",Comercial Vicente Lopez,efectivo,acreditado
+15/08/2026,pago,,TRANSF INSUMOS BELGRANO S.R.L. REF OP-,"80074,60",Insumos Belgrano SRL,debito automatico,acreditado
+07/08/2026,pago,OP-1007,PAGO CLIENTE NEXO SA REF OP-1007,"135544,63",Cliente Nexo SA,mercado pago,acreditado
+11/08/2026,pago,OP-1019,PAGO LOGISTICA NORTE SRL REF OP-1019,"107756,44",Logistica Norte SRL,transferencia,acreditado
+02/08/2026,pago,OP-1027,PAGO FERRETERIA INDUSTRIAL SA REF OP-1027,"46363,79",Ferreteria Industrial SA,transferencia,acreditado
+05/08/2026,pago,OP-1023,PAGO FERRETERIA INDUSTRIAL SA REF OP-1023,"71149,75",Ferreteria Industrial SA,cheque,acreditado
+27/08/2026,pago,,TRANSF TRANSPORTES QUILMES S.A. REF OP,"263246,57",Transportes Quilmes SA,mercado pago,acreditado
+17/08/2026,pago,OP-1037,PAGO LOGISTICA NORTE SRL REF OP-1037,"457819,38",Logistica Norte SRL,transferencia,acreditado
+23/08/2026,pago,OP-1012,PAGO CLIENTE NEXO SA REF OP-1012,"278396,97",Cliente Nexo SA,transferencia,acreditado
+03/08/2026,pago,OP-2005,PAGO ESTUDIO JURIDICO PAZ REF OP-2005,"476848,59",Estudio Juridico Paz,debito automatico,acreditado
+19/08/2026,pago,OP-1048,PAGO ESTUDIO JURIDICO PAZ REF OP-1048,"267220,57",Estudio Juridico Paz,cheque,acreditado
+21/08/2026,pago,OP-1011,PAGO LOGISTICA NORTE SRL REF OP-1011,"142846,04",Logistica Norte SRL,debito automatico,acreditado
+14/08/2026,pago,OP-1032,PAGO CLIENTE NEXO SA REF OP-1032,"56210,39",Cliente Nexo SA,cheque,acreditado
+09/08/2026,pago,OP-1000,PAGO PAPELERA DEL SUR SRL REF OP-1000,"14930,13",Papelera del Sur SRL,cheque,acreditado
+24/08/2026,pago,OP-1065,PAGO INSUMOS BELGRANO SRL REF OP-1065,"204774,57",Insumos Belgrano SRL,debito automatico,acreditado
+23/08/2026,pago,OP-2007,PAGO FERRETERIA INDUSTRIAL SA REF OP-2007,"399010,08",Ferreteria Industrial SA,mercado pago,acreditado
+04/08/2026,pago,OP-1001,PAGO SERVICIOS TECNICOS MR REF OP-1001,"69559,59",Servicios Tecnicos MR,debito automatico,acreditado
+02/08/2026,pago,OP-1050,PAGO SERVICIOS TECNICOS MR REF OP-1050,"35149,96",Servicios Tecnicos MR,mercado pago,acreditado
+27/08/2026,pago,OP-1039,PAGO CLIENTE NEXO SA REF OP-1039,"422150,34",Cliente Nexo SA,mercado pago,acreditado
+15/08/2026,pago,OP-1046,PAGO FERRETERIA INDUSTRIAL SA REF OP-1046,"432115,92",Ferreteria Industrial SA,transferencia,acreditado
+17/08/2026,pago,OP-1003,PAGO PAPELERA DEL SUR SRL REF OP-1003,"107290,31",Papelera del Sur SRL,debito automatico,acreditado
+17/08/2026,pago,OP-1043,PAGO LOGISTICA NORTE SRL REF OP-1043,"81765,56",Logistica Norte SRL,debito automatico,acreditado
+13/08/2026,pago,OP-1029,PAGO ESTUDIO JURIDICO PAZ REF OP-1029,"33302,72",Estudio Juridico Paz,debito automatico,acreditado
+15/08/2026,pago,OP-1055,PAGO CLIENTE NEXO SA REF OP-1055,"205047,00",Cliente Nexo SA,transferencia,acreditado
+27/08/2026,pago,,TRANSF PAPELERA DEL SUR S.R.L. REF OP-,"305553,68",Papelera del Sur SRL,mercado pago,acreditado
+21/08/2026,pago,OP-1049,PAGO DISTRIBUIDORA ANDINA SA REF OP-1049,"36863,70",Distribuidora Andina SA,transferencia,acreditado
+05/08/2026,pago,OP-1026,PAGO SERVICIOS TECNICOS MR REF OP-1026,"478724,40",Servicios Tecnicos MR,debito automatico,acreditado
+25/08/2026,pago,,TRANSF DISTRIBUIDORA ANDINA S.A. REF O,"4691,29",Distribuidora Andina SA,cheque,acreditado
+25/08/2026,pago,OP-1013,PAGO DISTRIBUIDORA ANDINA SA REF OP-1013,"318422,60",Distribuidora Andina SA,mercado pago,acreditado
+25/08/2026,pago,OP-1061,PAGO DISTRIBUIDORA ANDINA SA REF OP-1061,"465211,21",Distribuidora Andina SA,cheque,acreditado
+24/08/2026,pago,OP-1052,PAGO SERVICIOS TECNICOS MR REF OP-1052,"260214,59",Servicios Tecnicos MR,debito automatico,acreditado
+18/08/2026,pago,OP-1044,PAGO COMERCIAL VICENTE LOPEZ REF OP-1044,"463001,11",Comercial Vicente Lopez,cheque,acreditado
+24/08/2026,pago,OP-1024,PAGO LOGISTICA NORTE SRL REF OP-1024,"260092,17",Logistica Norte SRL,debito automatico,acreditado
+28/08/2026,pago,OP-1014,PAGO PAPELERA DEL SUR SRL REF OP-1014,"410986,55",Papelera del Sur SRL,transferencia,acreditado
+26/08/2026,pago,OP-1009,PAGO CLIENTE NEXO SA REF OP-1009,"290977,32",Cliente Nexo SA,transferencia,acreditado
+04/08/2026,pago,OP-1008,PAGO PAPELERA DEL SUR SRL REF OP-1008,"47239,77",Papelera del Sur SRL,mercado pago,acreditado
+19/08/2026,pago,OP-1005,PAGO COMERCIAL VICENTE LOPEZ REF OP-1005,"108150,18",Comercial Vicente Lopez,mercado pago,acreditado
+17/08/2026,pago,OP-1034,PAGO LOGISTICA NORTE SRL REF OP-1034,"366455,97",Logistica Norte SRL,transferencia,acreditado
+11/08/2026,pago,OP-2003,PAGO SERVICIOS TECNICOS MR REF OP-2003,"323478,97",Servicios Tecnicos MR,cheque,acreditado
+07/08/2026,pago,OP-1021,PAGO COMERCIAL VICENTE LOPEZ REF OP-1021,"130712,40",Comercial Vicente Lopez,debito automatico,acreditado
+04/08/2026,pago,,TRANSF COMERCIAL VICENTE LOPEZ REF OP-,"270552,57",Comercial Vicente Lopez,transferencia,acreditado
+16/08/2026,pago,,PAGO ESTUDIO JURIDICO PAZ REF OP-4000,"266554,47",Estudio Juridico Paz,cheque,acreditado
+13/08/2026,pago,OP-1018,PAGO SERVICIOS TECNICOS MR REF OP-1018,"80942,99",Servicios Tecnicos MR,mercado pago,acreditado
+22/08/2026,pago,OP-1045,PAGO INSUMOS BELGRANO SRL REF OP-1045,"193319,33",Insumos Belgrano SRL,mercado pago,acreditado
+23/08/2026,pago,OP-1004,PAGO DISTRIBUIDORA ANDINA SA REF OP-1004,"270713,90",Distribuidora Andina SA,debito automatico,acreditado
+05/08/2026,pago,OP-2009,PAGO PAPELERA DEL SUR SRL REF OP-2009,"358664,59",Papelera del Sur SRL,mercado pago,acreditado
+19/08/2026,pago,OP-1068,PAGO CLIENTE NEXO SA REF OP-1068,"30267,84",Cliente Nexo SA,efectivo,acreditado
+18/08/2026,pago,OP-1030,PAGO FERRETERIA INDUSTRIAL SA REF OP-1030,"255387,54",Ferreteria Industrial SA,transferencia,acreditado
+16/08/2026,pago,OP-1062,PAGO TRANSPORTES QUILMES SA REF OP-1062,"196859,51",Transportes Quilmes SA,cheque,acreditado
+14/08/2026,pago,OP-5002,PAGO CLIENTE NEXO SA REF OP-5002,"376198,36",Cliente Nexo SA,cheque,acreditado
+17/08/2026,pago,OP-1035,PAGO INSUMOS BELGRANO SRL REF OP-1035,"404476,28",Insumos Belgrano SRL,debito automatico,acreditado
+05/08/2026,pago,,PAGO INSUMOS BELGRANO SRL REF OP-4001,"176938,77",Insumos Belgrano SRL,mercado pago,acreditado
+24/08/2026,pago,OP-1033,PAGO FERRETERIA INDUSTRIAL SA REF OP-1033,"4548,02",Ferreteria Industrial SA,mercado pago,acreditado
+25/08/2026,pago,OP-2004,PAGO INSUMOS BELGRANO SRL REF OP-2004,"219923,32",Insumos Belgrano SRL,transferencia,acreditado
+21/08/2026,pago,OP-1060,PAGO LOGISTICA NORTE SRL REF OP-1060,"49702,46",Logistica Norte SRL,debito automatico,acreditado
+26/08/2026,pago,OP-1020,PAGO SERVICIOS TECNICOS MR REF OP-1020,"394999,84",Servicios Tecnicos MR,mercado pago,acreditado
+07/08/2026,pago,OP-1057,PAGO PAPELERA DEL SUR SRL REF OP-1057,"121609,07",Papelera del Sur SRL,debito automatico,acreditado
+03/08/2026,pago,OP-2000,PAGO DISTRIBUIDORA ANDINA SA REF OP-2000,"459783,70",Distribuidora Andina SA,cheque,acreditado
+04/08/2026,pago,OP-1054,PAGO COMERCIAL VICENTE LOPEZ REF OP-1054,"93825,53",Comercial Vicente Lopez,efectivo,acreditado
+09/08/2026,pago,OP-1064,PAGO DISTRIBUIDORA ANDINA SA REF OP-1064,"472992,32",Distribuidora Andina SA,efectivo,acreditado
+22/08/2026,pago,OP-2008,PAGO LOGISTICA NORTE SRL REF OP-2008,"145105,72",Logistica Norte SRL,transferencia,acreditado
+24/08/2026,pago,OP-1056,PAGO PAPELERA DEL SUR SRL REF OP-1056,"31912,25",Papelera del Sur SRL,mercado pago,acreditado
+19/08/2026,pago,OP-1040,PAGO SERVICIOS TECNICOS MR REF OP-1040,"30630,30",Servicios Tecnicos MR,transferencia,acreditado
+03/08/2026,pago,OP-2006,PAGO TRANSPORTES QUILMES SA REF OP-2006,"448912,94",Transportes Quilmes SA,cheque,acreditado
+23/08/2026,pago,OP-5003,PAGO INSUMOS BELGRANO SRL REF OP-5003,"78937,37",Insumos Belgrano SRL,transferencia,acreditado
+18/08/2026,pago,OP-1067,PAGO DISTRIBUIDORA ANDINA SA REF OP-1067,"279269,00",Distribuidora Andina SA,transferencia,acreditado
+01/08/2026,pago,OP-5001,PAGO TRANSPORTES QUILMES SA REF OP-5001,"423435,53",Transportes Quilmes SA,cheque,acreditado
+06/08/2026,pago,OP-1017,PAGO PAPELERA DEL SUR SRL REF OP-1017,"293555,49",Papelera del Sur SRL,debito automatico,acreditado
+06/08/2026,pago,OP-1058,PAGO FERRETERIA INDUSTRIAL SA REF OP-1058,"69866,96",Ferreteria Industrial SA,mercado pago,acreditado
+21/08/2026,pago,OP-1015,PAGO COMERCIAL VICENTE LOPEZ REF OP-1015,"135593,41",Comercial Vicente Lopez,mercado pago,acreditado
+18/08/2026,pago,OP-1031,PAGO PAPELERA DEL SUR SRL REF OP-1031,"328175,85",Papelera del Sur SRL,mercado pago,acreditado
+19/08/2026,pago,OP-2001,PAGO SERVICIOS TECNICOS MR REF OP-2001,"194033,46",Servicios Tecnicos MR,cheque,acreditado
+06/08/2026,pago,OP-1006,PAGO DISTRIBUIDORA ANDINA SA REF OP-1006,"364951,11",Distribuidora Andina SA,efectivo,acreditado
+03/08/2026,pago,OP-1059,PAGO FERRETERIA INDUSTRIAL SA REF OP-1059,"122157,68",Ferreteria Industrial SA,efectivo,acreditado
+10/08/2026,pago,OP-1066,PAGO FERRETERIA INDUSTRIAL SA REF OP-1066,"76838,09",Ferreteria Industrial SA,cheque,acreditado
+17/08/2026,pago,,PAGO SERVICIOS TECNICOS MR REF OP-4002,"321127,24",Servicios Tecnicos MR,debito automatico,acreditado
+16/08/2026,pago,OP-1022,PAGO CLIENTE NEXO SA REF OP-1022,"104422,86",Cliente Nexo SA,efectivo,acreditado
