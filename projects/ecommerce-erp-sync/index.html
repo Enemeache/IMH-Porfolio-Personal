@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>E-commerce ↔ ERP Sync — Demo</title>
+<style>
+:root{
+  --bg:#fbfbfa; --panel:#ffffff; --fg:#191c21; --muted:#5f6771; --line:#dfe3e8;
+  --accent:#12507e; --ok:#166a45; --warn:#8a5a00; --bad:#a32118;
+  --ok-bg:#e8f4ee; --warn-bg:#fdf3e0; --bad-bg:#fbeceb; --accent-bg:#e9f0f6;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#14171b; --panel:#1a1e23; --fg:#e8eaed; --muted:#9aa3ae; --line:#2c323a;
+    --accent:#7fb2dd; --ok:#6fcf9a; --warn:#e3b45f; --bad:#f0897f;
+    --ok-bg:#16291f; --warn-bg:#2a2214; --bad-bg:#2c1a18; --accent-bg:#172431;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14171b; --panel:#1a1e23; --fg:#e8eaed; --muted:#9aa3ae; --line:#2c323a;
+  --accent:#7fb2dd; --ok:#6fcf9a; --warn:#e3b45f; --bad:#f0897f;
+  --ok-bg:#16291f; --warn-bg:#2a2214; --bad-bg:#2c1a18; --accent-bg:#172431;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:15px;line-height:1.5}
+.wrap{max-width:1040px;margin:0 auto;padding:1.5rem 1rem 4rem}
+header{border-bottom:2px solid var(--fg);padding-bottom:.9rem;margin-bottom:1.5rem}
+h1{font-size:1.35rem;margin:0 0 .3rem;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:.9rem;margin:0 0 .6rem}
+.badgebar{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.3rem}
+.badge{font-family:var(--mono);font-size:.72rem;border:1px solid var(--line);border-radius:3px;padding:.15rem .45rem;color:var(--muted)}
+.note{margin-top:.75rem;font-size:.82rem;color:var(--muted);border-left:3px solid var(--accent);padding:.4rem .7rem;background:var(--accent-bg)}
+.note a{color:inherit}
+h2{font-size:.78rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin:0 0 .7rem;font-weight:600}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:1rem;margin-bottom:1rem}
+.grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:1rem;align-items:start}
+@media(max-width:820px){.grid2{grid-template-columns:1fr}}
+.presets{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.8rem}
+button{padding:.55rem 1rem;border:1px solid var(--fg);border-radius:3px;background:var(--fg);color:var(--bg);font-size:.92rem;font-family:inherit;cursor:pointer}
+button:hover{opacity:.88}
+button.ghost{background:transparent;color:var(--fg);border-color:var(--line);padding:.32rem .6rem;font-size:.78rem}
+button.small{padding:.25rem .5rem;font-size:.75rem}
+select,input[type=number]{padding:.4rem .5rem;border:1px solid var(--line);border-radius:3px;background:var(--panel);color:var(--fg);font-size:.88rem;font-family:inherit}
+.itemrow{display:flex;gap:.5rem;align-items:center;margin-bottom:.5rem}
+.itemrow select{flex:1}
+.itemrow input{width:70px}
+.row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-top:1rem}
+
+.pipeline{display:flex;align-items:center;flex-wrap:wrap;gap:0;margin-bottom:.9rem}
+.stage{flex:1 1 auto;min-width:100px;border:1px solid var(--line);border-radius:4px;padding:.5rem .55rem;background:var(--bg);text-align:center;transition:background .25s,border-color .25s}
+.stage .t{font-size:.8rem;font-weight:600}
+.stage.active{border-color:var(--accent);background:var(--accent-bg)}
+.stage.ok{border-color:var(--ok);background:var(--ok-bg)}
+.stage.bad{border-color:var(--bad);background:var(--bad-bg)}
+.arrow{flex:0 0 auto;padding:0 .3rem;color:var(--muted);font-size:.9rem}
+@media(max-width:820px){.pipeline{flex-direction:column;align-items:stretch}.arrow{text-align:center;padding:.15rem 0;transform:rotate(90deg)}}
+
+.console{background:#0d1117;color:#c9d1d9;border-radius:4px;padding:.7rem .8rem;font-family:var(--mono);font-size:.78rem;line-height:1.7;max-height:320px;overflow-y:auto}
+.console summary{cursor:pointer}
+.console summary::-webkit-details-marker{color:#6e7681}
+.console .ts{color:#6e7681}
+.console .op{color:#7ee787}
+.console .fault{color:#f0897f}
+.console pre{white-space:pre-wrap;word-break:break-all;color:#9aa3ae;margin:.3rem 0 .6rem 1rem;font-size:.72rem}
+
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{text-align:left;padding:.4rem .5rem;border-bottom:1px solid var(--line);font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+td{padding:.4rem .5rem;border-bottom:1px solid var(--line)}
+td.num{font-family:var(--mono);text-align:right}
+tr.zero td{color:var(--bad)}
+
+.statuspill{display:inline-block;font-family:var(--mono);font-size:.75rem;font-weight:700;text-transform:uppercase;padding:.15rem .55rem;border-radius:99px}
+.statuspill.confirmado{background:var(--ok-bg);color:var(--ok)}
+.statuspill.rechazado{background:var(--bad-bg);color:var(--bad)}
+
+footer{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--line);font-size:.82rem;color:var(--muted)}
+footer a{color:var(--accent)}
+.hidden{display:none}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>E-commerce ↔ ERP Sync</h1>
+  <p class="sub">Un pedido del webshop se reconcilia con un ERP legacy que solo habla SOAP. Mandá un pedido y mirá el XML real viajando entre los dos sistemas.</p>
+  <div class="badgebar">
+    <span class="badge">SOAP</span><span class="badge">XML</span><span class="badge">Transacción compensatoria</span>
+  </div>
+  <p class="note">Esta página reimplementa en JS la misma lógica exacta de <code>app/soap_erp.py</code> / <code>app/soap_client.py</code> / <code>app/orders.py</code> del repo: arma el mismo Envelope SOAP, lo "manda", el ERP lo procesa y devuelve la misma respuesta XML (o un <code>&lt;soap:Fault&gt;</code>). Click en cada paso del log para ver el XML completo. Código real (con SOAP corriendo sobre HTTP de verdad, no simulado) en <a href="https://github.com/Enemeache/integration-ml-playground/tree/main/ecommerce-erp-sync" target="_blank" rel="noopener">GitHub ↗</a>.</p>
+</header>
+
+<div class="grid2">
+<div>
+<section class="panel">
+  <h2>1. Armar un pedido</h2>
+  <div class="presets">
+    <button class="ghost" type="button" data-preset="simple">Pedido simple</button>
+    <button class="ghost" type="button" data-preset="partial">Con falla parcial (sin stock)</button>
+    <button class="ghost" type="button" data-preset="multi">Multi-ítem, todo OK</button>
+  </div>
+  <div id="items"></div>
+  <div class="row">
+    <button class="ghost small" type="button" id="btnAddItem">+ Agregar ítem</button>
+  </div>
+  <div class="row">
+    <button type="button" id="btnSend">Enviar pedido →</button>
+    <button class="ghost" type="button" id="btnReset">Reiniciar stock</button>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>2. Pipeline</h2>
+  <div class="pipeline" id="pipeline">
+    <div class="stage" id="stage-webshop"><div class="t">Webshop</div></div>
+    <div class="arrow">→</div>
+    <div class="stage" id="stage-integration"><div class="t">Integración</div></div>
+    <div class="arrow">→</div>
+    <div class="stage" id="stage-soap"><div class="t">SOAP</div></div>
+    <div class="arrow">→</div>
+    <div class="stage" id="stage-erp"><div class="t">ERP Legacy</div></div>
+  </div>
+  <div id="orderResult"></div>
+</section>
+</div>
+
+<div>
+<section class="panel">
+  <h2>Stock del ERP (en vivo)</h2>
+  <table id="stockTable"><thead><tr><th>Producto</th><th>SKU</th><th>Stock</th></tr></thead><tbody></tbody></table>
+</section>
+
+<section class="panel">
+  <h2>Log de la integración (SOAP real, click para ver XML)</h2>
+  <div class="console" id="console"><div>$ esperando un pedido…</div></div>
+</section>
+</div>
+</div>
+
+<footer>
+  Demo del proyecto <a href="https://github.com/Enemeache/integration-ml-playground/tree/main/ecommerce-erp-sync" target="_blank" rel="noopener">ecommerce-erp-sync</a> —
+  en el repo esto corre como dos servicios FastAPI separados (ERP + integración) hablando SOAP por HTTP real, con 19 tests que incluyen el protocolo completo de punta a punta.
+</footer>
+</div>
+
+<script>
+var PRODUCT_NAMES = {
+  "SKU-001": "Zapatillas Running X200",
+  "SKU-002": "Mochila Urbana Impermeable",
+  "SKU-003": "Auriculares Bluetooth",
+  "SKU-004": "Cafetera Espresso (sin stock)"
+};
+var INITIAL_STOCK = { "SKU-001": 20, "SKU-002": 5, "SKU-003": 50, "SKU-004": 0 };
+var STOCK = {};
+
+function resetStock(){ STOCK = Object.assign({}, INITIAL_STOCK); renderStock(); }
+
+function renderStock(){
+  var tbody = document.querySelector('#stockTable tbody');
+  tbody.innerHTML = '';
+  Object.keys(INITIAL_STOCK).forEach(function(sku){
+    var tr = document.createElement('tr');
+    if(STOCK[sku] === 0) tr.className = 'zero';
+    tr.innerHTML = '<td>'+PRODUCT_NAMES[sku]+'</td><td style="font-family:var(--mono)">'+sku+'</td><td class="num">'+STOCK[sku]+'</td>';
+    tbody.appendChild(tr);
+  });
+}
+
+/* ---- SOAP a mano, mismo formato que app/soap_erp.py / app/soap_client.py ---- */
+function envelope(bodyInner){
+  return '<?xml version="1.0" encoding="UTF-8"?>'+
+    '<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:erp="urn:erp-legacy">'+
+    '<soap:Body>'+bodyInner+'</soap:Body></soap:Envelope>';
+}
+function fault(message){
+  return envelope('<soap:Fault><faultcode>soap:Server</faultcode><faultstring>'+message+'</faultstring></soap:Fault>');
+}
+
+/* El "ERP": procesa la operación como lo haría soap_erp.py */
+function erpHandle(requestXml){
+  var opMatch = requestXml.match(/<erp:(ReserveStock|ReleaseStock|GetStock)>/);
+  var op = opMatch ? opMatch[1] : null;
+  var sku = (requestXml.match(/<erp:Sku>([^<]+)<\/erp:Sku>/)||[])[1];
+  var qty = parseInt((requestXml.match(/<erp:Quantity>(\d+)<\/erp:Quantity>/)||[])[1] || '0', 10);
+
+  if(!op || !(sku in STOCK)) return fault('SKU desconocido: '+sku);
+
+  if(op === 'GetStock'){
+    return envelope('<erp:GetStockResponse><erp:Sku>'+sku+'</erp:Sku><erp:Quantity>'+STOCK[sku]+'</erp:Quantity></erp:GetStockResponse>');
+  }
+  if(op === 'ReserveStock'){
+    if(qty > STOCK[sku]) return fault('Stock insuficiente para '+sku+': pedido '+qty+', disponible '+STOCK[sku]);
+    STOCK[sku] -= qty;
+    return envelope('<erp:ReserveStockResponse><erp:Success>true</erp:Success><erp:RemainingStock>'+STOCK[sku]+'</erp:RemainingStock></erp:ReserveStockResponse>');
+  }
+  if(op === 'ReleaseStock'){
+    STOCK[sku] += qty;
+    return envelope('<erp:ReleaseStockResponse><erp:Success>true</erp:Success><erp:RemainingStock>'+STOCK[sku]+'</erp:RemainingStock></erp:ReleaseStockResponse>');
+  }
+}
+
+function soapCall(op, sku, qty){
+  var body = qty === undefined
+    ? '<erp:'+op+'><erp:Sku>'+sku+'</erp:Sku></erp:'+op+'>'
+    : '<erp:'+op+'><erp:Sku>'+sku+'</erp:Sku><erp:Quantity>'+qty+'</erp:Quantity></erp:'+op+'>';
+  var request = envelope(body);
+  var response = erpHandle(request);
+  var isFault = response.indexOf('<soap:Fault>') >= 0;
+  return { request: request, response: response, isFault: isFault };
+}
+
+/* ---- Log visual ---- */
+var consoleEl = document.getElementById('console');
+function logStep(summaryHtml, requestXml, responseXml, isFault){
+  var ts = new Date().toLocaleTimeString('es-AR', {hour12:false});
+  var details = document.createElement('details');
+  details.innerHTML = '<summary><span class="ts">'+ts+'</span> '+summaryHtml+'</summary>'+
+    '<pre>--- Request ---\n'+escapeHtml(requestXml)+'\n\n--- Response ---\n'+escapeHtml(responseXml)+'</pre>';
+  if(isFault) details.querySelector('summary').classList.add('fault');
+  consoleEl.appendChild(details);
+  consoleEl.scrollTop = consoleEl.scrollHeight;
+}
+function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* ---- Transacción: igual logica que app/orders.py::process_order ---- */
+function processOrder(items, done){
+  var stages = ['stage-webshop','stage-integration','stage-soap','stage-erp'];
+  stages.forEach(function(id){ document.getElementById(id).className = 'stage'; });
+  document.getElementById('stage-webshop').className = 'stage active';
+
+  var reserved = [];
+  var i = 0;
+  function step(){
+    document.getElementById('stage-integration').className = 'stage active';
+    document.getElementById('stage-soap').className = 'stage active';
+    document.getElementById('stage-erp').className = 'stage active';
+
+    if(i >= items.length){
+      stages.forEach(function(id){ document.getElementById(id).className = 'stage ok'; });
+      done({ status: 'confirmado', reserved: reserved });
+      return;
+    }
+    var item = items[i];
+    var result = soapCall('ReserveStock', item.sku, item.quantity);
+    renderStock();
+
+    if(result.isFault){
+      var faultMsg = (result.response.match(/<faultstring>([^<]+)<\/faultstring>/)||[])[1];
+      logStep('<span class="op">ReserveStock</span> '+item.sku+' x'+item.quantity+' → <span class="fault">FAULT</span>: '+faultMsg, result.request, result.response, true);
+      // transaccion compensatoria: liberar lo ya reservado
+      reserved.forEach(function(r){
+        var rel = soapCall('ReleaseStock', r.sku, r.quantity);
+        renderStock();
+        logStep('<span class="op">ReleaseStock</span> (compensación) '+r.sku+' x'+r.quantity+' → OK', rel.request, rel.response, false);
+      });
+      document.getElementById('stage-erp').className = 'stage bad';
+      done({ status: 'rechazado', reason: faultMsg });
+      return;
+    }
+
+    var remaining = (result.response.match(/<erp:RemainingStock>(\d+)<\/erp:RemainingStock>/)||[])[1];
+    logStep('<span class="op">ReserveStock</span> '+item.sku+' x'+item.quantity+' → OK, quedan '+remaining, result.request, result.response, false);
+    reserved.push(item);
+    i++;
+    setTimeout(step, 500);
+  }
+  setTimeout(step, 300);
+}
+
+/* ---- UI: items del pedido ---- */
+var itemsEl = document.getElementById('items');
+function addItemRow(sku, qty){
+  var row = document.createElement('div');
+  row.className = 'itemrow';
+  var options = Object.keys(PRODUCT_NAMES).map(function(s){
+    return '<option value="'+s+'"'+(s===sku?' selected':'')+'>'+PRODUCT_NAMES[s]+'</option>';
+  }).join('');
+  row.innerHTML = '<select class="sku">'+options+'</select>'+
+    '<input type="number" class="qty" min="1" value="'+(qty||1)+'">'+
+    '<button class="ghost small" type="button" onclick="this.parentElement.remove()">✕</button>';
+  itemsEl.appendChild(row);
+}
+document.getElementById('btnAddItem').addEventListener('click', function(){ addItemRow('SKU-001', 1); });
+
+function readItems(){
+  return Array.prototype.map.call(itemsEl.querySelectorAll('.itemrow'), function(row){
+    return { sku: row.querySelector('.sku').value, quantity: parseInt(row.querySelector('.qty').value, 10) || 1 };
+  });
+}
+
+document.getElementById('btnSend').addEventListener('click', function(){
+  var items = readItems();
+  if(!items.length) return;
+  document.getElementById('btnSend').disabled = true;
+  consoleEl.innerHTML = '';
+  document.getElementById('orderResult').innerHTML = '';
+
+  processOrder(items, function(result){
+    var pill = '<span class="statuspill '+result.status+'">'+result.status+'</span>';
+    var extra = result.status === 'rechazado' ? ' — '+result.reason : '';
+    document.getElementById('orderResult').innerHTML = '<p class="row">'+pill+'<span class="sub">'+extra+'</span></p>';
+    document.getElementById('btnSend').disabled = false;
+  });
+});
+
+document.getElementById('btnReset').addEventListener('click', function(){
+  resetStock();
+  consoleEl.innerHTML = '<div>$ stock reiniciado</div>';
+  document.getElementById('orderResult').innerHTML = '';
+});
+
+document.querySelectorAll('[data-preset]').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    itemsEl.innerHTML = '';
+    var preset = btn.dataset.preset;
+    if(preset === 'simple'){ addItemRow('SKU-001', 4); }
+    else if(preset === 'partial'){ addItemRow('SKU-001', 2); addItemRow('SKU-004', 1); }
+    else if(preset === 'multi'){ addItemRow('SKU-001', 2); addItemRow('SKU-002', 1); addItemRow('SKU-003', 3); }
+  });
+});
+
+resetStock();
+addItemRow('SKU-001', 4);
+</script>
+</body>
+</html>
