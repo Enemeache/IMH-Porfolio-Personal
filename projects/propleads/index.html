@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PropLeads Integration Hub — Demo</title>
+<style>
+:root{
+  --bg:#fbfbfa; --panel:#ffffff; --fg:#191c21; --muted:#5f6771; --line:#dfe3e8;
+  --accent:#12507e; --ok:#166a45; --warn:#8a5a00; --bad:#a32118;
+  --ok-bg:#e8f4ee; --warn-bg:#fdf3e0; --bad-bg:#fbeceb; --accent-bg:#e9f0f6;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#14171b; --panel:#1a1e23; --fg:#e8eaed; --muted:#9aa3ae; --line:#2c323a;
+    --accent:#7fb2dd; --ok:#6fcf9a; --warn:#e3b45f; --bad:#f0897f;
+    --ok-bg:#16291f; --warn-bg:#2a2214; --bad-bg:#2c1a18; --accent-bg:#172431;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14171b; --panel:#1a1e23; --fg:#e8eaed; --muted:#9aa3ae; --line:#2c323a;
+  --accent:#7fb2dd; --ok:#6fcf9a; --warn:#e3b45f; --bad:#f0897f;
+  --ok-bg:#16291f; --warn-bg:#2a2214; --bad-bg:#2c1a18; --accent-bg:#172431;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--fg);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  font-size:15px; line-height:1.5;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:1.5rem 1rem 4rem}
+header{border-bottom:2px solid var(--fg);padding-bottom:.9rem;margin-bottom:1.5rem}
+h1{font-size:1.35rem;margin:0 0 .3rem;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:.9rem;margin:0 0 .6rem}
+.badgebar{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.3rem}
+.badge{font-family:var(--mono);font-size:.72rem;border:1px solid var(--line);border-radius:3px;
+       padding:.15rem .45rem;color:var(--muted)}
+.note{margin-top:.75rem;font-size:.82rem;color:var(--muted);
+      border-left:3px solid var(--accent);padding:.4rem .7rem;background:var(--accent-bg)}
+.note a{color:inherit}
+h2{font-size:.78rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);
+   margin:0 0 .7rem;font-weight:600}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:4px;
+       padding:1rem;margin-bottom:1rem}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start}
+@media(max-width:820px){.grid2{grid-template-columns:1fr}}
+label.f{display:block;font-size:.8rem;color:var(--muted);margin:.6rem 0 .2rem}
+label.f:first-child{margin-top:0}
+input[type=text],input[type=number],select,textarea{
+  width:100%;padding:.42rem .5rem;border:1px solid var(--line);border-radius:3px;
+  background:var(--panel);color:var(--fg);font-size:.88rem;font-family:inherit}
+textarea{height:88px;resize:vertical}
+button{
+  padding:.55rem 1rem;border:1px solid var(--fg);border-radius:3px;background:var(--fg);
+  color:var(--bg);font-size:.92rem;font-family:inherit;cursor:pointer}
+button:hover{opacity:.88}
+button.ghost{background:transparent;color:var(--fg);border-color:var(--line);
+             padding:.32rem .6rem;font-size:.78rem}
+button:disabled{opacity:.45;cursor:not-allowed}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.presets{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.8rem}
+.row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-top:1rem}
+
+/* pipeline */
+.pipeline{display:flex;align-items:center;flex-wrap:wrap;gap:0;margin-bottom:.9rem}
+.stage{flex:1 1 auto;min-width:104px;border:1px solid var(--line);border-radius:4px;
+       padding:.5rem .55rem;background:var(--bg);text-align:center;transition:background .25s,border-color .25s}
+.stage .k{font-family:var(--mono);font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.stage .t{font-size:.8rem;font-weight:600;margin-top:.1rem}
+.stage.active{border-color:var(--accent);background:var(--accent-bg)}
+.stage.done{border-color:var(--ok);background:var(--ok-bg)}
+.arrow{flex:0 0 auto;padding:0 .3rem;color:var(--muted);font-size:.9rem}
+@media(max-width:820px){.pipeline{flex-direction:column;align-items:stretch}.arrow{text-align:center;padding:.15rem 0;transform:rotate(90deg)}}
+
+.console{background:#0d1117;color:#c9d1d9;border-radius:4px;padding:.7rem .8rem;
+         font-family:var(--mono);font-size:.78rem;line-height:1.6;min-height:3.5rem;
+         max-height:220px;overflow-y:auto}
+.console .ln{opacity:0;animation:fade .25s forwards}
+.console .ts{color:#6e7681}
+.console .tag{color:#7ee787}
+.console .tag.warn{color:#f2cc60}
+@keyframes fade{to{opacity:1}}
+
+.statuspill{display:inline-block;font-family:var(--mono);font-size:.72rem;font-weight:700;
+            text-transform:uppercase;letter-spacing:.04em;padding:.15rem .55rem;border-radius:99px}
+.statuspill.hot{background:var(--bad-bg);color:var(--bad)}
+.statuspill.warm{background:var(--warn-bg);color:var(--warn)}
+.statuspill.cold{background:var(--accent-bg);color:var(--accent)}
+
+.matchrow{margin-bottom:.55rem}
+.matchrow .mh{display:flex;justify-content:space-between;font-size:.85rem;margin-bottom:.2rem}
+.matchrow .mh b{font-weight:600}
+.matchrow .mh span{font-family:var(--mono);color:var(--muted)}
+.bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:3px;
+       transition:width .5s ease}
+
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{text-align:left;padding:.45rem .5rem;border-bottom:1px solid var(--line);
+   font-size:.73rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);white-space:nowrap}
+td{padding:.5rem .5rem;border-bottom:1px solid var(--line);vertical-align:top}
+.empty{padding:1.6rem 1rem;text-align:center;color:var(--muted);font-size:.88rem}
+.scroll{overflow-x:auto}
+footer{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--line);
+       font-size:.82rem;color:var(--muted)}
+footer a{color:var(--accent)}
+.hidden{display:none}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>PropLeads Integration Hub</h1>
+  <p class="sub">Simulación interactiva del pipeline real: un lead entra por webhook, se encola, un worker lo matchea contra un catálogo de propiedades y lo clasifica con IA. Corré un ejemplo y mirá cada etapa procesarse.</p>
+  <div class="badgebar">
+    <span class="badge">FastAPI</span><span class="badge">RabbitMQ</span><span class="badge">MongoDB</span>
+    <span class="badge">GraphQL</span><span class="badge">scikit-learn</span><span class="badge">Claude API</span>
+    <span class="badge">Docker</span><span class="badge">pytest</span>
+  </div>
+  <p class="note">Esta página es 100% cliente: reimplementa en JavaScript el mismo algoritmo de matching (TF-IDF + similitud coseno) y la misma heurística de clasificación que corren en el backend real (Python), para que puedas ver el flujo sin tener que levantar Docker. Código completo y tests en <a href="https://github.com/Enemeache/realestate-integration-hub" target="_blank" rel="noopener">GitHub ↗</a>.</p>
+</header>
+
+<section class="panel">
+  <h2>1. Simular un lead entrante</h2>
+  <div class="presets">
+    <button class="ghost" type="button" data-preset="0">Familia busca casa con pileta</button>
+    <button class="ghost" type="button" data-preset="1">Joven busca monoambiente</button>
+    <button class="ghost" type="button" data-preset="2">Urgente, debo mudarme ya</button>
+  </div>
+  <div class="grid2">
+    <div>
+      <label class="f" for="fName">Nombre</label>
+      <input type="text" id="fName" value="Juana Pérez">
+      <label class="f" for="fSource">Fuente</label>
+      <select id="fSource">
+        <option value="zonaprop">ZonaProp</option>
+        <option value="web_form" selected>Formulario web</option>
+        <option value="whatsapp">WhatsApp</option>
+      </select>
+    </div>
+    <div>
+      <label class="f" for="fBudget">Presupuesto (USD, opcional)</label>
+      <input type="number" id="fBudget" value="350000" min="0" step="1000">
+      <label class="f" for="fMsg">Mensaje del lead</label>
+      <textarea id="fMsg">Busco una casa con pileta para mi familia, tengo que mudarme urgente esta semana</textarea>
+    </div>
+  </div>
+  <div class="row">
+    <button type="button" id="btnSend">Enviar lead →</button>
+    <button class="ghost" type="button" id="btnClear">Limpiar leads de la sesión</button>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>2. Pipeline de integración</h2>
+  <div class="pipeline" id="pipeline"></div>
+  <div class="console" id="console"><span class="ln"><span class="ts">$</span> esperando un lead…</span></div>
+</section>
+
+<section class="panel hidden" id="resultPanel">
+  <h2>3. Resultado del procesamiento</h2>
+  <div class="grid2">
+    <div>
+      <div class="row" style="margin-top:0">
+        <b id="rName"></b>
+        <span class="statuspill" id="rStatus"></span>
+      </div>
+      <p class="sub" id="rSummary" style="margin-top:.5rem"></p>
+    </div>
+    <div>
+      <div class="sub" style="margin-bottom:.4rem">Top matches (similitud TF-IDF)</div>
+      <div id="rMatches"></div>
+    </div>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>4. Leads guardados (GET /leads)</h2>
+  <div class="scroll">
+    <table id="leadsTable">
+      <thead><tr><th>ID</th><th>Nombre</th><th>Status</th><th>Mejor match</th><th>Score</th></tr></thead>
+      <tbody id="leadsBody"></tbody>
+    </table>
+  </div>
+  <div class="empty" id="leadsEmpty">Todavía no enviaste ningún lead.</div>
+</section>
+
+<footer>
+  Demo del proyecto <a href="https://github.com/Enemeache/realestate-integration-hub" target="_blank" rel="noopener">PropLeads Integration Hub</a> —
+  en el repo real esto corre con FastAPI + RabbitMQ + MongoDB dockerizados, con 9 tests y CI en GitHub Actions.
+  Los leads de esta demo viven solo en la memoria de esta pestaña, no se guardan en ningún lado.
+</footer>
+</div>
+
+<script>
+/* ── catálogo (igual a data/properties_seed.json del repo) ───────────── */
+var PROPERTIES = [
+  {id:"p1", title:"Casa 4 ambientes en Barrio Los Castores", description:"Casa moderna de 4 ambientes con pileta, quincho y parque de 800m2. Ideal familia grande, cerca del colegio St. Andrew's. Nordelta.", neighborhood:"Los Castores, Nordelta"},
+  {id:"p2", title:"Departamento 2 ambientes a estrenar", description:"Monoambiente de lujo con amenities, gimnasio y coworking. Perfecto para joven profesional o inversión. A estrenar, entrega inmediata.", neighborhood:"Puertos, Escobar"},
+  {id:"p3", title:"Casa de campo estilo minimalista", description:"Casa de diseño minimalista con muelle propio sobre laguna, ideal para deportes náuticos y descanso. 3 dormitorios en suite.", neighborhood:"Barrancas del Lago, Nordelta"},
+  {id:"p4", title:"Departamento 3 ambientes con vista al golf", description:"Piso alto con vista panorámica a la cancha de golf. Balcón terraza, cochera doble. Excelente para familia tipo con hijos chicos.", neighborhood:"Golf, Nordelta"},
+  {id:"p5", title:"PH reciclado a nuevo cerca del centro comercial", description:"PH totalmente reciclado, luminoso, patio propio. A pasos del paseo de compras y el hospital. Sin expensas.", neighborhood:"Al Sur, Nordelta"},
+  {id:"p6", title:"Casa familiar con quincho y pileta climatizada", description:"5 ambientes, jardín amplio, quincho cerrado, pileta climatizada. Zona muy segura con guardia 24hs, ideal para chicos.", neighborhood:"Punta Cañas, Nordelta"},
+  {id:"p7", title:"Departamento económico 1 dormitorio", description:"Unidad funcional de 1 dormitorio, buen precio de entrada, ideal primera inversión o alquiler. Cochera opcional.", neighborhood:"Los Lagos, Nordelta"},
+  {id:"p8", title:"Casa premium frente al lago", description:"Diseño de autor frente al lago central, doble altura, muelle privado y home theater. Terminaciones de máxima categoría.", neighborhood:"Islas del Golf, Nordelta"},
+  {id:"p9", title:"Departamento 2 ambientes pet friendly", description:"Departamento moderno, pet friendly, con parque canino en el complejo. Amenities completos y seguridad perimetral.", neighborhood:"Sausalito, Nordelta"},
+  {id:"p10", title:"Casa a estrenar lista para mudarse", description:"Casa a estrenar, 3 dormitorios, cocina integrada, jardín con pileta. Financiación disponible en pesos.", neighborhood:"La Alameda, Nordelta"},
+  {id:"p11", title:"Lote de terreno para construir", description:"Lote de 600m2 en zona en desarrollo, apto para construir casa de hasta 3 pisos. Buena oportunidad de inversión a mediano plazo.", neighborhood:"Puertos, Escobar"},
+  {id:"p12", title:"Departamento de lujo con servicio de conserjería", description:"3 ambientes de categoría con conserjería 24hs, spa y piscina climatizada en el edificio. Vista al río.", neighborhood:"Yacht, Nordelta"}
+];
+
+var PRESETS = [
+  {name:"Juana Pérez", source:"web_form", budget:350000, message:"Busco una casa con pileta para mi familia, tengo que mudarme urgente esta semana"},
+  {name:"Tomás Ibáñez", source:"zonaprop", budget:130000, message:"Soy soltero y busco un monoambiente moderno con gimnasio, no tengo apuro"},
+  {name:"Lucía Fernández", source:"whatsapp", budget:90000, message:"Necesito mudarme ya, cuanto antes, cualquier departamento chico me sirve"}
+];
+
+/* ── TF-IDF + similitud coseno (misma idea que app/matching.py) ──────── */
+var STOPWORDS = {"de":1,"la":1,"el":1,"en":1,"con":1,"para":1,"un":1,"una":1,"y":1,"a":1,
+  "los":1,"las":1,"del":1,"que":1,"se":1,"su":1,"sus":1,"mi":1,"tu":1,"al":1,"o":1,"por":1};
+
+function normalize(s){
+  return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+}
+function tokenize(s){
+  return normalize(s).split(/[^a-z0-9]+/).filter(function(t){return t.length>2 && !STOPWORDS[t];});
+}
+
+var corpusDocs = PROPERTIES.map(function(p){return tokenize(p.title+" "+p.description+" "+p.neighborhood);});
+var df = {};
+corpusDocs.forEach(function(tokens){
+  var seen={};
+  tokens.forEach(function(t){ if(!seen[t]){ df[t]=(df[t]||0)+1; seen[t]=1; } });
+});
+var N = corpusDocs.length;
+function idf(term){ return Math.log((1+N)/(1+(df[term]||0)))+1; }
+
+function vectorize(tokens){
+  var tf={};
+  tokens.forEach(function(t){ tf[t]=(tf[t]||0)+1; });
+  var vec={}, norm=0;
+  Object.keys(tf).forEach(function(t){
+    var w = tf[t]*idf(t);
+    vec[t]=w; norm += w*w;
+  });
+  norm = Math.sqrt(norm) || 1;
+  Object.keys(vec).forEach(function(t){ vec[t]/=norm; });
+  return vec;
+}
+var corpusVecs = corpusDocs.map(vectorize);
+
+function cosine(a,b){
+  var s=0, keys = Object.keys(a).length<Object.keys(b).length?a:b, other=(keys===a?b:a);
+  Object.keys(keys).forEach(function(t){ if(other[t]) s += keys[t]*other[t]; });
+  return s;
+}
+function topMatches(message, k){
+  var qVec = vectorize(tokenize(message));
+  var scored = PROPERTIES.map(function(p,i){ return {property:p, score:cosine(qVec, corpusVecs[i])}; });
+  scored.sort(function(a,b){ return b.score-a.score; });
+  return scored.slice(0,k||3);
+}
+
+/* ── clasificación heurística (misma lógica que app/llm.py _mock_classify) ── */
+function classifyLead(message, budget){
+  var text = normalize(message);
+  var urgentWords = ["urgente","esta semana","ya","cuanto antes","hoy"];
+  var isUrgent = urgentWords.some(function(w){ return text.indexOf(normalize(w))>=0; });
+  var status = "warm";
+  if(isUrgent || (budget && budget>300000)) status="hot";
+  else if(message.trim().length<15) status="cold";
+  var summary = "Lead heurístico (sin LLM): interesado en '"+message.slice(0,60)+"'";
+  return {status:status, summary:summary};
+}
+
+/* ── pipeline UI ───────────────────────────────────────────────────── */
+var STAGES = [
+  {k:"webhook", t:"Webhook", log:function(id){return ['<span class="tag">POST</span> /webhook/lead → <span class="tag">202</span> Accepted (id='+id+')'];}},
+  {k:"queue", t:"Cola", log:function(){return ['[rabbitmq] publish → queue <b>leads.incoming</b> (durable)'];}},
+  {k:"worker", t:"Worker", log:function(id){return ['[worker] consume mensaje id='+id];}},
+  {k:"matching", t:"Matching", log:function(){return ['[matching] TfidfMatcher.top_matches() sobre 12 propiedades'];}},
+  {k:"llm", t:"Clasificación IA", log:function(s){return ['[llm] classify_lead() → status=<span class="tag '+(s==='hot'?'warn':'')+'">'+s+'</span>'];}},
+  {k:"db", t:"MongoDB", log:function(){return ['[mongo] leads.insert_one(document)'];}},
+  {k:"api", t:"API", log:function(){return ['[api] disponible en GET /leads y POST /graphql'];}}
+];
+var pipelineEl = document.getElementById('pipeline');
+STAGES.forEach(function(s,i){
+  var box = document.createElement('div');
+  box.className='stage'; box.id='stage-'+s.k;
+  box.innerHTML='<div class="k">'+String(i+1).padStart(2,'0')+'</div><div class="t">'+s.t+'</div>';
+  pipelineEl.appendChild(box);
+  if(i<STAGES.length-1){
+    var arrow=document.createElement('div'); arrow.className='arrow'; arrow.textContent='→';
+    pipelineEl.appendChild(arrow);
+  }
+});
+
+var consoleEl = document.getElementById('console');
+function logLine(html){
+  var ts = new Date().toLocaleTimeString('es-AR',{hour12:false});
+  var ln = document.createElement('div');
+  ln.className='ln';
+  ln.innerHTML='<span class="ts">'+ts+'</span>  '+html;
+  consoleEl.appendChild(ln);
+  consoleEl.scrollTop = consoleEl.scrollHeight;
+}
+
+var leads = [];
+var leadSeq = 1;
+var sending = false;
+
+function runPipeline(lead, done){
+  var i=0;
+  STAGES.forEach(function(s){ document.getElementById('stage-'+s.k).className='stage'; });
+  (function step(){
+    if(i>0) document.getElementById('stage-'+STAGES[i-1].k).className='stage done';
+    if(i>=STAGES.length){ done(); return; }
+    var s = STAGES[i];
+    document.getElementById('stage-'+s.k).className='stage active';
+    var arg = s.k==='webhook'||s.k==='worker' ? lead.id : (s.k==='llm' ? lead.status : null);
+    s.log(arg).forEach(logLine);
+    i++;
+    setTimeout(step, 420);
+  })();
+}
+
+function renderResult(lead){
+  document.getElementById('resultPanel').classList.remove('hidden');
+  document.getElementById('rName').textContent = lead.name+' · '+lead.source;
+  var pill = document.getElementById('rStatus');
+  pill.className = 'statuspill '+lead.status;
+  pill.textContent = lead.status;
+  document.getElementById('rSummary').textContent = lead.summary;
+
+  var mEl = document.getElementById('rMatches');
+  mEl.innerHTML='';
+  lead.matches.forEach(function(m){
+    var pct = Math.round(m.score*100);
+    var div = document.createElement('div');
+    div.className='matchrow';
+    div.innerHTML='<div class="mh"><b>'+m.property.title+'</b><span>'+m.score.toFixed(3)+'</span></div>'+
+      '<div class="bar"><i style="width:'+pct+'%"></i></div>';
+    mEl.appendChild(div);
+  });
+}
+
+function renderLeadsTable(){
+  var body = document.getElementById('leadsBody');
+  body.innerHTML='';
+  document.getElementById('leadsEmpty').classList.toggle('hidden', leads.length>0);
+  leads.slice().reverse().forEach(function(lead){
+    var tr = document.createElement('tr');
+    var best = lead.matches[0];
+    tr.innerHTML = '<td class="sub" style="font-family:var(--mono)">'+lead.id+'</td>'+
+      '<td>'+lead.name+'</td>'+
+      '<td><span class="statuspill '+lead.status+'">'+lead.status+'</span></td>'+
+      '<td>'+(best?best.property.title:'—')+'</td>'+
+      '<td style="font-family:var(--mono)">'+(best?best.score.toFixed(3):'—')+'</td>';
+    body.appendChild(tr);
+  });
+}
+
+document.getElementById('btnSend').addEventListener('click', function(){
+  if(sending) return;
+  var name = document.getElementById('fName').value.trim() || 'Lead sin nombre';
+  var source = document.getElementById('fSource').value;
+  var budget = parseFloat(document.getElementById('fBudget').value) || null;
+  var message = document.getElementById('fMsg').value.trim();
+  if(!message){ document.getElementById('fMsg').focus(); return; }
+
+  sending = true;
+  document.getElementById('btnSend').disabled = true;
+  consoleEl.innerHTML='';
+
+  var cls = classifyLead(message, budget);
+  var lead = {
+    id: 'lead-'+String(leadSeq++).padStart(3,'0'),
+    name:name, source:source, budget:budget, message:message,
+    status:cls.status, summary:cls.summary,
+    matches: topMatches(message, 3)
+  };
+
+  runPipeline(lead, function(){
+    leads.push(lead);
+    renderResult(lead);
+    renderLeadsTable();
+    sending = false;
+    document.getElementById('btnSend').disabled = false;
+  });
+});
+
+document.getElementById('btnClear').addEventListener('click', function(){
+  leads = [];
+  renderLeadsTable();
+  document.getElementById('resultPanel').classList.add('hidden');
+  consoleEl.innerHTML='<span class="ln"><span class="ts">$</span> esperando un lead…</span>';
+});
+
+document.querySelectorAll('[data-preset]').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var p = PRESETS[+btn.dataset.preset];
+    document.getElementById('fName').value = p.name;
+    document.getElementById('fSource').value = p.source;
+    document.getElementById('fBudget').value = p.budget;
+    document.getElementById('fMsg').value = p.message;
+  });
+});
+
+renderLeadsTable();
+</script>
+</body>
+</html>
