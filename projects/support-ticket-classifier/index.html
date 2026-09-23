@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Support Ticket Classifier — Demo</title>
+<style>
+:root{
+  --bg:#fbfbfa; --panel:#ffffff; --fg:#191c21; --muted:#5f6771; --line:#dfe3e8;
+  --accent:#12507e; --ok:#166a45; --warn:#8a5a00; --bad:#a32118;
+  --ok-bg:#e8f4ee; --warn-bg:#fdf3e0; --bad-bg:#fbeceb; --accent-bg:#e9f0f6;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#14171b; --panel:#1a1e23; --fg:#e8eaed; --muted:#9aa3ae; --line:#2c323a;
+    --accent:#7fb2dd; --ok:#6fcf9a; --warn:#e3b45f; --bad:#f0897f;
+    --ok-bg:#16291f; --warn-bg:#2a2214; --bad-bg:#2c1a18; --accent-bg:#172431;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14171b; --panel:#1a1e23; --fg:#e8eaed; --muted:#9aa3ae; --line:#2c323a;
+  --accent:#7fb2dd; --ok:#6fcf9a; --warn:#e3b45f; --bad:#f0897f;
+  --ok-bg:#16291f; --warn-bg:#2a2214; --bad-bg:#2c1a18; --accent-bg:#172431;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:15px;line-height:1.5}
+.wrap{max-width:980px;margin:0 auto;padding:1.5rem 1rem 4rem}
+header{border-bottom:2px solid var(--fg);padding-bottom:.9rem;margin-bottom:1.5rem}
+h1{font-size:1.35rem;margin:0 0 .3rem;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:.9rem;margin:0 0 .6rem}
+.badgebar{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.3rem}
+.badge{font-family:var(--mono);font-size:.72rem;border:1px solid var(--line);border-radius:3px;padding:.15rem .45rem;color:var(--muted)}
+.note{margin-top:.75rem;font-size:.82rem;color:var(--muted);border-left:3px solid var(--accent);padding:.4rem .7rem;background:var(--accent-bg)}
+.note a{color:inherit}
+h2{font-size:.78rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin:0 0 .7rem;font-weight:600}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:1rem;margin-bottom:1rem}
+.presets{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.8rem}
+textarea{width:100%;height:90px;padding:.5rem;border:1px solid var(--line);border-radius:3px;background:var(--panel);color:var(--fg);font-size:.9rem;font-family:inherit;resize:vertical}
+button{padding:.55rem 1rem;border:1px solid var(--fg);border-radius:3px;background:var(--fg);color:var(--bg);font-size:.92rem;font-family:inherit;cursor:pointer}
+button:hover{opacity:.88}
+button.ghost{background:transparent;color:var(--fg);border-color:var(--line);padding:.32rem .6rem;font-size:.78rem}
+button:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-top:1rem}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+.resultcard{display:flex;gap:.6rem;align-items:center;margin-bottom:.6rem}
+.pill{display:inline-block;font-family:var(--mono);font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:.2rem .6rem;border-radius:99px}
+.pill.category{background:var(--accent-bg);color:var(--accent)}
+.pill.alta{background:var(--bad-bg);color:var(--bad)}
+.pill.media{background:var(--warn-bg);color:var(--warn)}
+.pill.baja{background:var(--ok-bg);color:var(--ok)}
+.termrow{display:flex;justify-content:space-between;font-size:.85rem;margin-bottom:.35rem;font-family:var(--mono)}
+.termrow .bar{flex:1;height:6px;border-radius:3px;background:var(--line);margin:0 .6rem;overflow:hidden;align-self:center}
+.termrow .bar i{display:block;height:100%;background:var(--accent);border-radius:3px}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{text-align:left;padding:.45rem .5rem;border-bottom:1px solid var(--line);font-size:.73rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+td{padding:.45rem .5rem;border-bottom:1px solid var(--line)}
+footer{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--line);font-size:.82rem;color:var(--muted)}
+footer a{color:var(--accent)}
+.hidden{display:none}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Support Ticket Classifier</h1>
+  <p class="sub">Clasifica un ticket de soporte por departamento y prioridad usando el modelo <strong>real entrenado</strong> (TF-IDF + LinearSVC de scikit-learn) — no una reimplementación aproximada.</p>
+  <div class="badgebar">
+    <span class="badge">scikit-learn</span><span class="badge">TF-IDF</span><span class="badge">LinearSVC</span><span class="badge">PyTorch (comparado)</span>
+  </div>
+  <p class="note">Esta página carga <code>model.json</code>: el vocabulario, los pesos idf y los coeficientes de LinearSVC exportados directamente del pipeline entrenado en Python. El JS de acá abajo reimplementa <code>TfidfVectorizer.transform()</code> + <code>LinearSVC.decision_function()</code> con esos mismos números — verificado contra el modelo real en Python, misma predicción, no una aproximación. Código y entrenamiento completos en <a href="https://github.com/Enemeache/integration-ml-playground/tree/main/support-ticket-classifier" target="_blank" rel="noopener">GitHub ↗</a>.</p>
+</header>
+
+<section class="panel">
+  <h2>Probar un ticket</h2>
+  <div class="presets">
+    <button class="ghost" type="button" data-preset="0">Cuenta bloqueada, urgente</button>
+    <button class="ghost" type="button" data-preset="1">Consulta de precios</button>
+    <button class="ghost" type="button" data-preset="2">App se cierra sola</button>
+    <button class="ghost" type="button" data-preset="3">Cancelar suscripción</button>
+    <button class="ghost" type="button" data-preset="4">Cobro duplicado</button>
+  </div>
+  <textarea id="ticketText">no puedo entrar a mi cuenta, es urgente que me ayuden hoy</textarea>
+  <div class="row">
+    <button type="button" id="btnClassify">Clasificar →</button>
+    <span id="loadStatus" class="sub"></span>
+  </div>
+</section>
+
+<section class="panel hidden" id="resultPanel">
+  <h2>Resultado</h2>
+  <div class="resultcard">
+    <span class="pill category" id="rCategory"></span>
+    <span class="pill" id="rPriority"></span>
+  </div>
+  <div class="grid2">
+    <div>
+      <div class="sub" style="margin-bottom:.4rem">Términos que más influyeron (departamento)</div>
+      <div id="rTermsCategory"></div>
+    </div>
+    <div>
+      <div class="sub" style="margin-bottom:.4rem">Términos que más influyeron (prioridad)</div>
+      <div id="rTermsPriority"></div>
+    </div>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>scikit-learn vs PyTorch (evaluación real, ver reports/comparison.md)</h2>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Modelo</th><th>Accuracy (categoría)</th><th>n_test</th></tr></thead>
+      <tbody>
+        <tr><td>TF-IDF + LinearSVC (scikit-learn) — el que corre en esta página</td><td>97.2%</td><td>180</td></tr>
+        <tr><td>EmbeddingBag + Linear (PyTorch, 12 epochs)</td><td>96.1%</td><td>180</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="sub" style="margin-top:.6rem">Casi empatados: con ~900 tickets sintéticos, TF-IDF ya captura casi toda la señal por palabras clave, así que la red neuronal no tiene margen para mostrar ventaja. Entrenar y comparar ambos en vez de asumir cuál "debería" ganar es el punto del proyecto.</p>
+</section>
+
+<footer>
+  Demo del proyecto <a href="https://github.com/Enemeache/integration-ml-playground/tree/main/support-ticket-classifier" target="_blank" rel="noopener">support-ticket-classifier</a> —
+  dataset sintético (900 tickets, 5 categorías), entrenamiento y evaluación completos en el repo. Nada de esta página se envía a ningún servidor: todo corre en tu navegador.
+</footer>
+</div>
+
+<script>
+var MODEL = null;
+var PRESETS = [
+  "no puedo entrar a mi cuenta, es urgente que me ayuden hoy",
+  "quiero saber si tienen planes para empresas y si tienen integracion con otras herramientas",
+  "la aplicacion se cierra sola cuando intento cargar un archivo, ya probe reinstalar",
+  "quiero dar de baja mi suscripcion antes de que se renueve el proximo mes",
+  "me cobraron dos veces este mes, no reconozco un cargo en mi resumen"
+];
+
+fetch('./model.json').then(function(r){ return r.json(); }).then(function(data){
+  MODEL = data;
+  document.getElementById('loadStatus').textContent = 'Modelo cargado (' + Object.keys(data.category.vocabulary).length + ' términos)';
+  document.getElementById('btnClassify').disabled = false;
+}).catch(function(e){
+  document.getElementById('loadStatus').textContent = 'Error cargando el modelo: ' + e;
+});
+document.getElementById('btnClassify').disabled = true;
+
+function tokenize(text){
+  var m = text.toLowerCase().match(/[\p{L}\p{N}_]{2,}/gu);
+  return m || [];
+}
+function ngrams(tokens, n1, n2){
+  var out = [];
+  for(var n = n1; n <= n2; n++){
+    for(var i = 0; i + n <= tokens.length; i++){
+      out.push(tokens.slice(i, i+n).join(' '));
+    }
+  }
+  return out;
+}
+
+/* Reimplementa TfidfVectorizer.transform() (sublinear_tf, smooth idf, norma L2)
+   + LinearSVC.decision_function() con los pesos reales exportados de sklearn. */
+function classify(text, modelPart){
+  var tokens = tokenize(text);
+  var terms = ngrams(tokens, modelPart.ngram_range[0], modelPart.ngram_range[1]);
+  var counts = {};
+  terms.forEach(function(t){
+    if(modelPart.vocabulary.hasOwnProperty(t)){ counts[t] = (counts[t]||0) + 1; }
+  });
+  var weighted = {}; // idx -> peso tfidf (sin normalizar)
+  var sumsq = 0;
+  Object.keys(counts).forEach(function(t){
+    var idx = modelPart.vocabulary[t];
+    var sublinearTf = 1 + Math.log(counts[t]);
+    var w = sublinearTf * modelPart.idf[idx];
+    weighted[idx] = w;
+    sumsq += w*w;
+  });
+  var norm = Math.sqrt(sumsq) || 1;
+
+  var scores = modelPart.classes.map(function(_, ci){
+    var s = modelPart.intercept[ci];
+    Object.keys(weighted).forEach(function(idxStr){
+      var idx = +idxStr;
+      s += (weighted[idx]/norm) * modelPart.coef[ci][idx];
+    });
+    return s;
+  });
+  var bestIdx = 0;
+  scores.forEach(function(s, i){ if(s > scores[bestIdx]) bestIdx = i; });
+
+  // top terminos que mas empujaron a la clase ganadora (para transparencia)
+  var reverseVocab = {};
+  Object.keys(modelPart.vocabulary).forEach(function(t){ reverseVocab[modelPart.vocabulary[t]] = t; });
+  var contributions = Object.keys(weighted).map(function(idxStr){
+    var idx = +idxStr;
+    var contribution = (weighted[idx]/norm) * modelPart.coef[bestIdx][idx];
+    return { term: reverseVocab[idx], contribution: contribution };
+  }).sort(function(a,b){ return b.contribution - a.contribution; }).slice(0, 6);
+
+  return { label: modelPart.classes[bestIdx], contributions: contributions };
+}
+
+function renderTerms(elId, contributions){
+  var el = document.getElementById(elId);
+  el.innerHTML = '';
+  var maxAbs = Math.max.apply(null, contributions.map(function(c){ return Math.abs(c.contribution); }).concat([0.001]));
+  contributions.forEach(function(c){
+    var pct = Math.max(4, Math.round(Math.abs(c.contribution)/maxAbs*100));
+    var row = document.createElement('div');
+    row.className = 'termrow';
+    row.innerHTML = '<span>'+c.term+'</span><span class="bar"><i style="width:'+pct+'%"></i></span><span>'+c.contribution.toFixed(2)+'</span>';
+    el.appendChild(row);
+  });
+}
+
+document.getElementById('btnClassify').addEventListener('click', function(){
+  if(!MODEL) return;
+  var text = document.getElementById('ticketText').value.trim();
+  if(!text) return;
+
+  var category = classify(text, MODEL.category);
+  var priority = classify(text, MODEL.priority);
+
+  document.getElementById('resultPanel').classList.remove('hidden');
+  document.getElementById('rCategory').textContent = category.label;
+  var pPill = document.getElementById('rPriority');
+  pPill.textContent = priority.label;
+  pPill.className = 'pill ' + priority.label;
+
+  renderTerms('rTermsCategory', category.contributions);
+  renderTerms('rTermsPriority', priority.contributions);
+});
+
+document.querySelectorAll('[data-preset]').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.getElementById('ticketText').value = PRESETS[+btn.dataset.preset];
+  });
+});
+</script>
+</body>
+</html>
