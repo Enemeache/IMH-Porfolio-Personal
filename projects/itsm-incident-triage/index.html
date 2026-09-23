@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ITSM Incident Triage — Demo</title>
+<style>
+:root{
+  --bg:#fbfbfa; --panel:#ffffff; --fg:#191c21; --muted:#5f6771; --line:#dfe3e8;
+  --accent:#12507e; --ok:#166a45; --warn:#8a5a00; --bad:#a32118;
+  --ok-bg:#e8f4ee; --warn-bg:#fdf3e0; --bad-bg:#fbeceb; --accent-bg:#e9f0f6;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#14171b; --panel:#1a1e23; --fg:#e8eaed; --muted:#9aa3ae; --line:#2c323a;
+    --accent:#7fb2dd; --ok:#6fcf9a; --warn:#e3b45f; --bad:#f0897f;
+    --ok-bg:#16291f; --warn-bg:#2a2214; --bad-bg:#2c1a18; --accent-bg:#172431;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14171b; --panel:#1a1e23; --fg:#e8eaed; --muted:#9aa3ae; --line:#2c323a;
+  --accent:#7fb2dd; --ok:#6fcf9a; --warn:#e3b45f; --bad:#f0897f;
+  --ok-bg:#16291f; --warn-bg:#2a2214; --bad-bg:#2c1a18; --accent-bg:#172431;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:15px;line-height:1.5}
+.wrap{max-width:1060px;margin:0 auto;padding:1.5rem 1rem 4rem}
+header{border-bottom:2px solid var(--fg);padding-bottom:.9rem;margin-bottom:1.5rem}
+h1{font-size:1.35rem;margin:0 0 .3rem;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:.9rem;margin:0 0 .6rem}
+.badgebar{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.3rem}
+.badge{font-family:var(--mono);font-size:.72rem;border:1px solid var(--line);border-radius:3px;padding:.15rem .45rem;color:var(--muted)}
+.note{margin-top:.75rem;font-size:.82rem;color:var(--muted);border-left:3px solid var(--accent);padding:.4rem .7rem;background:var(--accent-bg)}
+.note a{color:inherit}
+h2{font-size:.78rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin:0 0 .7rem;font-weight:600}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:1rem;margin-bottom:1rem}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start}
+@media(max-width:820px){.grid2{grid-template-columns:1fr}}
+.presets{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.6rem}
+button{padding:.55rem 1rem;border:1px solid var(--fg);border-radius:3px;background:var(--fg);color:var(--bg);font-size:.92rem;font-family:inherit;cursor:pointer}
+button:hover{opacity:.88}
+button.ghost{background:transparent;color:var(--fg);border-color:var(--line);padding:.32rem .6rem;font-size:.78rem}
+.row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-top:.8rem}
+.clock{font-family:var(--mono);font-size:1.05rem;font-weight:700;background:var(--accent-bg);color:var(--accent);border-radius:4px;padding:.5rem .8rem;display:inline-block}
+table{width:100%;border-collapse:collapse;font-size:.83rem}
+th{text-align:left;padding:.4rem .5rem;border-bottom:1px solid var(--line);font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);white-space:nowrap}
+td{padding:.4rem .5rem;border-bottom:1px solid var(--line);white-space:nowrap}
+.scroll{overflow-x:auto}
+.pill{display:inline-block;font-family:var(--mono);font-size:.72rem;font-weight:700;padding:.12rem .5rem;border-radius:99px}
+.pill.P1{background:var(--bad-bg);color:var(--bad)}
+.pill.P2{background:var(--warn-bg);color:var(--warn)}
+.pill.P3{background:var(--warn-bg);color:var(--warn)}
+.pill.P4{background:var(--accent-bg);color:var(--accent)}
+.pill.open{background:var(--bad-bg);color:var(--bad)}
+.pill.resolved{background:var(--ok-bg);color:var(--ok)}
+.console{background:#0d1117;color:#c9d1d9;border-radius:4px;padding:.7rem .8rem;font-family:var(--mono);font-size:.78rem;line-height:1.7;max-height:220px;overflow-y:auto}
+.console .ts{color:#6e7681}
+.console .tag{color:#7ee787}
+.empty{padding:1.2rem;text-align:center;color:var(--muted);font-size:.85rem}
+footer{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--line);font-size:.82rem;color:var(--muted)}
+footer a{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>ITSM Incident Triage</h1>
+  <p class="sub">Simulá alertas de monitoreo: mirá cómo se deduplican, se clasifican por severidad y se auto-resuelven con el tiempo — sin esperar minutos reales, con un reloj que controlás vos.</p>
+  <div class="badgebar">
+    <span class="badge">Deduplicación</span><span class="badge">Reglas de severidad</span><span class="badge">Auto-resolución</span>
+  </div>
+  <p class="note">Misma lógica exacta que <code>app/incidents.py</code> del repo: cada alerta se identifica por un <em>fingerprint</em> — si ya hay un incidente abierto con ese fingerprint, solo suma una ocurrencia (no crea uno nuevo, no vuelve a notificar). El reloj es el mismo patrón que <code>FrozenClock</code> en los tests. Código en <a href="https://github.com/Enemeache/integration-ml-playground/tree/main/itsm-incident-triage" target="_blank" rel="noopener">GitHub ↗</a>.</p>
+</header>
+
+<section class="panel">
+  <h2>Reloj simulado</h2>
+  <div class="row" style="margin-top:0">
+    <span class="clock" id="clockDisplay"></span>
+    <button class="ghost" type="button" data-advance="15">+15 min</button>
+    <button class="ghost" type="button" data-advance="45">+45 min</button>
+    <button class="ghost" type="button" data-advance="120">+2 h</button>
+    <button type="button" id="btnAutoResolve">Auto-resolver P4 inactivos (&gt;30 min)</button>
+  </div>
+</section>
+
+<div class="grid2">
+<section class="panel">
+  <h2>Disparar una alerta</h2>
+  <div class="presets">
+    <button class="ghost" type="button" data-alert="pagos-down">🔴 Pagos caído (repetible)</button>
+    <button class="ghost" type="button" data-alert="cpu-alto">🟡 CPU alto en reportes</button>
+    <button class="ghost" type="button" data-alert="metricas-ok">🔵 Métricas generadas OK</button>
+    <button class="ghost" type="button" data-alert="web-lento">🟡 Sitio web lento</button>
+  </div>
+  <p class="sub">Hacé click varias veces en "Pagos caído" — vas a ver que las ocurrencias suben pero no se crean incidentes nuevos ni se vuelve a notificar.</p>
+</section>
+
+<section class="panel">
+  <h2>Notificaciones enviadas</h2>
+  <div class="console" id="console"><div>$ esperando alertas…</div></div>
+</section>
+</div>
+
+<section class="panel">
+  <h2>Incidentes</h2>
+  <div class="scroll">
+    <table id="incTable">
+      <thead><tr><th>Servicio</th><th>Severidad</th><th>Status</th><th>Ocurrencias</th><th>Primera vez</th><th>Última vez</th></tr></thead>
+      <tbody id="incBody"></tbody>
+    </table>
+  </div>
+  <div class="empty" id="incEmpty">Todavía no se disparó ninguna alerta.</div>
+</section>
+
+<footer>
+  Demo del proyecto <a href="https://github.com/Enemeache/integration-ml-playground/tree/main/itsm-incident-triage" target="_blank" rel="noopener">itsm-incident-triage</a> —
+  en el repo esto es una API FastAPI con persistencia en SQLite, notificación real a Slack (opcional) y 23 tests.
+</footer>
+</div>
+
+<script>
+/* ---- reloj simulado, mismo patron que FrozenClock en tests/conftest.py ---- */
+var virtualNow = new Date(2026, 0, 1, 9, 0, 0);
+function clockISO(){ return virtualNow.toISOString(); }
+function fmtClock(){
+  return virtualNow.toLocaleString('es-AR', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'});
+}
+function renderClock(){ document.getElementById('clockDisplay').textContent = fmtClock(); }
+
+/* ---- clasificacion por reglas, igual que app/severity.py ---- */
+var CRITICAL_KEYWORDS = ['caído','caido','down','no responde','500'];
+var WARNING_KEYWORDS = ['lento','degradado','alta latencia','cpu alto','memoria alta'];
+function classifySeverity(message){
+  var text = message.toLowerCase();
+  if(CRITICAL_KEYWORDS.some(function(k){ return text.indexOf(k) >= 0; })) return 'P1';
+  if(WARNING_KEYWORDS.some(function(k){ return text.indexOf(k) >= 0; })) return 'P3';
+  return 'P4';
+}
+
+/* ---- estado (equivalente a app/store.py en memoria) ---- */
+var incidents = []; // {id, fingerprint, service, severity, status, message, occurrences, first_seen, last_seen}
+var seq = 1;
+
+function findOpenByFingerprint(fp){
+  return incidents.find(function(i){ return i.fingerprint === fp && i.status === 'open'; });
+}
+
+/* ---- logica de negocio, igual que app/incidents.py::ingest_alert ---- */
+function ingestAlert(fingerprint, service, message){
+  var seenAt = clockISO();
+  var existing = findOpenByFingerprint(fingerprint);
+  if(existing){
+    existing.occurrences += 1;
+    existing.last_seen = seenAt;
+    renderAll();
+    return { incident: existing, isNew: false };
+  }
+  var severity = classifySeverity(message);
+  var incident = {
+    id: 'inc-' + String(seq++).padStart(3,'0'),
+    fingerprint: fingerprint, service: service, severity: severity, status: 'open',
+    message: message, occurrences: 1, first_seen: seenAt, last_seen: seenAt
+  };
+  incidents.push(incident);
+  logNotification('<span class="tag">['+severity+']</span> Nuevo incidente en '+service+': '+message+' (id='+incident.id+')');
+  renderAll();
+  return { incident: incident, isNew: true };
+}
+
+function autoResolveStale(severity, thresholdMinutes){
+  var cutoff = new Date(virtualNow.getTime() - thresholdMinutes*60000);
+  var resolved = [];
+  incidents.forEach(function(i){
+    if(i.status === 'open' && i.severity === severity && new Date(i.last_seen) < cutoff){
+      i.status = 'resolved';
+      i.resolved_at = clockISO();
+      resolved.push(i);
+      logNotification('<span class="tag">['+severity+']</span> Auto-resuelto por inactividad ('+thresholdMinutes+' min): '+i.message+' (id='+i.id+')');
+    }
+  });
+  renderAll();
+  return resolved;
+}
+
+/* ---- UI ---- */
+var consoleEl = document.getElementById('console');
+function logNotification(html){
+  var ts = fmtClock();
+  var div = document.createElement('div');
+  div.innerHTML = '<span class="ts">'+ts+'</span>  '+html;
+  consoleEl.appendChild(div);
+  consoleEl.scrollTop = consoleEl.scrollHeight;
+}
+
+function renderIncidents(){
+  var tbody = document.getElementById('incBody');
+  tbody.innerHTML = '';
+  document.getElementById('incEmpty').style.display = incidents.length ? 'none' : 'block';
+  incidents.slice().reverse().forEach(function(i){
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td>'+i.service+'</td>'+
+      '<td><span class="pill '+i.severity+'">'+i.severity+'</span></td>'+
+      '<td><span class="pill '+i.status+'">'+i.status+'</span></td>'+
+      '<td style="font-family:var(--mono)">'+i.occurrences+'</td>'+
+      '<td>'+new Date(i.first_seen).toLocaleString('es-AR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})+'</td>'+
+      '<td>'+new Date(i.last_seen).toLocaleString('es-AR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})+'</td>';
+    tbody.appendChild(tr);
+  });
+}
+function renderAll(){ renderClock(); renderIncidents(); }
+
+var ALERTS = {
+  'pagos-down': { fingerprint: 'svc-pagos-down', service: 'pagos', message: 'El servicio de pagos está caído' },
+  'cpu-alto': { fingerprint: 'svc-reportes-cpu', service: 'reportes', message: 'CPU alto en el server de reportes' },
+  'metricas-ok': { fingerprint: 'svc-reportes-metricas', service: 'reportes', message: 'Métricas semanales generadas correctamente' },
+  'web-lento': { fingerprint: 'svc-web-lento', service: 'web', message: 'El sitio web está lento, alta latencia' }
+};
+document.querySelectorAll('[data-alert]').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var a = ALERTS[btn.dataset.alert];
+    ingestAlert(a.fingerprint, a.service, a.message);
+  });
+});
+document.querySelectorAll('[data-advance]').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    virtualNow = new Date(virtualNow.getTime() + (+btn.dataset.advance)*60000);
+    renderClock();
+  });
+});
+document.getElementById('btnAutoResolve').addEventListener('click', function(){
+  autoResolveStale('P4', 30);
+});
+
+renderAll();
+</script>
+</body>
+</html>
