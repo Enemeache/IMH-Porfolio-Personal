@@ -5,6 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Ignacio Montero Horianski — Datos, Desarrollo, Marketing</title>
 <meta name="description" content="Analista de datos y desarrollador web en Buenos Aires. Dashboards, automatización de procesos y sitios en producción."/>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2316161A'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='16' fill='%23C8442A' text-anchor='middle'%3EI%3C/text%3E%3C/svg%3E"/>
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="Ignacio Montero Horianski — Datos, Desarrollo, Marketing"/>
+<meta property="og:description" content="Analista de datos y desarrollador web en Buenos Aires. Dashboards, automatización de procesos y sitios en producción."/>
+<meta property="og:url" content="https://enemeache.github.io/IMH-Porfolio-Personal/"/>
+<meta property="og:image" content="https://enemeache.github.io/IMH-Porfolio-Personal/img/og-cover.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:locale" content="es_AR"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="theme-color" content="#F7F6F3" media="(prefers-color-scheme: light)"/>
+<meta name="theme-color" content="#0E0E10" media="(prefers-color-scheme: dark)"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet"/>
@@ -222,8 +234,9 @@
 
   /* ── OVERLAYS ───────────────────────────────── */
   .ov{position:fixed;inset:0;z-index:120;background:var(--paper);
-    display:flex;flex-direction:column;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s;}
-  .ov.open{opacity:1;visibility:visible;}
+    display:flex;flex-direction:column;opacity:0;visibility:hidden;
+    transition:opacity .3s, visibility 0s linear .3s;}
+  .ov.open{opacity:1;visibility:visible;transition:opacity .3s, visibility 0s;}
   .ov-bar{display:flex;justify-content:space-between;align-items:center;gap:16px;
     padding:14px var(--pad);border-bottom:1px solid var(--rule);flex-shrink:0;}
   .ov-bar b{font-family:var(--mono);font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;font-weight:500;
@@ -233,12 +246,19 @@
     padding:7px 15px;border-radius:100px;transition:all .2s;white-space:nowrap;}
   .ov-x:hover{border-color:var(--ink);color:var(--ink);}
   .ov iframe{flex:1;width:100%;border:none;background:#fff;}
+  #viewerLoading{position:absolute;inset:56px 0 0 0;display:none;align-items:center;justify-content:center;gap:10px;
+    background:var(--paper);color:var(--ink-2);font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;
+    text-transform:uppercase;z-index:2;}
+  #viewerLoading.on{display:flex;}
+  #viewerLoading span{width:13px;height:13px;border:2px solid var(--rule);border-top-color:var(--accent);
+    border-radius:50%;animation:spin .7s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
 
   /* project detail modal */
   .modal{position:fixed;inset:0;z-index:130;display:grid;place-items:center;padding:20px;
     background:color-mix(in srgb,var(--ink) 42%,transparent);backdrop-filter:blur(7px);
-    opacity:0;visibility:hidden;transition:opacity .32s,visibility .32s;}
-  .modal.open{opacity:1;visibility:visible;}
+    opacity:0;visibility:hidden;transition:opacity .32s, visibility 0s linear .32s;}
+  .modal.open{opacity:1;visibility:visible;transition:opacity .32s, visibility 0s;}
   .modal-box{background:var(--paper);border:1px solid var(--rule);border-radius:5px;
     width:min(760px,100%);max-height:88vh;overflow-y:auto;padding:clamp(26px,4.5vw,54px);
     transform:translateY(18px) scale(.99);transition:transform .38s cubic-bezier(.22,1,.36,1);}
@@ -314,6 +334,7 @@
       <button class="fbtn" data-f="mkt">Marketing &amp; IA</button>
     </div>
   </div>
+  <p class="mono" id="liveCount" aria-live="polite" style="margin:-10px 0 18px"></p>
   <div class="work" id="workList"></div>
 </section>
 
@@ -923,7 +944,7 @@
             <text x="146" y="166" fill="rgba(255,255,255,0.3)" font-size="5.5" font-family="sans-serif">✓ Fotos y alérgenos por plato</text>
             <text x="146" y="182" fill="rgba(255,255,255,0.3)" font-size="5.5" font-family="sans-serif">✓ Multi-idioma</text>
             <text x="146" y="198" fill="rgba(255,255,255,0.3)" font-size="5.5" font-family="sans-serif">✓ Analítica de platos más vistos</text>
-          </svg></div><div><img src="./img/dashboard-hero.png" alt="" loading="lazy"/></div><div><svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          </svg></div><div><img src="./img/dashboard-hero.webp" alt="Dashboard de KPIs de producción"/></div><div><svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
             <rect width="480" height="250" fill="#0A1A0D"/>
             <rect width="480" height="38" fill="#1B3A2D"/>
             <text x="20" y="24" fill="#C4973A" font-size="13" font-family="Georgia,serif" font-weight="600">Küme</text>
@@ -940,7 +961,7 @@
             <text x="106" y="230" fill="rgba(196,151,58,0.8)" font-size="6.5" font-family="sans-serif">Diseño Web</text>
             <rect x="164" y="218" width="50" height="17" rx="2" fill="rgba(196,151,58,0.12)" stroke="rgba(196,151,58,0.35)" stroke-width="1"/>
             <text x="172" y="230" fill="rgba(196,151,58,0.8)" font-size="6.5" font-family="sans-serif">Branding</text>
-          </svg></div><div><img src="./img/trainer-hero.png" alt="" loading="lazy"/></div><div><img src="./img/excel-hero.png" alt="" loading="lazy"/></div><div><svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          </svg></div><div><img src="./img/trainer-hero.webp" alt="Landing de Joaquín Verón, personal trainer"/></div><div><img src="./img/excel-hero.webp" alt="Automatización de reportes contables en Python"/></div><div><svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
             <rect width="480" height="250" fill="#030712"/>
             <pattern id="dp" x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="7" cy="7" r="0.8" fill="rgba(255,255,255,0.13)"/></pattern>
             <rect width="480" height="250" fill="url(#dp)"/>
@@ -1013,22 +1034,23 @@
             <rect x="260" y="102" width="136" height="14" rx="2" fill="rgba(6,182,212,0.1)"/><text x="265" y="113" fill="rgba(6,182,212,0.8)" font-size="6" font-family="sans-serif">Caso real: instalación industrial</text>
             <rect x="260" y="120" width="100" height="14" rx="2" fill="rgba(16,185,129,0.1)"/><text x="265" y="131" fill="rgba(16,185,129,0.8)" font-size="6" font-family="sans-serif">Tip técnico semanal</text>
             <rect x="260" y="138" width="120" height="14" rx="2" fill="rgba(6,182,212,0.1)"/><text x="265" y="149" fill="rgba(6,182,212,0.8)" font-size="6" font-family="sans-serif">Promo: garantía extendida</text>
-          </svg></div><div><img src="./img/web-hero.webp" alt="" loading="lazy"/></div></div>
+          </svg></div><div><img src="./img/web-hero.webp" alt="Módulo de software Depofis"/></div><div><svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"><rect width="480" height="250" fill="#0E1116"/><text x="22" y="30" fill="#E6E9EC" font-size="14" font-family="sans-serif" font-weight="700">PropLeads Integration Hub</text><text x="22" y="45" fill="#8B949E" font-size="6.6" font-family="sans-serif">Un lead entra por webhook y sale clasificado</text><text x="458" y="30" fill="#8B949E" font-size="5.6" font-family="monospace" text-anchor="end">FASTAPI · RABBITMQ · MONGODB</text><line x1="22" y1="54" x2="458" y2="54" stroke="#2A313A" stroke-width="1"/><rect x="22" y="70" width="98" height="56" rx="4" fill="#161B22" stroke="#2A313A" stroke-width="0.9"/><text x="32" y="86" fill="#8B949E" font-size="5.2" font-family="monospace" letter-spacing="0.5">WEBHOOK</text><text x="32" y="103" fill="#58A6FF" font-size="11" font-family="sans-serif" font-weight="700">Lead</text><line x1="120" y1="98" x2="130" y2="98" stroke="#2A313A" stroke-width="1.2"/><path d="M135 98 l-5 -3 l0 6 z" fill="#2A313A"/><rect x="135" y="70" width="98" height="56" rx="4" fill="#161B22" stroke="#2A313A" stroke-width="0.9"/><text x="145" y="86" fill="#8B949E" font-size="5.2" font-family="monospace" letter-spacing="0.5">COLA</text><text x="145" y="103" fill="#D29922" font-size="11" font-family="sans-serif" font-weight="700">Encolado</text><line x1="233" y1="98" x2="243" y2="98" stroke="#2A313A" stroke-width="1.2"/><path d="M248 98 l-5 -3 l0 6 z" fill="#2A313A"/><rect x="248" y="70" width="98" height="56" rx="4" fill="#161B22" stroke="#2A313A" stroke-width="0.9"/><text x="258" y="86" fill="#8B949E" font-size="5.2" font-family="monospace" letter-spacing="0.5">WORKER</text><text x="258" y="103" fill="#A371F7" font-size="11" font-family="sans-serif" font-weight="700">Match</text><line x1="346" y1="98" x2="356" y2="98" stroke="#2A313A" stroke-width="1.2"/><path d="M361 98 l-5 -3 l0 6 z" fill="#2A313A"/><rect x="361" y="70" width="98" height="56" rx="4" fill="#161B22" stroke="#2A313A" stroke-width="0.9"/><text x="371" y="86" fill="#8B949E" font-size="5.2" font-family="monospace" letter-spacing="0.5">IA</text><text x="371" y="103" fill="#3FB950" font-size="11" font-family="sans-serif" font-weight="700">Clasificado</text><text x="22" y="150" fill="#8B949E" font-size="5.6" font-family="monospace" letter-spacing="0.6">PIPELINE EN VIVO</text><rect x="22" y="160" width="142" height="52" rx="4" fill="#161B22" stroke="#2A313A" stroke-width="0.9"/><text x="32" y="176" fill="#8B949E" font-size="5.2" font-family="monospace" letter-spacing="0.5">PROPIEDADES EN CATÁLOGO</text><text x="32" y="193" fill="#E6E9EC" font-size="11" font-family="sans-serif" font-weight="700">1.240</text><text x="32" y="205" fill="#8B949E" font-size="5" font-family="sans-serif">match por zona, precio y tipo</text><rect x="172" y="160" width="142" height="52" rx="4" fill="#161B22" stroke="#2A313A" stroke-width="0.9"/><text x="182" y="176" fill="#8B949E" font-size="5.2" font-family="monospace" letter-spacing="0.5">LATENCIA P95</text><text x="182" y="193" fill="#3FB950" font-size="11" font-family="sans-serif" font-weight="700">310 ms</text><text x="182" y="205" fill="#8B949E" font-size="5" font-family="sans-serif">webhook → lead clasificado</text><rect x="322" y="160" width="136" height="52" rx="4" fill="#161B22" stroke="#2A313A" stroke-width="0.9"/><text x="332" y="176" fill="#8B949E" font-size="5.2" font-family="monospace" letter-spacing="0.5">REINTENTOS</text><text x="332" y="193" fill="#D29922" font-size="11" font-family="sans-serif" font-weight="700">dead-letter</text><text x="332" y="205" fill="#8B949E" font-size="5" font-family="sans-serif">cola con backoff</text><text x="22" y="232" fill="#8B949E" font-size="5.4" font-family="sans-serif">Simulación interactiva: corrés un ejemplo y mirás cada etapa procesarse.</text></svg></div><div><svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"><rect width="480" height="250" fill="#0E1116"/><text x="22" y="30" fill="#E6E9EC" font-size="14" font-family="sans-serif" font-weight="700">Support Ticket Classifier</text><text x="22" y="45" fill="#8B949E" font-size="6.6" font-family="sans-serif">Departamento y prioridad con el modelo entrenado</text><text x="458" y="30" fill="#8B949E" font-size="5.6" font-family="monospace" text-anchor="end">SCIKIT-LEARN · TF-IDF</text><line x1="22" y1="54" x2="458" y2="54" stroke="#2A313A" stroke-width="1"/><rect x="22" y="66" width="214" height="104" rx="4" fill="#161B22" stroke="#2A313A" stroke-width="0.9"/><text x="32" y="82" fill="#8B949E" font-size="5.4" font-family="monospace">TICKET DE ENTRADA</text><text x="32" y="99" fill="#E6E9EC" font-size="6.4" font-family="sans-serif">“No puedo acceder a mi cuenta</text><text x="32" y="112" fill="#E6E9EC" font-size="6.4" font-family="sans-serif">desde ayer, ya probé resetear</text><text x="32" y="125" fill="#E6E9EC" font-size="6.4" font-family="sans-serif">la clave tres veces.”</text><line x1="32" y1="140" x2="226" y2="140" stroke="#2A313A" stroke-width="0.8"/><rect x="32" y="147" width="87" height="14" rx="7" fill="#3FB950" opacity="0.16"/><text x="76" y="156" fill="#3FB950" font-size="5.6" font-family="monospace" text-anchor="middle">DEPARTAMENTO: ACCESOS</text><rect x="248" y="66" width="210" height="104" rx="4" fill="#161B22" stroke="#2A313A" stroke-width="0.9"/><text x="258" y="82" fill="#8B949E" font-size="5.4" font-family="monospace">CONFIANZA POR CLASE</text><text x="258" y="96" fill="#E6E9EC" font-size="5.8" font-family="sans-serif">Accesos</text><rect x="318" y="91" width="110" height="5" rx="2.5" fill="#2A313A"/><rect x="318" y="91" width="96" height="5" rx="2.5" fill="#3FB950"/><text x="458" y="96" fill="#3FB950" font-size="5.4" font-family="monospace" text-anchor="end">87%</text><text x="258" y="114" fill="#8B949E" font-size="5.8" font-family="sans-serif">Facturación</text><rect x="318" y="109" width="110" height="5" rx="2.5" fill="#2A313A"/><rect x="318" y="109" width="8" height="5" rx="2.5" fill="#8B949E"/><text x="458" y="114" fill="#8B949E" font-size="5.4" font-family="monospace" text-anchor="end">7%</text><text x="258" y="132" fill="#8B949E" font-size="5.8" font-family="sans-serif">Técnico</text><rect x="318" y="127" width="110" height="5" rx="2.5" fill="#2A313A"/><rect x="318" y="127" width="4" height="5" rx="2.5" fill="#8B949E"/><text x="458" y="132" fill="#8B949E" font-size="5.4" font-family="monospace" text-anchor="end">4%</text><text x="258" y="150" fill="#8B949E" font-size="5.8" font-family="sans-serif">Comercial</text><rect x="318" y="145" width="110" height="5" rx="2.5" fill="#2A313A"/><rect x="318" y="145" width="2" height="5" rx="2.5" fill="#8B949E"/><text x="458" y="150" fill="#8B949E" font-size="5.4" font-family="monospace" text-anchor="end">2%</text><rect x="22" y="182" width="67" height="14" rx="7" fill="#F85149" opacity="0.16"/><text x="56" y="191" fill="#F85149" font-size="5.6" font-family="monospace" text-anchor="middle">PRIORIDAD: ALTA</text><rect x="118" y="182" width="47" height="14" rx="7" fill="#58A6FF" opacity="0.16"/><text x="141" y="191" fill="#58A6FF" font-size="5.6" font-family="monospace" text-anchor="middle">LinearSVC</text><rect x="196" y="182" width="74" height="14" rx="7" fill="#A371F7" opacity="0.16"/><text x="233" y="191" fill="#A371F7" font-size="5.6" font-family="monospace" text-anchor="middle">PyTorch comparado</text><text x="22" y="226" fill="#8B949E" font-size="5.4" font-family="sans-serif">Corre el modelo real exportado, no una reimplementación aproximada.</text></svg></div><div><svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"><rect width="480" height="250" fill="#0E1116"/><text x="22" y="30" fill="#E6E9EC" font-size="14" font-family="sans-serif" font-weight="700">E-commerce ↔ ERP Sync</text><text x="22" y="45" fill="#8B949E" font-size="6.6" font-family="sans-serif">Un pedido se reconcilia con un ERP que solo habla SOAP</text><text x="458" y="30" fill="#8B949E" font-size="5.6" font-family="monospace" text-anchor="end">SOAP · XML</text><line x1="22" y1="54" x2="458" y2="54" stroke="#2A313A" stroke-width="1"/><rect x="22" y="66" width="120" height="46" rx="4" fill="#161B22" stroke="#2A313A" stroke-width="0.9"/><text x="32" y="82" fill="#8B949E" font-size="5.2" font-family="monospace" letter-spacing="0.5">WEBSHOP</text><text x="32" y="99" fill="#58A6FF" font-size="11" font-family="sans-serif" font-weight="700">Pedido #4812</text><text x="32" y="111" fill="#8B949E" font-size="5" font-family="sans-serif">JSON moderno</text><line x1="142" y1="89" x2="171" y2="89" stroke="#58A6FF" stroke-width="1.2"/><path d="M176 89 l-5 -3 l0 6 z" fill="#58A6FF"/><rect x="176" y="62" width="128" height="86" rx="4" fill="#161B22" stroke="#58A6FF" stroke-width="0.9"/><text x="186" y="78" fill="#58A6FF" font-size="5.2" font-family="monospace">ENVELOPE SOAP</text><text x="186" y="92" fill="#E6E9EC" font-size="5" font-family="monospace">&lt;soap:Envelope&gt;</text><text x="186" y="103" fill="#8B949E" font-size="5" font-family="monospace">  &lt;Order id="4812"&gt;</text><text x="186" y="114" fill="#8B949E" font-size="5" font-family="monospace">    &lt;Total&gt;128400&lt;/Total&gt;</text><text x="186" y="125" fill="#8B949E" font-size="5" font-family="monospace">  &lt;/Order&gt;</text><text x="186" y="136" fill="#8B949E" font-size="5" font-family="monospace">&lt;/soap:Envelope&gt;</text><line x1="304" y1="89" x2="333" y2="89" stroke="#58A6FF" stroke-width="1.2"/><path d="M338 89 l-5 -3 l0 6 z" fill="#58A6FF"/><rect x="338" y="66" width="120" height="46" rx="4" fill="#161B22" stroke="#2A313A" stroke-width="0.9"/><text x="348" y="82" fill="#8B949E" font-size="5.2" font-family="monospace" letter-spacing="0.5">ERP LEGACY</text><text x="348" y="99" fill="#3FB950" font-size="11" font-family="sans-serif" font-weight="700">Confirmado</text><text x="348" y="111" fill="#8B949E" font-size="5" font-family="sans-serif">solo SOAP/XML</text><text x="22" y="170" fill="#8B949E" font-size="5.6" font-family="monospace" letter-spacing="0.6">SI EL ERP RECHAZA</text><rect x="22" y="178" width="210" height="50" rx="4" fill="#161B22" stroke="#2A313A" stroke-width="0.9"/><text x="32" y="194" fill="#8B949E" font-size="5.2" font-family="monospace" letter-spacing="0.5">TRANSACCIÓN COMPENSATORIA</text><text x="32" y="211" fill="#D29922" font-size="11" font-family="sans-serif" font-weight="700">Rollback del webshop</text><text x="32" y="223" fill="#8B949E" font-size="5" font-family="sans-serif">el pedido no queda a medias</text><rect x="244" y="178" width="214" height="50" rx="4" fill="#161B22" stroke="#2A313A" stroke-width="0.9"/><text x="254" y="194" fill="#8B949E" font-size="5.2" font-family="monospace" letter-spacing="0.5">IDEMPOTENCIA</text><text x="254" y="211" fill="#3FB950" font-size="11" font-family="sans-serif" font-weight="700">Mismo id, un solo efecto</text><text x="254" y="223" fill="#8B949E" font-size="5" font-family="sans-serif">reintentos seguros</text></svg></div><div><svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"><rect width="480" height="250" fill="#0E1116"/><text x="22" y="30" fill="#E6E9EC" font-size="14" font-family="sans-serif" font-weight="700">ITSM Incident Triage</text><text x="22" y="45" fill="#8B949E" font-size="6.6" font-family="sans-serif">Alertas que se deduplican, clasifican y se cierran solas</text><text x="458" y="30" fill="#8B949E" font-size="5.6" font-family="monospace" text-anchor="end">DEDUP · SEVERIDAD</text><line x1="22" y1="54" x2="458" y2="54" stroke="#2A313A" stroke-width="1"/><rect x="22" y="66" width="106" height="44" rx="4" fill="#161B22" stroke="#2A313A" stroke-width="0.9"/><text x="32" y="82" fill="#8B949E" font-size="5.2" font-family="monospace" letter-spacing="0.5">ALERTAS CRUDAS</text><text x="32" y="99" fill="#8B949E" font-size="11" font-family="sans-serif" font-weight="700">47</text><text x="32" y="111" fill="#8B949E" font-size="5" font-family="sans-serif">últimos 15 min</text><line x1="128" y1="88" x2="155" y2="88" stroke="#2A313A" stroke-width="1.2"/><path d="M160 88 l-5 -3 l0 6 z" fill="#2A313A"/><rect x="160" y="66" width="106" height="44" rx="4" fill="#161B22" stroke="#2A313A" stroke-width="0.9"/><text x="170" y="82" fill="#8B949E" font-size="5.2" font-family="monospace" letter-spacing="0.5">TRAS DEDUP</text><text x="170" y="99" fill="#58A6FF" font-size="11" font-family="sans-serif" font-weight="700">12</text><text x="170" y="111" fill="#8B949E" font-size="5" font-family="sans-serif">−74% de ruido</text><line x1="266" y1="88" x2="293" y2="88" stroke="#2A313A" stroke-width="1.2"/><path d="M298 88 l-5 -3 l0 6 z" fill="#2A313A"/><rect x="298" y="66" width="160" height="44" rx="4" fill="#161B22" stroke="#2A313A" stroke-width="0.9"/><text x="308" y="82" fill="#8B949E" font-size="5.2" font-family="monospace" letter-spacing="0.5">REQUIEREN HUMANO</text><text x="308" y="99" fill="#F85149" font-size="11" font-family="sans-serif" font-weight="700">3</text><text x="308" y="111" fill="#8B949E" font-size="5" font-family="sans-serif">el resto se auto-resuelve</text><text x="22" y="128" fill="#8B949E" font-size="5.6" font-family="monospace" letter-spacing="0.6">COLA POR SEVERIDAD</text><rect x="22" y="140" width="436" height="19" rx="3" fill="#161B22" stroke="#2A313A" stroke-width="0.7"/><rect x="22" y="140" width="2.6" height="19" rx="1.3" fill="#F85149"/><text x="34" y="153" fill="#F85149" font-size="6.2" font-family="monospace" font-weight="700">P1</text><text x="56" y="153" fill="#E6E9EC" font-size="6.2" font-family="sans-serif">API de pagos sin responder</text><text x="450" y="153" fill="#8B949E" font-size="5.4" font-family="monospace" text-anchor="end">abierto</text><rect x="22" y="163" width="436" height="19" rx="3" fill="#161B22" stroke="#2A313A" stroke-width="0.7"/><rect x="22" y="163" width="2.6" height="19" rx="1.3" fill="#D29922"/><text x="34" y="176" fill="#D29922" font-size="6.2" font-family="monospace" font-weight="700">P2</text><text x="56" y="176" fill="#E6E9EC" font-size="6.2" font-family="sans-serif">Latencia alta en checkout</text><text x="450" y="176" fill="#8B949E" font-size="5.4" font-family="monospace" text-anchor="end">en curso</text><rect x="22" y="186" width="436" height="19" rx="3" fill="#161B22" stroke="#2A313A" stroke-width="0.7"/><rect x="22" y="186" width="2.6" height="19" rx="1.3" fill="#58A6FF"/><text x="34" y="199" fill="#58A6FF" font-size="6.2" font-family="monospace" font-weight="700">P3</text><text x="56" y="199" fill="#E6E9EC" font-size="6.2" font-family="sans-serif">Disco al 82% en nodo-04</text><text x="450" y="199" fill="#8B949E" font-size="5.4" font-family="monospace" text-anchor="end">auto-resuelto</text><rect x="22" y="209" width="436" height="19" rx="3" fill="#161B22" stroke="#2A313A" stroke-width="0.7"/><rect x="22" y="209" width="2.6" height="19" rx="1.3" fill="#8B949E"/><text x="34" y="222" fill="#8B949E" font-size="6.2" font-family="monospace" font-weight="700">P4</text><text x="56" y="222" fill="#E6E9EC" font-size="6.2" font-family="sans-serif">Certificado vence en 20 días</text><text x="450" y="222" fill="#8B949E" font-size="5.4" font-family="monospace" text-anchor="end">programado</text></svg></div><div><svg class="project-visual-svg" viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice"><rect width="480" height="250" fill="#0E1116"/><text x="22" y="30" fill="#E6E9EC" font-size="14" font-family="sans-serif" font-weight="700">Recsys Embeddings</text><text x="22" y="45" fill="#8B949E" font-size="6.6" font-family="sans-serif">Recomendaciones con los embeddings entrenados</text><text x="458" y="30" fill="#8B949E" font-size="5.6" font-family="monospace" text-anchor="end">TF-IDF + SVD</text><line x1="22" y1="54" x2="458" y2="54" stroke="#2A313A" stroke-width="1"/><rect x="22" y="64" width="224" height="118" rx="4" fill="#161B22" stroke="#2A313A" stroke-width="0.9"/><text x="32" y="80" fill="#8B949E" font-size="5.4" font-family="monospace">ESPACIO VECTORIAL (2 DE 128 DIM)</text><line x1="70" y1="118" x2="96" y2="104" stroke="#A371F7" stroke-width="0.8" opacity="0.5"/><line x1="70" y1="118" x2="104" y2="134" stroke="#A371F7" stroke-width="0.8" opacity="0.5"/><line x1="70" y1="118" x2="78" y2="142" stroke="#A371F7" stroke-width="0.8" opacity="0.5"/><circle cx="70" cy="118" r="5.5" fill="#3FB950"/><circle cx="96" cy="104" r="3.4" fill="#A371F7"/><circle cx="104" cy="134" r="3.4" fill="#A371F7"/><circle cx="78" cy="142" r="3.4" fill="#A371F7"/><circle cx="132" cy="96" r="2.6" fill="#8B949E"/><circle cx="152" cy="150" r="2.6" fill="#8B949E"/><circle cx="186" cy="110" r="2.6" fill="#8B949E"/><circle cx="170" cy="132" r="2.6" fill="#8B949E"/><circle cx="200" cy="150" r="2.6" fill="#8B949E"/><circle cx="126" cy="160" r="2.6" fill="#8B949E"/><circle cx="210" cy="88" r="2.6" fill="#8B949E"/><circle cx="58" cy="96" r="2.6" fill="#8B949E"/><text x="56" y="176" fill="#8B949E" font-size="5" font-family="monospace">● item consultado    ● vecinos más cercanos</text><text x="258" y="78" fill="#8B949E" font-size="5.4" font-family="monospace" letter-spacing="0.5">TOP RECOMENDACIONES</text><rect x="258" y="92" width="200" height="18" rx="3" fill="#161B22" stroke="#2A313A" stroke-width="0.7"/><text x="268" y="104" fill="#E6E9EC" font-size="6.2" font-family="sans-serif">Item 3312</text><rect x="340" y="99" width="70" height="4" rx="2" fill="#2A313A"/><rect x="340" y="99" width="66" height="4" rx="2" fill="#3FB950"/><text x="450" y="104" fill="#3FB950" font-size="5.4" font-family="monospace" text-anchor="end">0.94</text><rect x="258" y="114" width="200" height="18" rx="3" fill="#161B22" stroke="#2A313A" stroke-width="0.7"/><text x="268" y="126" fill="#E6E9EC" font-size="6.2" font-family="sans-serif">Item 0871</text><rect x="340" y="121" width="70" height="4" rx="2" fill="#2A313A"/><rect x="340" y="121" width="62" height="4" rx="2" fill="#3FB950"/><text x="450" y="126" fill="#3FB950" font-size="5.4" font-family="monospace" text-anchor="end">0.89</text><rect x="258" y="136" width="200" height="18" rx="3" fill="#161B22" stroke="#2A313A" stroke-width="0.7"/><text x="268" y="148" fill="#E6E9EC" font-size="6.2" font-family="sans-serif">Item 2204</text><rect x="340" y="143" width="70" height="4" rx="2" fill="#2A313A"/><rect x="340" y="143" width="60" height="4" rx="2" fill="#3FB950"/><text x="450" y="148" fill="#3FB950" font-size="5.4" font-family="monospace" text-anchor="end">0.85</text><rect x="258" y="160" width="200" height="46" rx="4" fill="#161B22" stroke="#2A313A" stroke-width="0.9"/><text x="268" y="176" fill="#8B949E" font-size="5.2" font-family="monospace" letter-spacing="0.5">EVALUACIÓN</text><text x="268" y="193" fill="#58A6FF" font-size="11" font-family="sans-serif" font-weight="700">Precision@K / Recall</text><text x="268" y="205" fill="#8B949E" font-size="5" font-family="sans-serif">content-based + collaborative</text><text x="22" y="226" fill="#8B949E" font-size="5.4" font-family="sans-serif">Usa los embeddings reales entrenados, no una aproximación.</text></svg></div></div>
 
 <!-- live viewer -->
-<div class="ov" id="viewerOverlay">
+<div class="ov" id="viewerOverlay" role="dialog" aria-modal="true" aria-labelledby="viewerTitle">
   <div class="ov-bar"><b id="viewerTitle">Proyecto</b><button class="ov-x" onclick="closeViewer()">Cerrar ✕</button></div>
-  <iframe id="viewerFrame" src="" allowfullscreen title="Proyecto en vivo"></iframe>
+  <div id="viewerLoading" aria-hidden="true"><span></span>Cargando proyecto…</div>
+  <iframe id="viewerFrame" src="" allowfullscreen title="Proyecto en vivo" onload="var l=document.getElementById('viewerLoading');if(l)l.classList.remove('on');"></iframe>
 </div>
 
 <!-- dashboard viewer -->
-<div class="ov" id="dashboardOverlay">
+<div class="ov" id="dashboardOverlay" role="dialog" aria-modal="true" aria-label="Dashboard de KPIs">
   <div class="ov-bar"><b>Dashboard KPIs — Marzo 2026</b><button class="ov-x" onclick="closeDashboard()">Cerrar ✕</button></div>
   <iframe id="dashboardFrame" src="" title="Dashboard"></iframe>
 </div>
 
 <!-- project detail -->
-<div class="modal" id="projectModal" onclick="if(event.target===this)closeProject()">
+<div class="modal" id="projectModal" role="dialog" aria-modal="true" aria-labelledby="mTitle" onclick="if(event.target===this)closeProject()">
   <div class="modal-box">
     <p class="mono" id="mCat"></p>
     <h3 id="mTitle"></h3>
@@ -1083,14 +1105,16 @@ WORK.forEach(function(w,i){
 /* filters */
 document.querySelectorAll('.fbtn').forEach(function(btn){
   btn.onclick=function(){
-    document.querySelectorAll('.fbtn').forEach(function(b){b.classList.remove('on');});
-    btn.classList.add('on');
+    document.querySelectorAll('.fbtn').forEach(function(b){b.classList.remove('on');b.setAttribute('aria-pressed','false');});
+    btn.classList.add('on'); btn.setAttribute('aria-pressed','true');
     var f=btn.dataset.f, n=0;
     document.querySelectorAll('.row').forEach(function(r){
       var show=(f==='all'||r.dataset.cat===f);
       r.classList.toggle('hidden',!show);
       if(show){ r.querySelector('.r-num').textContent=String(++n).padStart(2,'0'); }
     });
+    var live=document.getElementById('liveCount');
+    if(live) live.textContent = n + (n===1?' proyecto':' proyectos');
     hidePv();
   };
 });
@@ -1122,22 +1146,53 @@ if(fine){
 
 /* ── overlays ──────────────────────────── */
 function lock(on){document.body.style.overflow=on?'hidden':'';}
+
+/* accesibilidad de dialogos: mover el foco adentro, atraparlo y devolverlo */
+var lastFocus=null, trapped=null;
+function focusables(el){
+  return [].slice.call(el.querySelectorAll('a[href],button:not([disabled]),iframe,input,select,textarea,[tabindex]:not([tabindex="-1"])'))
+    .filter(function(e){return e.offsetParent!==null;});
+}
+function openDialog(el){
+  lastFocus=document.activeElement; trapped=el;
+  /* el dialogo entra con una transicion de visibility: no se puede enfocar
+     hasta que termina, asi que esperamos a que sea visible de verdad */
+  var tries=0;
+  (function attempt(){
+    if(getComputedStyle(el).visibility==='visible'){
+      var f=focusables(el); if(f.length) f[0].focus();
+    } else if(++tries<25) setTimeout(attempt,40);
+  })();
+}
+function closeDialog(){
+  trapped=null;
+  if(lastFocus&&lastFocus.focus){ lastFocus.focus(); lastFocus=null; }
+}
+function trapFocus(e){
+  if(e.key!=='Tab'||!trapped) return;
+  var f=focusables(trapped); if(!f.length) return;
+  var first=f[0], last=f[f.length-1];
+  if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+  else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
+}
+addEventListener('keydown',trapFocus);
 function openViewer(src,title){
+  var ld=document.getElementById('viewerLoading'); if(ld) ld.classList.add('on');
   document.getElementById('viewerFrame').src=src;
   document.getElementById('viewerTitle').textContent=title||'Proyecto';
-  document.getElementById('viewerOverlay').classList.add('open'); lock(1); hidePv();
+  document.getElementById('viewerOverlay').classList.add('open'); lock(1); hidePv(); openDialog(document.getElementById('viewerOverlay'));
 }
 function closeViewer(){
   document.getElementById('viewerOverlay').classList.remove('open');
-  document.getElementById('viewerFrame').src=''; lock(0);
+  document.getElementById('viewerFrame').src=''; lock(0); closeDialog();
 }
 function openDashboard(){
   document.getElementById('dashboardFrame').src='./dashboards/DEMO_DASHBOARD_PRODUCCION.html';
-  document.getElementById('dashboardOverlay').classList.add('open'); lock(1); hidePv();
+  document.getElementById('dashboardOverlay').classList.add('open'); lock(1); hidePv(); openDialog(document.getElementById('dashboardOverlay'));
 }
 function closeDashboard(){
   document.getElementById('dashboardOverlay').classList.remove('open');
-  document.getElementById('dashboardFrame').src=''; lock(0);
+  document.getElementById('dashboardFrame').src=''; lock(0); closeDialog();
 }
 
 var projects = {
@@ -1243,15 +1298,27 @@ function openProject(id){
   document.getElementById('mSolution').textContent=p.solution;
   document.getElementById('mResult').textContent=p.result;
   document.getElementById('mTags').innerHTML=p.tags.map(function(t){return '<span>'+t+'</span>';}).join('');
-  document.getElementById('projectModal').classList.add('open'); lock(1); hidePv();
+  document.getElementById('projectModal').classList.add('open'); lock(1); hidePv(); openDialog(document.getElementById('projectModal'));
 }
 function closeProject(){
-  document.getElementById('projectModal').classList.remove('open'); lock(0);
+  document.getElementById('projectModal').classList.remove('open'); lock(0); closeDialog();
 }
 addEventListener('keydown',function(e){
   if(e.key!=='Escape')return;
   closeViewer(); closeDashboard(); closeProject(); mm(0);
 });
+
+/* precarga de los previews en mapa de bits: evita el parpadeo al pasar el mouse */
+['dashboard-hero','trainer-hero','excel-hero','web-hero'].forEach(function(n){
+  var i=new Image(); i.src='./img/'+n+'.webp';
+});
+
+/* contador inicial */
+(function(){
+  var live=document.getElementById('liveCount');
+  if(live){ var n=document.querySelectorAll('.row').length;
+    live.textContent = n + ' proyectos'; }
+})();
 
 /* ── reveal ────────────────────────────── */
 var io=new IntersectionObserver(function(es){
